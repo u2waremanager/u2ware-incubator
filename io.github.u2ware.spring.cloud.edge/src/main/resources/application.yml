@@ -1,0 +1,18 @@
+server:
+  port: 18080
+
+management:
+  security:
+    enabled: false
+
+zuul:
+  ignoredServices: '*'
+  routes:
+    persons:
+      path: /persons/**
+      serviceId: persons
+    members:
+      path: /members/**
+      serviceId: members
+
+

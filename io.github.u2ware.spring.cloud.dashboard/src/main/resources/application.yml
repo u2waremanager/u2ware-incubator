@@ -1,0 +1,15 @@
+server:
+  port: 8760
+
+management:
+  security:
+    enabled: false  
+
+spring:
+  boot:
+   admin:
+     context-path: /eureka
+     
+turbine:
+  cluster-name-expression: new String("default")
+  app-config: cloud-edge-server,persons,members 

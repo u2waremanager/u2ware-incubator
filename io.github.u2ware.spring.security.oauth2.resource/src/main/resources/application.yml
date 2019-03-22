@@ -1,0 +1,16 @@
+server:
+  port: 8082
+  context-path: /api
+
+
+logging:
+  level:
+    root: INFO
+#    org.springframework.security: DEBUG
+#    com.u2ware: DEBUG
+
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-uri: http://localhost:8081/oauth/token_key

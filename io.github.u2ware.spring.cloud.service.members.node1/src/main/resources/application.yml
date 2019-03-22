@@ -1,0 +1,10 @@
+server:
+  port: 18082
+
+management:
+  security:
+    enabled: false
+
+spring:
+  jpa:
+    show-sql: true
