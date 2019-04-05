@@ -68,6 +68,22 @@ const routes = [
     },
     component: () => import(/* webpackChunkName: "vuetify" */ '../apps/vuetify/App.vue'),
   },
+  {
+    path: '/vuetify-layouts',
+    name: 'vuetify-layouts',
+    meta: {
+      title: 'vuetify-layouts'
+    },
+    // component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/baseline.vue'),
+    // component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/baselineFlipped.vue'),
+    // component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/centered.vue'),
+    // component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/complex.vue'),
+    // component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/dark.vue'),
+    component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/googleContacts.vue'),
+    // component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/googleKeep.vue'),
+    // component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/googleYoutube.vue'),
+    // component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/sandbox.vue'),
+  },
 ];
 
 
