@@ -1,4 +1,4 @@
-package io.github.u2ware.frontend.vue;
+package io.github.u2ware.frontend;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

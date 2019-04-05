@@ -1,4 +1,4 @@
-package io.github.u2ware.frontend.vue;
+package io.github.u2ware.frontend;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
