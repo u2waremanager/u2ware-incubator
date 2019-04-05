@@ -1,4 +1,4 @@
-package io.github.u2ware.io.github.u2ware.frontend.vue;
+package io.github.u2ware.frontend.vue;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
