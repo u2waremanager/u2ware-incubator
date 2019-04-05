@@ -1,7 +1,8 @@
 <template>
 <div class="hello">
      <h1>C11</h1>
-     <C2/>
+     <C2 bar="aaaaa" foo="RRRR"/>
+     <C2 bar="xxxxx" foo="xxxx"/>
 </div>
 </template>
 

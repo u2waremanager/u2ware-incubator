@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Dummy from '../apps/Dummy.vue'
+import Blank from '../apps/Blank.vue'
 
 
 Vue.use(Router)
@@ -11,8 +11,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'dummy',
-      component: Dummy
+      name: 'blank',
+      component: Blank
     },
     {
       path: '/test-i18n',
@@ -28,12 +28,23 @@ export default new Router({
       path: '/basic',
       name: 'basic',
       component: () => import(/* webpackChunkName: "basic" */ '../apps/basic/App.vue'),
-      // children : [
-      //   {
-      //     path : '/about',
-      //     component: () => import(/* webpackChunkName: "welcome_about" */ '../views/welcome/About.vue')
-      //   },
-      // ]
+    },
+    {
+      path: '/basic-router',
+      name: 'basic-router',
+      component: () => import(/* webpackChunkName: "basic-router" */ '../apps/basic-router/App.vue'),
+      children : [
+        {
+          path : '/basic-router',
+          name: 'basic-router-home',
+          component: () => import(/* webpackChunkName: "basic-router-home" */ '../apps/basic-router/views/Home.vue')
+        },
+        {
+          path : '/basic-router/about',
+          name: 'basic-router-about',
+          component: () => import(/* webpackChunkName: "basic-router-about" */ '../apps/basic-router/views/About.vue')
+        },
+      ]
     },
   ]
 })
