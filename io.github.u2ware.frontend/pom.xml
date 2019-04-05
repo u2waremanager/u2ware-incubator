@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>io.github.u2ware</groupId>
-	<artifactId>io.github.u2ware.frontend.vue</artifactId>
+	<artifactId>io.github.u2ware.frontend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>io.github.u2ware.frontend.vue</name>
+	<name>io.github.u2ware.frontend</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
