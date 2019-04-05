@@ -1,17 +1,17 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Blank from '../apps/Blank.vue'
+import All from '../apps/All.vue'
 
 Vue.use(Router)
 
 const routes = [
   {
     path: '/',
-    name: 'blank',
+    name: 'all',
     meta: {
       title: ''
     },
-    component: Blank
+    component: All
   },
   {
     path: '/test-i18n',
@@ -48,7 +48,7 @@ const routes = [
         meta: {
           title: 'basic-router-home'
         },
-            component: () => import(/* webpackChunkName: "basic-router-home" */ '../apps/basic-router/views/Home.vue')
+        component: () => import(/* webpackChunkName: "basic-router-home" */ '../apps/basic-router/views/Home.vue')
       },
       {
         path : '/basic-router/about',
@@ -74,16 +74,44 @@ const routes = [
     meta: {
       title: 'vuetify-layouts'
     },
+    component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/App.vue'),
+    children : [
     // component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/baseline.vue'),
     // component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/baselineFlipped.vue'),
     // component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/centered.vue'),
     // component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/complex.vue'),
     // component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/dark.vue'),
-    component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/googleContacts.vue'),
+    // component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/googleContacts.vue'),
     // component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/googleKeep.vue'),
     // component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/googleYoutube.vue'),
     // component: () => import(/* webpackChunkName: "vuetify-layouts" */ '../apps/vuetify-layouts/sandbox.vue'),
+  ]
   },
+  {
+    path : '/vuetify-layouts/centered',
+    name: 'vuetify-layouts-centered',
+    meta: {
+      title: 'vuetify-layouts-centered'
+    },
+    component: () => import(/* webpackChunkName: "vuetify-layouts-centered" */ '../apps/vuetify-layouts/components/centered.vue')
+  },
+  {
+    path : '/vuetify-layouts/googleContacts',
+    name: 'vuetify-layouts-googleContacts',
+    meta: {
+      title: 'vuetify-layouts-googleContacts'
+    },
+    component: () => import(/* webpackChunkName: "vuetify-layouts-googleContacts" */ '../apps/vuetify-layouts/components/googleContacts.vue')
+  },
+  {
+    path : '/vuetify-layouts/sandbox',
+    name: 'vuetify-layouts-sandbox',
+    meta: {
+      title: 'vuetify-layouts-sandbox'
+    },
+    component: () => import(/* webpackChunkName: "vuetify-layouts-sandbox" */ '../apps/vuetify-layouts/components/sandbox.vue')
+  },
+  
 ];
 
 
