@@ -5,6 +5,9 @@
     <h2><router-link to="/basic-router">basic-router</router-link></h2>
     <h2><router-link to="/vuetify">vuetify</router-link></h2>
     <h2><router-link to="/vuetify-layouts">vuetify-layouts</router-link></h2>
+    <h2><router-link to="/test-axios">test-axios</router-link></h2>
+    <h2><router-link to="/test-components">test-components</router-link></h2>
+    <h2><router-link to="/test-i18n">test-i18n</router-link></h2>
 </div>
 </template>
 

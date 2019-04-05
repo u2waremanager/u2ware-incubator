@@ -14,6 +14,14 @@ const routes = [
     component: All
   },
   {
+    path: '/test-axios',
+    name: 'test-axios',
+    meta: {
+      title: 'test-axios'
+    },
+    component: () => import(/* webpackChunkName: "test-axios" */ '../apps/test-axios/App.vue'),
+  },
+  {
     path: '/test-i18n',
     name: 'test-i18n',
     meta: {
