@@ -16,7 +16,19 @@ export default {
 
   components: {
     'C2' : C2
-  }
+  },
+  created: function() {
+      this.$log.debug('C1', 'created');
+  },
+  mounted: function() {
+      this.$log.debug('C1', 'mounted');
+  },
+  updated: function() {
+      this.$log.debug('C1', 'updated');
+  },
+  destroyed: function() {
+      this.$log.debug('C1', 'destroyed');
+  },
 
 }
 </script>

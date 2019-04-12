@@ -9,8 +9,8 @@ const options = {
     isEnabled: true,
     logLevel : isProduction ? 'error' : 'debug',
     stringifyArguments : false,
-    showLogLevel : true,
-    showMethodName : true,
+    showLogLevel : false,
+    showMethodName : false,
     separator: ' ',
     showConsoleColors: true
 };

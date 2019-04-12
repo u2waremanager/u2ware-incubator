@@ -13,8 +13,19 @@ export default {
   props: {
     foo: String,
     bar: String,
-  }
-
+  },
+  created: function() {
+      this.$log.debug('C2', 'created');
+  },
+  mounted: function() {
+      this.$log.debug('C2', 'mounted');
+  },
+  updated: function() {
+      this.$log.debug('C2', 'updated');
+  },
+  destroyed: function() {
+      this.$log.debug('C2', 'destroyed');
+  },
 }
 </script>
 
