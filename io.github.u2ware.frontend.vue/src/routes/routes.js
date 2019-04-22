@@ -169,6 +169,14 @@ export default [
       },
       component: () => import(/* webpackChunkName: "vuetify-layouts-sandbox" */ '../apps/demo/vuetify-layouts/components/sandbox.vue')
     },
+    {
+      path : '/vuetify-layouts/X1',
+      name: 'vuetify-layouts-X1',
+      meta: {
+        title: 'vuetify-layouts-X1'
+      },
+      component: () => import(/* webpackChunkName: "vuetify-layouts-X1" */ '../apps/demo/vuetify-layouts/components/X1.vue')
+    },
     
 
   ];

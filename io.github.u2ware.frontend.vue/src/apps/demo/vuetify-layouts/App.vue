@@ -10,6 +10,8 @@
     <h2><router-link to="/vuetify-layouts/googleKeep">googleKeep</router-link></h2>
     <h2><router-link to="/vuetify-layouts/googleYoutube">googleYoutube</router-link></h2>
     <h2><router-link to="/vuetify-layouts/sandbox">sandbox</router-link></h2>
+    <h1>Samples</h1>
+    <h2><router-link to="/vuetify-layouts/X1">X1</router-link></h2>
 </div>
 </template>
 
