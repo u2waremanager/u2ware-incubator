@@ -36,7 +36,7 @@
           <v-list-tile
             v-else
             :key="i"
-            @click=""
+            click=""
           >
             <v-list-tile-action>
               <v-icon>{{ item.icon }}</v-icon>
@@ -116,8 +116,8 @@
   }
 </script>
 
-<style lang="stylus">
-  #keep
+<style>
+  /* #keep
     .v-navigation-drawer__border
-      display: none
+      display: none */
 </style>

@@ -98,12 +98,44 @@ export default [
     ]
     },
     {
+      path : '/vuetify-layouts/baseline',
+      name: 'vuetify-layouts-baseline',
+      meta: {
+        title: 'vuetify-layouts-baseline'
+      },
+      component: () => import(/* webpackChunkName: "vuetify-layouts-baseline" */ '../apps/demo/vuetify-layouts/components/baseline.vue')
+    },
+    {
+      path : '/vuetify-layouts/baselineFlipped',
+      name: 'vuetify-layouts-baselineFlipped',
+      meta: {
+        title: 'vuetify-layouts-baselineFlipped'
+      },
+      component: () => import(/* webpackChunkName: "vuetify-layouts-baselineFlipped" */ '../apps/demo/vuetify-layouts/components/baselineFlipped.vue')
+    },
+    {
       path : '/vuetify-layouts/centered',
       name: 'vuetify-layouts-centered',
       meta: {
         title: 'vuetify-layouts-centered'
       },
       component: () => import(/* webpackChunkName: "vuetify-layouts-centered" */ '../apps/demo/vuetify-layouts/components/centered.vue')
+    },
+    {
+      path : '/vuetify-layouts/complex',
+      name: 'vuetify-layouts-complex',
+      meta: {
+        title: 'vuetify-layouts-complex'
+      },
+      component: () => import(/* webpackChunkName: "vuetify-layouts-complex" */ '../apps/demo/vuetify-layouts/components/complex.vue')
+    },
+    {
+      path : '/vuetify-layouts/dark',
+      name: 'vuetify-layouts-dark',
+      meta: {
+        title: 'vuetify-layouts-dark'
+      },
+      component: () => import(/* webpackChunkName: "vuetify-layouts-dark" */ '../apps/demo/vuetify-layouts/components/dark.vue')
     },
     {
       path : '/vuetify-layouts/googleContacts',
@@ -114,6 +146,22 @@ export default [
       component: () => import(/* webpackChunkName: "vuetify-layouts-googleContacts" */ '../apps/demo/vuetify-layouts/components/googleContacts.vue')
     },
     {
+      path : '/vuetify-layouts/googleYoutube',
+      name: 'vuetify-layouts-googleYoutube',
+      meta: {
+        title: 'vuetify-layouts-googleYoutube'
+      },
+      component: () => import(/* webpackChunkName: "vuetify-layouts-googleYoutube" */ '../apps/demo/vuetify-layouts/components/googleYoutube.vue')
+    },
+    {
+      path : '/vuetify-layouts/googleKeep',
+      name: 'vuetify-layouts-googleKeep',
+      meta: {
+        title: 'vuetify-layouts-googleKeep'
+      },
+      component: () => import(/* webpackChunkName: "vuetify-layouts-googleKeep" */ '../apps/demo/vuetify-layouts/components/googleKeep.vue')
+    },
+    {
       path : '/vuetify-layouts/sandbox',
       name: 'vuetify-layouts-sandbox',
       meta: {
@@ -122,4 +170,5 @@ export default [
       component: () => import(/* webpackChunkName: "vuetify-layouts-sandbox" */ '../apps/demo/vuetify-layouts/components/sandbox.vue')
     },
     
+
   ];
