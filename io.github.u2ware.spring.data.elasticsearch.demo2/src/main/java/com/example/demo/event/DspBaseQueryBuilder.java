@@ -55,7 +55,13 @@ public class DspBaseQueryBuilder {
 		TermsAggregationBuilder aggregation = AggregationBuilders.terms(field).field(field).size(Integer.MAX_VALUE);
 		return aggregation(aggregation);
 	}
+	
+	public DspBaseQueryBuilder aggregationTerms(String field, int size) {
+		TermsAggregationBuilder aggregation = AggregationBuilders.terms(field).field(field).size(size);
+		return aggregation(aggregation);
+	}
 
+	
 	public DspBaseQueryBuilder aggregationRange(String field, DateTimeRange... ranges) {
 		RangeAggregationBuilder aggregation = AggregationBuilders.range(field).field(field);
 		for(DateTimeRange range : ranges) {
