@@ -11,7 +11,7 @@ export default {
             this.$log.debug(this.$axios);
 
             this.$axios
-                .get('http://localhost:8080/persons')
+                .get('http://google.com')
                 .then((result) => {
                     this.$log.debug(result);
                 })
@@ -20,7 +20,7 @@ export default {
                 })
 
             this.$axios
-                .get('http://localhost:8080/persons2')
+                .get('http://sssss/persons2')
                 .then((result) => {
                     this.$log.debug(result);
                 })
