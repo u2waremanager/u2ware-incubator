@@ -10,9 +10,19 @@
 
 export default {
 
+  name : "C1",
   props: {
     foo: String,
     bar: String,
+  },
+  data: () => ({
+
+  }),
+  components: {
+    'C2' : C2
+  },
+  methods : {
+
   },
   created: function() {
       this.$log.debug('C2', 'created');
