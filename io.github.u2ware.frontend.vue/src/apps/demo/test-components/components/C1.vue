@@ -23,16 +23,16 @@ export default {
 
   },
   created: function() {
-      this.$log.debug('C1', 'created');
+      this.$log.debug(this.$options.name, 'created');
   },
   mounted: function() {
-      this.$log.debug('C1', 'mounted');
+      this.$log.debug(this.$options.name, 'mounted');
   },
   updated: function() {
-      this.$log.debug('C1', 'updated');
+      this.$log.debug(this.$options.name, 'updated');
   },
   destroyed: function() {
-      this.$log.debug('C1', 'destroyed');
+      this.$log.debug(this.$options.name, 'destroyed');
   },
 
 }
