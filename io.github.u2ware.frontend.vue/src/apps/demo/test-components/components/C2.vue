@@ -15,12 +15,11 @@ export default {
     foo: String,
     bar: String,
   },
+  components: {
+  },
   data: () => ({
 
   }),
-  components: {
-    'C2' : C2
-  },
   methods : {
 
   },

@@ -13,12 +13,15 @@ import C2 from './C2.vue'
 
 export default {
   name : "C1",
-  data: () => ({
-
-  }),
   components: {
     'C2' : C2
   },
+  props : {
+
+  },
+  data: () => ({
+
+  }),
   methods : {
 
   },
