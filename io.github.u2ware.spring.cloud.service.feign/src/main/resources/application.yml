@@ -1,0 +1,32 @@
+server:
+  port: 18081
+
+logging:
+  level:
+    com:
+      example:
+        demo: DEBUG
+
+
+management:
+  security:
+    enabled: false
+
+spring:
+  jpa:
+    show-sql: true
+
+feign:
+  client:
+    config: 
+      juso:
+        loggerLevel: full
+        url: http://www.juso.go.kr/addrlink/addrLinkApiJsonp.do
+        resultType: json
+        confmKey: TESTJUSOGOKR
+
+
+
+        # decoder: com.example.demo.juso.JusoClient#Response
+          
+
