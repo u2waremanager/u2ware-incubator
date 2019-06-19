@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Oauth2 Logon</title>
+
+  <link rel="stylesheet" href="/webjars/bootstrap/4.1.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/webjars/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/webjars/bulma/0.7.0/css/bulma.css">
+  <link rel="stylesheet" href="/webjars/bootstrap-social/5.0.0/bootstrap-social.css">
+  <style>
+    .btn-kakao {
+      color: #000;
+      background-color: #ff0;
+      border-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-kakao:focus, .btn-kakao.focus {
+      color: #000;
+      background-color: #ffff66;
+      border-color: rgba(0, 0, 0, 0.2)
+    }
+    .fa-kakao {
+      background: url("/images/kakaolink_btn_small.png")
+    }
+
+    .btn-naver {
+      color: #000;
+      background-color: #1EC800;
+      border-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-naver:focus, .btn-naver.focus {
+      color: #000;
+      background-color: #1EC800;
+      border-color: rgba(0, 0, 0, 0.2)
+    }
+    .fa-naver {
+      background: url("/images/naver_btn.png");
+      background-size: 36px;
+      width: 36px;
+      height: 36px;
+    }
+
+
+  </style>
+</head>
+<body>
+<section class="hero is-primary is-bold">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">
+        <i class="fa" aria-hidden="true"></i>&nbsp;Spring boot Oauth2 Logon
+      </h1>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <pre>{{client}}</pre>
+    <a class="btn btn-block btn-social" href="logout">
+      <span class="fa"></span> Sign Out
+    </a>
+  </div>
+</section>
+</body>
+</html>
