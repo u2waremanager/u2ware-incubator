@@ -12,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
@@ -58,8 +59,15 @@ public class HomeController {
         // map.from(null).to(null);
     }
 
-    @GetMapping("/user")
+    @GetMapping("/oAuth2User")
     public @ResponseBody OAuth2User user(@AuthenticationPrincipal OAuth2User oauth2User) {
         return oauth2User;
     }
+
+
+    @GetMapping("/oAuth2AuthorizedClient")
+	public @ResponseBody OAuth2AuthorizedClient index(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) {
+        return authorizedClient;
+	}
+
 }
