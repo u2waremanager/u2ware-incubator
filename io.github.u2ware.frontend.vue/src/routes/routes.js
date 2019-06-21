@@ -127,5 +127,18 @@ export default [
         component: () => import(/* webpackChunkName: "test-components-events" */ '../apps/demo/test-components-events/App.vue'),
     },
   
-    
+/*
+    {
+      path: '/:room/:username',
+      name: 'conference',
+      meta: {
+        title: 'Conference'
+      },
+      component: () => import(.....), 
+    }
+
+    // 
+    this.$route.params.room
+    this.$route.params.username
+*/    
 ]

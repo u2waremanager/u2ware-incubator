@@ -1,0 +1,44 @@
+{
+    "clientRegistration": {
+        "registrationId": "github",
+        "clientId": "1e23fd1ad849f81fa36f",
+        "clientSecret": "294feb7dacf8b317b36bb800b4be08675a5edaf1",
+        "clientAuthenticationMethod": {
+            "value": "basic"
+        },
+        "authorizationGrantType": {
+            "value": "authorization_code"
+        },
+        "redirectUriTemplate": "{baseUrl}/{action}/oauth2/code/{registrationId}",
+        "scopes": [
+            "read:user"
+        ],
+        "providerDetails": {
+            "authorizationUri": "https://github.com/login/oauth/authorize",
+            "tokenUri": "https://github.com/login/oauth/access_token",
+            "userInfoEndpoint": {
+                "uri": "https://api.github.com/user",
+                "authenticationMethod": {
+                    "value": "header"
+                },
+                "userNameAttributeName": "id"
+            },
+            "jwkSetUri": null,
+            "configurationMetadata": {}
+        },
+        "clientName": "GitHub"
+    },
+    "principalName": "1083091",
+    "accessToken": {
+        "tokenValue": "28ea330fa949bc4cfadd7748ed48c3eeeb878265",
+        "issuedAt": "2019-06-19T23:13:19.082Z",
+        "expiresAt": "2019-06-19T23:13:20.082Z",
+        "tokenType": {
+            "value": "Bearer"
+        },
+        "scopes": [
+            "read:user"
+        ]
+    },
+    "refreshToken": null
+}

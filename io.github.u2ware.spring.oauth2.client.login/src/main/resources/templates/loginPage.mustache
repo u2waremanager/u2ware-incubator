@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/webjars/bulma/0.7.0/css/bulma.css">
   <link rel="stylesheet" href="/webjars/bootstrap-social/5.0.0/bootstrap-social.css">
   <style>
+
     .btn-kakao {
       color: #000;
       background-color: #ff0;
@@ -26,13 +27,13 @@
     }
 
     .btn-naver {
-      color: #000;
+      color: #fff;
       background-color: #1EC800;
       border-color: rgba(0, 0, 0, 0.2);
     }
 
     .btn-naver:focus, .btn-naver.focus {
-      color: #000;
+      color: #fff;
       background-color: #1EC800;
       border-color: rgba(0, 0, 0, 0.2)
     }
@@ -59,8 +60,8 @@
 <section class="section">
   <div class="container">
     {{#registrations}}
-    <a class="btn btn-block btn-social btn-{{registrationId}}" href="/login/oauth2/authorization/{{registrationId}}">
-      <span class="fa fa-{{registrationId}}"></span>/login/oauth2/authorization/{{registrationId}}
+    <a class="btn btn-block btn-social btn-{{registrationId}}" href="/oauth2/authorization/{{registrationId}}">
+      <span class="fa fa-{{registrationId}}"></span>{{registrationId}}
     </a>
     {{/registrations}}
   </div>

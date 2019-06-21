@@ -1,0 +1,48 @@
+{
+    "clientRegistration": {
+        "registrationId": "kakao",
+        "clientId": "a7fbb91a35afeb826365068947c55c42",
+        "clientSecret": "L5TF5lTLhHRkjgf8BRrCZrukqL6WNItW",
+        "clientAuthenticationMethod": {
+            "value": "POST"
+        },
+        "authorizationGrantType": {
+            "value": "authorization_code"
+        },
+        "redirectUriTemplate": "{baseUrl}/login/oauth2/code/{registrationId}",
+        "scopes": [
+            "profile"
+        ],
+        "providerDetails": {
+            "authorizationUri": "https://kauth.kakao.com/oauth/authorize",
+            "tokenUri": "https://kauth.kakao.com/oauth/token",
+            "userInfoEndpoint": {
+                "uri": "https://kapi.kakao.com/v2/user/me",
+                "authenticationMethod": {
+                    "value": "header"
+                },
+                "userNameAttributeName": "id"
+            },
+            "jwkSetUri": null,
+            "configurationMetadata": {}
+        },
+        "clientName": "Kakao"
+    },
+    "principalName": "1081613344",
+    "accessToken": {
+        "tokenValue": "Lw-PNAC33llHJ5l78C66EpNWFwP1wUauymg7CAo9dRsAAAFrcgeLsQ",
+        "issuedAt": "2019-06-19T23:17:01.528Z",
+        "expiresAt": "2019-06-20T05:17:00.528Z",
+        "tokenType": {
+            "value": "Bearer"
+        },
+        "scopes": [
+            "profile"
+        ]
+    },
+    "refreshToken": {
+        "tokenValue": "3MQpI5xg-mXK7iypKri1vEp9FjBXHhw____gDQo9dRsAAAFrcgeLrw",
+        "issuedAt": "2019-06-19T23:17:01.528Z",
+        "expiresAt": null
+    }
+}

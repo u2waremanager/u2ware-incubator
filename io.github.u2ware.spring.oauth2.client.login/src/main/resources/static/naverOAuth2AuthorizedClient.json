@@ -1,0 +1,48 @@
+{
+    "clientRegistration": {
+        "registrationId": "naver",
+        "clientId": "oAAZUgI8RQCckk7KDaLC",
+        "clientSecret": "UkJyRionyy",
+        "clientAuthenticationMethod": {
+            "value": "POST"
+        },
+        "authorizationGrantType": {
+            "value": "authorization_code"
+        },
+        "redirectUriTemplate": "{baseUrl}/login/oauth2/code/{registrationId}",
+        "scopes": [
+            "profile"
+        ],
+        "providerDetails": {
+            "authorizationUri": "https://nid.naver.com/oauth2.0/authorize",
+            "tokenUri": "https://nid.naver.com/oauth2.0/token",
+            "userInfoEndpoint": {
+                "uri": "https://openapi.naver.com/v1/nid/me",
+                "authenticationMethod": {
+                    "value": "header"
+                },
+                "userNameAttributeName": "response"
+            },
+            "jwkSetUri": null,
+            "configurationMetadata": {}
+        },
+        "clientName": "Naver"
+    },
+    "principalName": "{id=39157432}",
+    "accessToken": {
+        "tokenValue": "AAAAO7d1dHFAYOaXXAdaIITGFatZCsosHDNDlFzLossuSRLk9gmrEbpaqYZ8jiZIlGuH_Mu_Y0B1rlJzVW26qZq2uX0",
+        "issuedAt": "2019-06-19T23:20:52.833Z",
+        "expiresAt": "2019-06-20T00:20:52.833Z",
+        "tokenType": {
+            "value": "Bearer"
+        },
+        "scopes": [
+            "profile"
+        ]
+    },
+    "refreshToken": {
+        "tokenValue": "CxmppDSOXCEis6DAUwiskVYljGvqnLsjipMipDO32X2SlDqis1TGLcJMhqWgZdKKbcvxafoXLfuistZBxJFH6C8Q3eZnW1ey7Ryl2q0CCpLmGeyu5zyrOasWrtPn0SsCjCtZdL",
+        "issuedAt": "2019-06-19T23:20:52.833Z",
+        "expiresAt": null
+    }
+}

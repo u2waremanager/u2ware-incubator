@@ -1,0 +1,22 @@
+{
+    "authorities": [
+        {
+            "authority": "ROLE_USER",
+            "attributes": {
+                "resultcode": "00",
+                "message": "success",
+                "response": {
+                    "id": "39157432"
+                }
+            }
+        }
+    ],
+    "attributes": {
+        "resultcode": "00",
+        "message": "success",
+        "response": {
+            "id": "39157432"
+        }
+    },
+    "name": "{id=39157432}"
+}

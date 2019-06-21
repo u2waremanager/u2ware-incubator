@@ -1,0 +1,24 @@
+{
+    "authorities": [
+        {
+            "authority": "ROLE_USER",
+            "attributes": {
+                "id": 1081613344,
+                "properties": {
+                    "nickname": "이광식",
+                    "profile_image": "http://k.kakaocdn.net/dn/LXd5f/btqu6NkCgf4/DjRWoMuTp9JUDSVkoFBS3K/profile_640x640s.jpg",
+                    "thumbnail_image": "http://k.kakaocdn.net/dn/LXd5f/btqu6NkCgf4/DjRWoMuTp9JUDSVkoFBS3K/profile_110x110c.jpg"
+                }
+            }
+        }
+    ],
+    "attributes": {
+        "id": 1081613344,
+        "properties": {
+            "nickname": "이광식",
+            "profile_image": "http://k.kakaocdn.net/dn/LXd5f/btqu6NkCgf4/DjRWoMuTp9JUDSVkoFBS3K/profile_640x640s.jpg",
+            "thumbnail_image": "http://k.kakaocdn.net/dn/LXd5f/btqu6NkCgf4/DjRWoMuTp9JUDSVkoFBS3K/profile_110x110c.jpg"
+        }
+    },
+    "name": "1081613344"
+}

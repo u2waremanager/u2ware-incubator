@@ -1,0 +1,48 @@
+{
+    "clientRegistration": {
+        "registrationId": "google",
+        "clientId": "959686615396-k5ac9n5gfu1upq93fh2nnsnni7mgcenn.apps.googleusercontent.com",
+        "clientSecret": "JiWhVs53VnJMFmq1u_R_HJMX",
+        "clientAuthenticationMethod": {
+            "value": "basic"
+        },
+        "authorizationGrantType": {
+            "value": "authorization_code"
+        },
+        "redirectUriTemplate": "{baseUrl}/{action}/oauth2/code/{registrationId}",
+        "scopes": [
+            "openid",
+            "profile",
+            "email"
+        ],
+        "providerDetails": {
+            "authorizationUri": "https://accounts.google.com/o/oauth2/v2/auth",
+            "tokenUri": "https://www.googleapis.com/oauth2/v4/token",
+            "userInfoEndpoint": {
+                "uri": "https://www.googleapis.com/oauth2/v3/userinfo",
+                "authenticationMethod": {
+                    "value": "header"
+                },
+                "userNameAttributeName": "sub"
+            },
+            "jwkSetUri": "https://www.googleapis.com/oauth2/v3/certs",
+            "configurationMetadata": {}
+        },
+        "clientName": "Google"
+    },
+    "principalName": "111259631023998625968",
+    "accessToken": {
+        "tokenValue": "ya29.GlwtB56cJeroHFPasM9iMjmCyXVuRx-XhERXTgp5QoHsDER9ohrMy6RiIm4G7sHu_3m0LNbRNG3Jfj8qTYBi48qmO2Q8LyjlDhVwkZrqF5MdKY1V0_D40wwCR-0hpw",
+        "issuedAt": "2019-06-19T23:09:19.686Z",
+        "expiresAt": "2019-06-20T00:09:18.686Z",
+        "tokenType": {
+            "value": "Bearer"
+        },
+        "scopes": [
+            "https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/userinfo.email",
+            "openid"
+        ]
+    },
+    "refreshToken": null
+}

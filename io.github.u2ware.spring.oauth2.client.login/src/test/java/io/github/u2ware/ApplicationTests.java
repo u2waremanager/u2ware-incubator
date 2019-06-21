@@ -199,6 +199,9 @@ public class ApplicationTests {
         logger.info(facebookClientAuthorizeUri);
         logger.info(kakaoClientAuthorizeUri);
         logger.info(naverClientAuthorizeUri);
+
+
+
         
 	}
 
@@ -219,7 +222,15 @@ public class ApplicationTests {
 		int expectedClients = 0;
         if(ClassUtils.isAssignableValue(InMemoryClientRegistrationRepository.class, clientRegistrationRepository)){
         	InMemoryClientRegistrationRepository r = (InMemoryClientRegistrationRepository)clientRegistrationRepository;
-        	expectedClients = (int)StreamSupport.stream(r.spliterator(), false).count();
+            expectedClients = (int)StreamSupport.stream(r.spliterator(), false).count();
+            
+        // InMemoryClientRegistrationRepository rr = (InMemoryClientRegistrationRepository)this.clientRegistrationRepository;
+        // List<ClientRegistration> registrations = StreamSupport
+        // .stream(clientRegistrationRepository.spliterator(), true)
+        // // .map(clientRegistration -> new Registration(clientRegistration))
+        // .collect(Collectors.toList());
+
+
         }
 		assertThat(clientAnchorElements.size()).isEqualTo(expectedClients);
 
