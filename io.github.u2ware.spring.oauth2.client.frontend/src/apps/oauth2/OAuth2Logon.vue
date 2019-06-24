@@ -16,7 +16,9 @@
 export default {
     name : 'Oauth2Intro',
     data: () => ({
-        auth  : null
+        auth  : null,
+        // auth2Server  : 'http://localhost:9092',
+        auth2Server  : 'http://devapi.hi-class.io:19081',
     }),
     methods : {
 
@@ -25,8 +27,7 @@ export default {
 
             this.$axios({
                 method : 'get',
-                //url : 'http://localhost:9092/index',
-                url : 'http://localhost:9091/logout/'+localStorage.clientRegistrationId,
+                url : this.auth2Server + '/logout/'+localStorage.clientRegistrationId,
                 headers : {
                     'Authorization': localStorage.principalName
                 }
@@ -39,15 +40,13 @@ export default {
                 this.auth = error;
             })
 
-
         },
         info(){
             this.$log.debug(this.$options.name, 'info');
 
             this.$axios({
                 method : 'get',
-                //url : 'http://localhost:9092/index',
-                url : 'http://localhost:9091/info/'+localStorage.clientRegistrationId,
+                url : this.auth2Server + '/info/'+localStorage.clientRegistrationId,
                 headers : {
                     'Authorization': localStorage.principalName
                 }

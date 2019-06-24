@@ -24,7 +24,6 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
-import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -36,6 +35,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponents;
@@ -83,6 +83,7 @@ public class SecurityController {
             throws Exception{
 
         if(StringUtils.hasText(callback)){
+            logger.info("callback: "+callback);
             request.getSession().setAttribute(getClass().getName(), callback);
         }
 
@@ -100,6 +101,12 @@ public class SecurityController {
             throws Exception{
 
         clientService.removeAuthorizedClient(clientRegistrationId, principalName);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @RequestMapping(value="/info/{clientRegistrationId}", method = RequestMethod.OPTIONS)
+    public ResponseEntity<?> info(){
         return ResponseEntity.ok().build();
     }
 
@@ -132,6 +139,7 @@ public class SecurityController {
             throws Exception {
 
         Object callback = request.getSession().getAttribute(getClass().getName());
+        logger.info("callback: "+callback);
         if(StringUtils.isEmpty(callback)){
             return home(model);
         }
