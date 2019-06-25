@@ -57,8 +57,8 @@ export default {
     data: () => ({
         isAuthenticated : false,
         message : null,
-        // auth2Server  : 'http://localhost:9091',
-        auth2Server  : 'http://devapi.hi-class.io:19081',
+        auth2Server  : 'http://localhost:9091',
+        // auth2Server  : 'http://devapi.hi-class.io:19081',
         callback : 'http://localhost:8080/callback',
     }),
 

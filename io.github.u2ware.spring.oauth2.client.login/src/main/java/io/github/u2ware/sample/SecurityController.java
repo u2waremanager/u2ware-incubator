@@ -15,7 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -23,7 +22,6 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -31,104 +29,43 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import io.github.u2ware.sample.SecurityConfig.XOAuth2AuthorizedClientRepository;
+import io.github.u2ware.sample.SecurityConfig.XOAuth2AuthorizedClientService;
 
 @Controller
 public class SecurityController {
 
     protected Log logger = LogFactory.getLog(getClass());
 
-
-    @Autowired
-    private ClientRegistrationRepository clientRegistrationRepository;
-
-    @Autowired
-    private OAuth2AuthorizedClientRepository clientRepository;
-
-    @Autowired
-    private OAuth2AuthorizedClientService clientService;
-
+    private @Autowired ClientRegistrationRepository clientRegistrationRepository;
+    private @Autowired XOAuth2AuthorizedClientRepository clientRepository; 
+    private @Autowired XOAuth2AuthorizedClientService clientService; 
     private DefaultOAuth2UserService userService = new DefaultOAuth2UserService();
 
-
-
-    @GetMapping("/login")
+    @RequestMapping("/login")
     public String home(Model model) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getClass().isAssignableFrom(OAuth2AuthenticationToken.class)) {
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
             model.addAttribute("oauthToken", oauthToken);
+            model.addAttribute("clientService", clientService.getAll().values());
             return "logonPage";
 
         } else {
             model.addAttribute("registrations", clientRegistrationRepository);
+            model.addAttribute("clientService", clientService.getAll().values());
             return "loginPage";
         }
     }
-
-    @GetMapping(value = "/login/{clientRegistrationId}")
-    public String login(
-            HttpServletRequest request, 
-            @PathVariable("clientRegistrationId") String clientRegistrationId,
-            @RequestParam(value = "callback", required = false) String callback) 
-            throws Exception{
-
-        if(StringUtils.hasText(callback)){
-            logger.info("callback: "+callback);
-            request.getSession().setAttribute(getClass().getName(), callback);
-        }
-
-        UriComponents redirect = UriComponentsBuilder
-            .fromPath(OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI)
-            .pathSegment(clientRegistrationId).build();
-        logger.info(redirect);
-        return "redirect:" + redirect;
-    }
-
-    @GetMapping(value="/logout/{clientRegistrationId}")
-    public @ResponseBody ResponseEntity<Object> logoff(
-            @RequestHeader("Authorization") String principalName, 
-            @PathVariable("clientRegistrationId")String clientRegistrationId) 
-            throws Exception{
-
-        clientService.removeAuthorizedClient(clientRegistrationId, principalName);
-        return ResponseEntity.ok().build();
-    }
-
-
-    @RequestMapping(value="/info/{clientRegistrationId}", method = RequestMethod.OPTIONS)
-    public ResponseEntity<?> info(){
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping(value="/info/{clientRegistrationId}")
-    public @ResponseBody ResponseEntity<Object> info(
-            @RequestHeader("Authorization") String principalName, 
-            @PathVariable("clientRegistrationId")String clientRegistrationId) 
-            throws Exception {
-
-        ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId(clientRegistrationId);
-        OAuth2AuthorizedClient authorizedClient = clientService.loadAuthorizedClient(clientRegistrationId, principalName);
-        if(authorizedClient == null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        OAuth2AccessToken accessToken = authorizedClient.getAccessToken();
-        OAuth2UserRequest userRequest = new OAuth2UserRequest(clientRegistration, accessToken);
-        OAuth2User oauth2User = userService.loadUser(userRequest);
-        
-        return ResponseEntity.ok(oauth2User);
-    }
-
 
     @RequestMapping(value = "/logon")
     public String logon(
@@ -139,7 +76,6 @@ public class SecurityController {
             throws Exception {
 
         Object callback = request.getSession().getAttribute(getClass().getName());
-        logger.info("callback: "+callback);
         if(StringUtils.isEmpty(callback)){
             return home(model);
         }
@@ -168,21 +104,75 @@ public class SecurityController {
         return "redirect:" + redirect;
     }
 
+    @RequestMapping(value = "/login/{clientRegistrationId}")
+    public String login(
+            HttpServletRequest request, 
+            @PathVariable("clientRegistrationId") String clientRegistrationId,
+            @RequestParam(value = "callback", required = false) String callback) 
+            throws Exception{
+
+        if(StringUtils.hasText(callback)){
+            request.getSession().setAttribute(getClass().getName(), callback);
+        }
+
+        UriComponents redirect = UriComponentsBuilder
+            .fromPath(OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI)
+            .pathSegment(clientRegistrationId).build();
+        logger.info("/login/"+clientRegistrationId +" ["+callback+"]");
+        return "redirect:" + redirect;
+    }
+
+    @RequestMapping(value="/logout/{clientRegistrationId}")
+    public @ResponseBody ResponseEntity<Object> logout(
+            @RequestHeader("Authorization") String principalName, 
+            @PathVariable("clientRegistrationId")String clientRegistrationId) 
+            throws Exception{
+
+        logger.info("/logout/"+clientRegistrationId +" ["+principalName+"]");
+        clientService.removeAuthorizedClient(clientRegistrationId, principalName);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @RequestMapping(value="/info/{clientRegistrationId}")
+    public @ResponseBody ResponseEntity<Object> info(
+            @RequestHeader("Authorization") String principalName, 
+            @PathVariable("clientRegistrationId")String clientRegistrationId) 
+            throws Exception {
+
+        ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId(clientRegistrationId);
+        OAuth2AuthorizedClient authorizedClient = clientService.loadAuthorizedClient(clientRegistrationId, principalName);
+        if(authorizedClient == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        OAuth2AccessToken accessToken = authorizedClient.getAccessToken();
+        OAuth2UserRequest userRequest = new OAuth2UserRequest(clientRegistration, accessToken);
+        OAuth2User oauth2User = userService.loadUser(userRequest);
+
+        logger.info("/info/"+clientRegistrationId +" ["+principalName+"]");
+        return ResponseEntity.ok(oauth2User);
+    }
     
     ////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////
-    @GetMapping(value="/oauth2/user")
+    @RequestMapping(value="/info")
+    public @ResponseBody ResponseEntity<Object> info()throws Exception {
+        return ResponseEntity.ok(clientService.getAll().values());
+    }
+    
+    @RequestMapping(value="/oauth2/user")
     public @ResponseBody OAuth2User oauth2User(@AuthenticationPrincipal OAuth2User oauth2User) {
         return oauth2User;
     }
 
-    @GetMapping(value="/oauth2/authorizedClient")
+    @RequestMapping(value="/oauth2/authorizedClient")
     public @ResponseBody OAuth2AuthorizedClient oauth2User(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient){
         return authorizedClient;
     }
 
-    @GetMapping(value="/oauth2")
+    @RequestMapping(value="/oauth2")
     public @ResponseBody Map<String,Object> oauth2User() {
 
         Map<String,Object> contents = new HashMap<>();
