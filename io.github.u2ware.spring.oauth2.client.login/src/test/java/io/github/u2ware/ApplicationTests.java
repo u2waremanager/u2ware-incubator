@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.URI;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,10 +23,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationExchange;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationResponseType;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.ClassUtils;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -40,7 +43,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 @AutoConfigureMockMvc
 public class ApplicationTests {
 
-	private static final String AUTHORIZATION_BASE_URI = "/login/oauth2/authorization";
+	private static final String AUTHORIZATION_BASE_URI = "/oauth2/authorization";
 	private static final String AUTHORIZE_BASE_URL = "http://localhost:8080/login/oauth2/code";
 
     private Log logger = LogFactory.getLog(getClass());
@@ -48,6 +51,10 @@ public class ApplicationTests {
 	@Autowired
 	private WebClient webClient;
 
+	@Autowired
+	private WebApplicationContext applicationContext;
+	
+	
 	@Autowired
 	private ClientRegistrationRepository clientRegistrationRepository;
 
@@ -83,6 +90,36 @@ public class ApplicationTests {
         assertWhenLinkClickedThenStatusRedirectForAuthorization(page, githubClientRegistration);
         assertWhenLinkClickedThenStatusRedirectForAuthorization(page, kakaoClientRegistration);
         assertWhenLinkClickedThenStatusRedirectForAuthorization(page, naverClientRegistration);
+        
+        
+        //OAuth2ClientConfiguration d;
+        
+        Arrays.stream(applicationContext.getBeanDefinitionNames()).sorted().forEach(n-> {
+        	
+        	//String type = 
+        	String type = applicationContext.getType(n).getName();
+        	if(type.startsWith("org.springframework.security")|| type.startsWith("io.github.u2ware")) {
+            	logger.info(n+"="+type);
+        	}
+        });
+        
+        logger.info(applicationContext.getBeanNamesForType(OAuth2AuthorizationExchange.class).length);
+        
+        
+//
+//        OAuth2AccessTokenResponseClient accessTokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
+//
+//        // new OAuth2AuthorizationExchange(authorizationRequest, authorizationResponse);
+//
+//        OAuth2AuthorizationCodeGrantRequest authorizationGrantRequest = new OAuth2AuthorizationCodeGrantRequest(clientRegistration, null);
+//        OAuth2AccessTokenResponse accessTokenResponse = accessTokenResponseClient.getTokenResponse(authorizationGrantRequest);
+
+        
+        
+        
+        
+        
+        
         
 	}
 	

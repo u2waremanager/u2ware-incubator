@@ -150,8 +150,40 @@ public class SecurityController {
         OAuth2UserRequest userRequest = new OAuth2UserRequest(clientRegistration, accessToken);
         OAuth2User oauth2User = userService.loadUser(userRequest);
 
+//        try{
+//            OAuth2LoginAuthenticationFilter s1 = new OAuth2LoginAuthenticationFilter(clientRegistrationRepository, clientService);
+//            //(XAuthorizationRequestRepository.get)
+//            OAuth2LoginAuthenticationProvider s2; //(XOAuth2AuthorizedClientRepository.save)
+//            OidcAuthorizationCodeAuthenticationProvider s3;
+//            HttpSessionSecurityContextRepository s;
+//            OidcUserService oidcUserService = new OidcUserService();
+//            
+//            // private OidcUserService userService = new DefaultOAuth2UserService();
+//            // boolean oidcAuthenticationProviderEnabled = ClassUtils.isPresent("org.springframework.security.oauth2.jwt.JwtDecoder", this.getClass().getClassLoader());
+//
+//
+//            OAuth2AuthorizationRequest authorizationRequest = null;
+//            OAuth2AuthorizationResponse authorizationResponse = null;
+//            OAuth2AuthorizationExchange authorizationExchange = new OAuth2AuthorizationExchange(authorizationRequest, authorizationResponse);
+//            OAuth2AuthorizationCodeGrantRequest authorizationGrantRequest = new OAuth2AuthorizationCodeGrantRequest(clientRegistration, authorizationExchange);
+//            
+//            DefaultAuthorizationCodeTokenResponseClient accessTokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
+//            OAuth2AccessTokenResponse accessTokenResponse = accessTokenResponseClient.getTokenResponse(authorizationGrantRequest);
+//
+//
+//             OidcIdToken idToken = null;
+//             OidcUserRequest r = new OidcUserRequest(clientRegistration, accessToken, idToken);
+//             OidcUser oidcUser = oidcUserService.loadUser(r);
+//
+//        }catch(Exception e){
+//
+//        }
+        
         logger.info("/info/"+clientRegistrationId +" ["+principalName+"]");
-        return ResponseEntity.ok(oauth2User);
+        Map<String,Object> content = new HashMap<>();
+        content.put(OAuth2AuthorizedClient.class.getName(), authorizedClient);
+        content.put(OAuth2User.class.getName(), oauth2User);
+        return ResponseEntity.ok(content);
     }
     
     ////////////////////////////////////////////////////////////

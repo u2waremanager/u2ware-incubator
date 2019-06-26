@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -224,9 +223,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         public <T extends OAuth2AuthorizedClient> T loadAuthorizedClient(String clientRegistrationId, Authentication principal,
                                                                             HttpServletRequest request) {
             if (this.isPrincipalAuthenticated(principal)) {
-                this.print("loadAuthorizedClient ");                                                                    
+                this.print("loadAuthorizedClient 1 "+principal);                                                                    
                 return this.authorizedClientService.loadAuthorizedClient(clientRegistrationId, principal.getName());
             } else {
+                this.print("loadAuthorizedClient 2 "+principal);
                 return this.anonymousAuthorizedClientRepository.loadAuthorizedClient(clientRegistrationId, principal, request);
             }
         }
@@ -235,9 +235,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         public void saveAuthorizedClient(OAuth2AuthorizedClient authorizedClient, Authentication principal,
                                             HttpServletRequest request, HttpServletResponse response) {
             if (this.isPrincipalAuthenticated(principal)) {
-                this.print("saveAuthorizedClient ");                                                                    
+                this.print("saveAuthorizedClient 1");
                 this.authorizedClientService.saveAuthorizedClient(authorizedClient, principal);
             } else {
+                this.print("saveAuthorizedClient 2");                                                                    
                 this.anonymousAuthorizedClientRepository.saveAuthorizedClient(authorizedClient, principal, request, response);
             }
         }
@@ -246,9 +247,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         public void removeAuthorizedClient(String clientRegistrationId, Authentication principal,
                                             HttpServletRequest request, HttpServletResponse response) {
             if (this.isPrincipalAuthenticated(principal)) {
-                this.print("removeAuthorizedClient ");
+                this.print("removeAuthorizedClient 1");
                 this.authorizedClientService.removeAuthorizedClient(clientRegistrationId, principal.getName());
             } else {
+                this.print("removeAuthorizedClient 2");
                 this.anonymousAuthorizedClientRepository.removeAuthorizedClient(clientRegistrationId, principal, request, response);
             }
         }
