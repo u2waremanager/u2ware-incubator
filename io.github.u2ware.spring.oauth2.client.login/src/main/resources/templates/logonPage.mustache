@@ -59,12 +59,14 @@
 <section class="section">
   <div class="container">
     <pre>{{oauthToken}}</pre>
+    <a class="btn btn-block btn-social" href="info/{{oauthToken.authorizedClientRegistrationId}}/{{oauthToken.name}}">
+      <span class="fa"></span> User Info
+    </a>
+
     <a class="btn btn-block btn-social" href="logout">
       <span class="fa"></span> Sign Out
     </a>
-    {{#clientService}}
-      <span >{{principalName}}</span>
-    {{/clientService}}
+
 
   </div>
 </section>
