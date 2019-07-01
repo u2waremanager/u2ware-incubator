@@ -83,7 +83,6 @@ public class ApplicationTests {
         
         HtmlPage page = this.webClient.getPage("/");
         assertLoginPage(page);
-
         
         //
         assertWhenLinkClickedThenStatusRedirectForAuthorization(page, googleClientRegistration);
@@ -92,8 +91,9 @@ public class ApplicationTests {
         assertWhenLinkClickedThenStatusRedirectForAuthorization(page, naverClientRegistration);
         
         
-        //OAuth2ClientConfiguration d;
-        
+        //////////////////////////////////////////////////////
+        //
+        /////////////////////////////////////////////////////
         Arrays.stream(applicationContext.getBeanDefinitionNames()).sorted().forEach(n-> {
         	
         	//String type = 
@@ -286,17 +286,17 @@ public class ApplicationTests {
 		String kakaoClientAuthorizeUri = baseAuthorizeUri + kakaoClientRegistration.getRegistrationId();
 		String naverClientAuthorizeUri = baseAuthorizeUri + naverClientRegistration.getRegistrationId();
         
-		 for (int i=0; i<expectedClients; i++) {
-		 	assertThat(
-		 		clientAnchorElements.get(i).getHrefAttribute()
-		 	).isIn(
-		 		googleClientAuthorizeUri 
-		 		,githubClientAuthorizeUri
-		 		,facebookClientAuthorizeUri 
+//		 for (int i=0; i<expectedClients; i++) {
+//		 	assertThat(
+//		 		clientAnchorElements.get(i).getHrefAttribute()
+//		 	).isIn(
+//		 		googleClientAuthorizeUri 
+//		 		,githubClientAuthorizeUri
+//		 		,facebookClientAuthorizeUri 
 //		 		,oktaClientAuthorizeUri
-		 		,kakaoClientAuthorizeUri 
-		 		,naverClientAuthorizeUri 
-		 	);
+//		 		,kakaoClientAuthorizeUri 
+//		 		,naverClientAuthorizeUri 
+//		 	);
 //		 	assertThat(
 //		 		clientAnchorElements.get(2).asText()
 //		 	).isIn(
@@ -307,7 +307,7 @@ public class ApplicationTests {
 //		 		,kakaoClientRegistration.getClientName()
 //		 		,naverClientRegistration.getClientName()
 //		 	);
-		 }
+//		 }
 	}
 
 }

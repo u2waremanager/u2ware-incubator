@@ -72,44 +72,9 @@ public class SecurityController {
             @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient)
             throws Exception {
 
-        // OAuth2LoginAuthenticationFilter f;
-
-        // https://accounts.google.com/o/oauth2/v2/auth
-        // ?response_type=code
-        // &client_id=959686615396-k5ac9n5gfu1upq93fh2nnsnni7mgcenn.apps.googleusercontent.com
-        // &scope=openid%20profile%20email
-        // &state=ef6gM7W6z8i9RaHLmT_oh7n2Oa1x2yBqntc_s0zeN8w%3D
-        // &redirect_uri=http://localhost:9091/login/oauth2/code/google
-
-        // /login/oauth2/code/google
-        // ?state=fY953hChNHE54XxL1YI8j6DeDRWn9yDcaLfAukjCzqM%3D
-        // &code=4%2FdAEwrFKA64l9c6ni8S1bgWFb3v-bNTaBs7-pn0jDskxGoMgLtJCb8bnUE6KMHWBl7Q50iwftkVkpj6nkJLWOQ48
-        // &scope=email+profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email
-        // &authuser=1
-        // &session_state=28e42d0dd906f3c1da51715e1a50c05c3ca66b98..1a9f
-        // &prompt=consent
-
-
-        // http://localhost:9093/oauth/authorize
-        // ?response_type=code
-        // &client_id=myOauth2
-        // &scope=profile
-        // &state=0d_A4iaHlCst2DNThznSLu80F0LQ_nB0HzuO5qeLqTk%3D
-        // &redirect_uri=http://localhost:9091/login/oauth2/code/myOauth2
-
-        // /login/oauth2/code/myOauth2
-        // ?code=D8T4FC&state=msYCTVGyiTvo9zroHIbF9WADghgkBGVR9_q1BEm8Gi4%3D 
-        
-
-
-
         logger.info("/logon");
         logger.info("/logon");
         logger.info("/logon");
-        logger.info("/logon");
-        logger.info("/logon");
-        logger.info("/logon");
-
 
         Object callback = request.getSession().getAttribute(getClass().getName());
         if(StringUtils.isEmpty(callback)){
@@ -158,6 +123,10 @@ public class SecurityController {
         return "redirect:" + redirect;
     }
 
+    
+    //////////////////////////////////////////////////////////////////
+    //
+    ///////////////////////////////////////////////////////////////////
     @RequestMapping(value="/logout/{clientRegistrationId}")
     public @ResponseBody ResponseEntity<Object> logout(
             @RequestHeader("Authorization") String principalName, 
@@ -175,13 +144,13 @@ public class SecurityController {
             @PathVariable("clientRegistrationId")String clientRegistrationId) 
             throws Exception {
             
-        return info(principalName, clientRegistrationId);
+        return info1(principalName, clientRegistrationId);
     }
 
 
 
     @RequestMapping(value="/info/{clientRegistrationId}")
-    public @ResponseBody ResponseEntity<Object> info(
+    public @ResponseBody ResponseEntity<Object> info1(
             @RequestHeader("Authorization") String principalName, 
             @PathVariable("clientRegistrationId")String clientRegistrationId) 
             throws Exception {
