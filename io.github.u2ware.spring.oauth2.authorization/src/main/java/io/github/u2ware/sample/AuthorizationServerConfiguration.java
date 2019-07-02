@@ -98,11 +98,12 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
-		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-		converter.setKeyPair(this.keyPair);
 
 		DefaultAccessTokenConverter accessTokenConverter = new DefaultAccessTokenConverter();
 		accessTokenConverter.setUserTokenConverter(new SubjectAttributeUserTokenConverter());
+		
+		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+		converter.setKeyPair(this.keyPair);
 		converter.setAccessTokenConverter(accessTokenConverter);
 
 		return converter;
