@@ -1,4 +1,4 @@
-package io.github.u2ware.spring.oauth2.authorizationserver;
+package io.github.u2ware;
 
 //import static org.springframework.security.test.
 
@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
 
@@ -17,16 +18,19 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.oauth2.common.util.JacksonJsonParser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
-import io.github.u2ware.spring.oauth2.authorizationserver.config.AuthorizationServerConfig;
-import io.github.u2ware.spring.oauth2.authorizationserver.config.WebSecurityConfig;
+import io.github.u2ware.sample.AuthorizationServerConfiguration;
+import io.github.u2ware.sample.UserDetailsServices;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -54,43 +58,45 @@ public class ApplicationTests {
         	}
         });
 		
+        logger.info(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("password"));
+        
+        logger.info(new BCryptPasswordEncoder().encode("password"));
+        
+        
 		
-		
-		
-//        logger.info(username);
-//        logger.info(password);
-//        logger.info(CLIENT_ID);
-//        logger.info(CLIENT_SECRET);
-//
+        RequestPostProcessor with = httpBasic(AuthorizationServerConfiguration.CLIENT_ID, AuthorizationServerConfiguration.CLIENT_SECRET);
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "password");
-        params.add("username", WebSecurityConfig.USERNAME);
-        params.add("password", WebSecurityConfig.PASSWORD);
-//        params.add("client_id", AuthorizationServerConfig.CLIENT_ID); //foo
-//        params.add("scope", "message:read"); //read
+        params.add("username", UserDetailsServices.USERNAME);
+        params.add("password", UserDetailsServices.PASSWORD);
     
-        ResultActions result
-                = mockMvc.perform(post("/oauth/token")
-                .params(params)
-                .with(httpBasic(AuthorizationServerConfig.CLIENT_ID, AuthorizationServerConfig.CLIENT_SECRET)) //foo, bar
-                .accept("application/json;charset=UTF-8")) //"application/json;charset=UTF-8"
-                .andDo(print())
-                // .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"));//"application/json;charset=UTF-8"
+        ResultActions result = mockMvc.perform(
+        		post("/oauth/token")
+	                .params(params)
+	                .with(with) 
+	                .accept("application/json;charset=UTF-8")
+                ).andExpect(
+                	status().isOk()
+                ).andExpect(
+                	content().contentType("application/json;charset=UTF-8")
+                ).andDo(print());
     
         String resultString = result.andReturn().getResponse().getContentAsString();
         JacksonJsonParser jsonParser = new JacksonJsonParser();
         String accessToken = jsonParser.parseMap(resultString).get("access_token").toString();
         logger.info(accessToken);
         
-        
-        mockMvc.perform(get("/oauth/check_token")
-        		.param("token", accessToken)
-        ).andDo(print());
-        
 
-        mockMvc.perform(get("/oauth/info")
-        		.header("Authorization", "Bearer "+accessToken)
-        ).andDo(print());
+        //////////////////////////////////////////////
+        //
+        //////////////////////////////////////////////
+        mockMvc.perform(get("/oauth/check_token").param("token", accessToken)).andExpect(status().is4xxClientError()).andDo(print());
+        mockMvc.perform(get("/oauth/check_token").with(with)).andExpect(status().is4xxClientError()).andDo(print());
+        mockMvc.perform(get("/oauth/check_token").with(with).param("token", accessToken)).andExpect(status().is2xxSuccessful()).andDo(print());
+
+        mockMvc.perform(get("/login")).andExpect(status().is2xxSuccessful()).andDo(print());
+        
+        mockMvc.perform(get("/oauth/user")).andExpect(status().is4xxClientError()).andDo(print());
+        mockMvc.perform(get("/oauth/user").header("Authorization", "Bearer "+accessToken)).andExpect(status().is2xxSuccessful()).andDo(print());
 	}
 }

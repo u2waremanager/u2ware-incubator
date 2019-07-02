@@ -1,5 +1,7 @@
 package io.github.u2ware.spring.oauth2.resource.sample;
 
+import java.security.Principal;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.Authentication;
@@ -43,5 +45,10 @@ public class HomeController {
         }
         return "";
     }
+
+	@GetMapping("/resource/info")
+	public Principal user(Principal user) {
+		return user;
+	}	
 
 }
