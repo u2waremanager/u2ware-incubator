@@ -20,13 +20,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @FrameworkEndpoint
-public class AuthorizationServerUserInfoEndpoint extends BearerTokenExtractor{
+public class BearerTokenEndpoint extends BearerTokenExtractor{
 
+        
 	protected Log logger = LogFactory.getLog(getClass());
 
 	private TokenStore tokenStore;
 	
-	public AuthorizationServerUserInfoEndpoint(TokenStore tokenStore) {
+	public BearerTokenEndpoint(TokenStore tokenStore) {
 		this.tokenStore = tokenStore;
 	}
 
