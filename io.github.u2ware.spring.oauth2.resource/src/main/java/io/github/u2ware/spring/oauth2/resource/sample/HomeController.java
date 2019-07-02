@@ -5,9 +5,7 @@ import java.security.Principal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Controller;
@@ -24,6 +22,10 @@ public class HomeController {
     public @ResponseBody String resource() {
         return "resource: " + System.currentTimeMillis();
     }
+	@GetMapping("/resource/info")
+	public Principal user(Principal user) {
+		return user;
+	}	
 
     @GetMapping("/index")
     public @ResponseBody Object index() {
@@ -46,9 +48,5 @@ public class HomeController {
         return "";
     }
 
-	@GetMapping("/resource/info")
-	public Principal user(Principal user) {
-		return user;
-	}	
 
 }
