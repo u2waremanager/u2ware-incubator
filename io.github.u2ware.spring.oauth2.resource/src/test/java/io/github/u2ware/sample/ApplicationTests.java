@@ -1,4 +1,4 @@
-package io.github.u2ware.spring.oauth2.resourceserver;
+package io.github.u2ware.sample;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
