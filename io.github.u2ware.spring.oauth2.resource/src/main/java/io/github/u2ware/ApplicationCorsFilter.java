@@ -1,4 +1,4 @@
-package io.github.u2ware.spring.oauth2.resource.sample;
+package io.github.u2ware;
 
 import java.io.IOException;
 
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class CorsFilter implements Filter {
+public class ApplicationCorsFilter implements Filter {
 
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {

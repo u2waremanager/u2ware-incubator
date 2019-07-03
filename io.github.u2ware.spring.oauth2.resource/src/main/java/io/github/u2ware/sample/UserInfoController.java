@@ -1,4 +1,4 @@
-package io.github.u2ware.spring.oauth2.resource.sample;
+package io.github.u2ware.sample;
 
 import java.security.Principal;
 
@@ -14,21 +14,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class HomeController {
+public class UserInfoController {
 
     private Log logger = LogFactory.getLog(getClass());
 
-    @RequestMapping("/resource")
-    public @ResponseBody String resource() {
-        return "resource: " + System.currentTimeMillis();
-    }
 
-	@GetMapping("/resource/info")
+	@GetMapping("/user/info")
 	public @ResponseBody Principal user(Principal user) {
 		return user;
 	}	
 
-    @GetMapping("/index")
+    @GetMapping("/")
     public @ResponseBody Object index() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -50,4 +46,9 @@ public class HomeController {
     }
 
 
+    @RequestMapping("/hello")
+    public @ResponseBody String hello() {
+        return "hello: " + System.currentTimeMillis();
+    }
+    
 }

@@ -20,19 +20,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @FrameworkEndpoint
-public class BearerTokenEndpoint extends BearerTokenExtractor{
+public class UserInfoEndpoint extends BearerTokenExtractor{
 
+	public static final String PATH = "/user/info";
         
 	protected Log logger = LogFactory.getLog(getClass());
 
 	private TokenStore tokenStore;
 	
-	public BearerTokenEndpoint(TokenStore tokenStore) {
+	public UserInfoEndpoint(TokenStore tokenStore) {
 		this.tokenStore = tokenStore;
 	}
 
 	
-    @GetMapping(value="/oauth/user")
+    @GetMapping(value=PATH)
     public @ResponseBody ResponseEntity<Object> info(HttpServletRequest request) {
     	
     	try {

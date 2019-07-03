@@ -42,8 +42,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 			.formLogin()
 				.and()
 			.authorizeRequests()
-				.mvcMatchers("/oauth/user").permitAll()
-                .mvcMatchers("/.well-known/jwks.json").permitAll()
+				.mvcMatchers(JwkSetEndpoint.PATH).permitAll()
+				.mvcMatchers(UserInfoEndpoint.PATH).permitAll()
 				.anyRequest().authenticated()
 				.and()
 				;

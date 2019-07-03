@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @FrameworkEndpoint
 public class JwkSetEndpoint {
+	
+	public static final String PATH = "/.well-known/jwks.json";
 
 	KeyPair keyPair;
 
@@ -21,7 +23,7 @@ public class JwkSetEndpoint {
 		this.keyPair = keyPair;
 	}
 
-	@GetMapping("/.well-known/jwks.json")
+	@GetMapping(PATH)
 	@ResponseBody
 	public Map<String, Object> getKey(Principal principal) {
 		RSAPublicKey publicKey = (RSAPublicKey) this.keyPair.getPublic();

@@ -31,6 +31,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import io.github.u2ware.sample.AuthorizationServerConfiguration;
 import io.github.u2ware.sample.UserDetailsServices;
+import io.github.u2ware.sample.UserInfoEndpoint;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -96,7 +97,7 @@ public class ApplicationTests {
 
         mockMvc.perform(get("/login")).andExpect(status().is2xxSuccessful()).andDo(print());
         
-        mockMvc.perform(get("/oauth/user")).andExpect(status().is4xxClientError()).andDo(print());
-        mockMvc.perform(get("/oauth/user").header("Authorization", "Bearer "+accessToken)).andExpect(status().is2xxSuccessful()).andDo(print());
+        mockMvc.perform(get(UserInfoEndpoint.PATH)).andExpect(status().is4xxClientError()).andDo(print());
+        mockMvc.perform(get(UserInfoEndpoint.PATH).header("Authorization", "Bearer "+accessToken)).andExpect(status().is2xxSuccessful()).andDo(print());
 	}
 }
