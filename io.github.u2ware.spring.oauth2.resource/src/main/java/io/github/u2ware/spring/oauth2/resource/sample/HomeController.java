@@ -22,8 +22,9 @@ public class HomeController {
     public @ResponseBody String resource() {
         return "resource: " + System.currentTimeMillis();
     }
+
 	@GetMapping("/resource/info")
-	public Principal user(Principal user) {
+	public @ResponseBody Principal user(Principal user) {
 		return user;
 	}	
 
