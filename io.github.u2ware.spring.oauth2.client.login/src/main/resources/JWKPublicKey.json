@@ -1,0 +1,8 @@
+{
+  "kty": "RSA",
+  "e": "AQAB",
+  "use": "sig",
+  "kid": "iscreammedia",
+  "alg": "RS256",
+  "n": "ogK3BjyTrVmE3KNj9-TP_oNTQP2GkCBzBFCXlswHDrEg5BqqYCqfmMJC8B-XUSGs7XXIIaoGAsPXFF99xDAnJH6BQ0s3d7n7aq68R5A-33ddGsjVXfXfmHInjYwlhmIErvDLZcyT1-Nk30nBM65fkJ7MfE1joIQ0XNhrNg38aiMFLvzu1veQ8rLb1hXxI1I7pAxxfc0aLjG5YKmjlEkBDPvvIPXV6lEKUIElG8Y2oRNMa0AP6fM6OHI3XMZfYuEorTZ_vh3RTo76_plcbjGRSnBIdxiqy1mN8m3w_bpr09cz1Z45W4aMIelgGT0VnafuS2qUHSBqS-V2oEVFM9RWUQ"
+}

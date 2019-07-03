@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,8 +35,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import io.github.u2ware.sample.x.NimbusDecoder;
+import io.github.u2ware.sample.x.NimbusEncoder;
+
 @Controller
-public class Oauth2LoginController {
+public class Oauth2LoginController implements InitializingBean{
 
     protected Log logger = LogFactory.getLog(getClass());
 	
@@ -78,6 +84,11 @@ public class Oauth2LoginController {
             @AuthenticationPrincipal OAuth2User oauth2User,
             @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) throws Exception {
 
+        Object callback = request.getSession().getAttribute(getClass().getName());
+        if (StringUtils.isEmpty(callback)) {
+            return login(model);
+        }
+        
         logger.info("---------------------------");
         logger.info("/logon");
         logger.info("/logon: " + principal.hashCode() + " " + principal.getClass());
@@ -85,12 +96,23 @@ public class Oauth2LoginController {
         logger.info("/logon: " + authorizedClient.hashCode() + " " + authorizedClient.getClass());
         logger.info("---------------------------");
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        logger.info("---------------------------");
+        logger.info("/logon: " + authentication.hashCode() + " " + authentication.getClass());
+        logger.info("/logon: " + authentication.getPrincipal().hashCode() + " " + authentication.getPrincipal().getClass());
+        logger.info("/logon: " + authentication.getDetails().hashCode() + " " + authentication.getDetails().getClass());
+        logger.info("/logon: " + authentication.getAuthorities().hashCode() + " " + authentication.getAuthorities().getClass());
+        logger.info("---------------------------");
+        
+        logger.info("---------------------------");
+        logger.info("/logon: " + authorizedClient.getAccessToken().hashCode()+" "+authorizedClient.getAccessToken().getClass());
+        logger.info("---------------------------");
+        
+
+        
+        
         // JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 
-        Object callback = request.getSession().getAttribute(getClass().getName());
-        if (StringUtils.isEmpty(callback)) {
-            return login(model);
-        }
 
         String token = "";
         String jwtToken = "";
@@ -99,6 +121,17 @@ public class Oauth2LoginController {
         token = authorizedClient.getAccessToken().getTokenValue();
         principalName = authorizedClient.getPrincipalName();
         clientRegistrationId = authorizedClient.getClientRegistration().getRegistrationId();
+        
+        
+        OAuth2AuthorizedClient OAuth2AuthorizedClient = clientService.loadAuthorizedClient(clientRegistrationId, principalName);
+
+        
+        //clientService.saveAuthorizedClient(OAuth2AuthorizedClient, principal);
+        
+        
+        
+        
+        
         if (ClassUtils.isAssignableValue(DefaultOidcUser.class, oauth2User)) {
             DefaultOidcUser oidcUser = (DefaultOidcUser) oauth2User;
             jwtToken = oidcUser.getIdToken().getTokenValue();
@@ -118,6 +151,7 @@ public class Oauth2LoginController {
         logger.info(redirect);
         return "redirect:" + redirect;
     }
+
     
     ////////////////////////////////////////////////////////////////////
     //
@@ -191,4 +225,20 @@ public class Oauth2LoginController {
         return contents;
     }
     
+    ////////////////////////////////////////////////////////////////////
+    //
+    ////////////////////////////////////////////////////////////////////
+	private NimbusEncoder encoder;// = new NimbusJwtEncoder(JWKKeypairSet.getFile());
+	private NimbusDecoder decoder;// = new NimbusJwtDecoder(JWKKeypairSet.getFile());
+	
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		encoder = new NimbusEncoder(new ClassPathResource("JWKKeypairSet.json").getFile());
+	}
+
+	
+	@GetMapping("/.well-known/jwks.json")
+	public @ResponseBody Map<String, Object> getKey() {
+		return encoder.getJWKSet().toJSONObject(true);
+	}
 }

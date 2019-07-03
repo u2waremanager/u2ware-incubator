@@ -1,15 +1,24 @@
 package io.github.u2ware.sample;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.DefaultClientCredentialsTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.NimbusAuthorizationCodeTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import io.github.u2ware.sample.x.InMemoryAuthorizationRequestRepository;
+import io.github.u2ware.sample.x.XOAuth2AuthorizedClientService;
 
 @Configuration
 @EnableWebSecurity
@@ -42,9 +51,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .redirectionEndpoint()
                     .baseUri("/login/oauth2/code/*") // OAuth2LoginAuthenticationFilter.DEFAULT_FILTER_PROCESSES_URI;
                     .and() 
-                // .tokenEndpoint()
-                //     //.accessTokenResponseClient(accessTokenResponseClient)
-                //     .and()
+//                .tokenEndpoint()
+//                     .accessTokenResponseClient(accessTokenResponseClient())
+//                     .and()
                 .defaultSuccessUrl("/logon", true)
                     .permitAll()
                     .and()
@@ -58,7 +67,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             ;
     }
 
-//    
+    
 //    @Bean 
 //    public OAuth2AuthorizedClientService authorizedClientService(ClientRegistrationRepository clientRegistrationRepository) {
 //        return new XOAuth2AuthorizedClientService(clientRegistrationRepository);  //InMemoryOAuth2AuthorizedClientService
@@ -73,7 +82,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
         return new InMemoryAuthorizationRequestRepository(); //HttpSessionOAuth2AuthorizationRequestRepository
     }
-
+    
    
     // CommonOAuth2Provider
 }

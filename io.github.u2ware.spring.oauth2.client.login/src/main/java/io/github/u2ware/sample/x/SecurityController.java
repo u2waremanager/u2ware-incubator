@@ -83,6 +83,18 @@ public class SecurityController {
     }
 
 
+	
+//  @RequestMapping(value="/resource/{clientRegistrationId}")
+//  public @ResponseBody ResponseEntity<Object> logout(
+//          @RequestHeader("Authorization") String principalName, 
+//          @PathVariable("clientRegistrationId")String clientRegistrationId) 
+//          throws Exception{
+//
+//      logger.info("/logout/"+clientRegistrationId +" ["+principalName+"]");
+//      clientService.removeAuthorizedClient(clientRegistrationId, principalName);
+//      return ResponseEntity.ok().build();
+//  }
+
 
     @RequestMapping(value="/info/{clientRegistrationId}")
     public @ResponseBody ResponseEntity<Object> info1(
