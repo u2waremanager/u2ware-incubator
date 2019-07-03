@@ -1,4 +1,4 @@
-package io.github.u2ware.sample;
+package io.github.u2ware.sample.x;
 
 import java.util.HashMap;
 import java.util.Map;

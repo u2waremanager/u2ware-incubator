@@ -1,4 +1,4 @@
-package io.github.u2ware.sample;
+package io.github.u2ware.sample.x;
 
 import java.util.Base64;
 import java.util.Map;

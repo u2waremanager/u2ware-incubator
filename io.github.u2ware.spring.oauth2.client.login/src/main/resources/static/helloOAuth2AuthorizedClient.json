@@ -1,0 +1,44 @@
+{
+    "clientRegistration": {
+        "registrationId": "hello",
+        "clientId": "hello",
+        "clientSecret": "secret",
+        "clientAuthenticationMethod": {
+            "value": "POST"
+        },
+        "authorizationGrantType": {
+            "value": "authorization_code"
+        },
+        "redirectUriTemplate": "{baseUrl}/login/oauth2/code/{registrationId}",
+        "scopes": [
+            "message:read"
+        ],
+        "providerDetails": {
+            "authorizationUri": "http://localhost:9093/oauth/authorize",
+            "tokenUri": "http://localhost:9093/oauth/token",
+            "userInfoEndpoint": {
+                "uri": "http://localhost:9093/user/info",
+                "authenticationMethod": {
+                    "value": "header"
+                },
+                "userNameAttributeName": "id"
+            },
+            "jwkSetUri": null,
+            "configurationMetadata": {}
+        },
+        "clientName": "hello"
+    },
+    "principalName": "hello",
+    "accessToken": {
+        "tokenValue": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhYWEiOiJnZ2dnIiwic3ViIjoidXNlciIsInNjb3BlIjpbIm1lc3NhZ2U6cmVhZCJdLCJleHAiOjIxNjIxMTQ3ODMsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJqdGkiOiJlY2ZmMWEwOS0zM2ZkLTQ5N2ItYWFlNS0wMzkxNjcyMzNiY2EiLCJjbGllbnRfaWQiOiJoZWxsbyJ9.Zx9wFuwb-VxmYrOBhFrfrr-4KrkK8UAlZL7xBjLLPq90sQdRXG_NNJH4R6NzTgUwEkqpFhAm-70LTQgzIN6aRbL_pjlfZomOlnTtQnfXv5GRKmpqhdw7s9j0UluMpOsFqoPEbsMisd4T21_MjNJ2YNLu_8Zid83NZDxkEv4fKL5iccQfGMniap8X7_OySJx08NE1DI8tKt06cJORXmphJLy_5jDDv4tn63i2gMVf4RUCdNOtT-Yv5xp7WLuV4fYDnXGrf32W1-Xq-ehQsjmRWDYR8SHP65M2istREA8r7ucZOIHFqW-tduCmd0FiY_fwxmDSW2Qd4B_-NkeM1ebaeA",
+        "issuedAt": "2019-07-03T00:46:23.215Z",
+        "expiresAt": "2038-07-07T11:26:22.215Z",
+        "tokenType": {
+            "value": "Bearer"
+        },
+        "scopes": [
+            "message:read"
+        ]
+    },
+    "refreshToken": null
+}

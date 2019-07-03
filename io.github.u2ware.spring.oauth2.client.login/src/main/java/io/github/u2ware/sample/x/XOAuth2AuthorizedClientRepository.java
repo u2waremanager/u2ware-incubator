@@ -1,4 +1,4 @@
-package io.github.u2ware.sample;
+package io.github.u2ware.sample.x;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

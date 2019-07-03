@@ -1,0 +1,24 @@
+{
+    "authorities": [
+        {
+            "authority": "ROLE_USER",
+            "attributes": {
+                "sub": "hello",
+                "scope": "message:read",
+                "active": true,
+                "id": "hello",
+                "exp": 2162114783000,
+                "expDate": "2038-07-07T20:26:23.000+09:00"
+            }
+        }
+    ],
+    "attributes": {
+        "sub": "hello",
+        "scope": "message:read",
+        "active": true,
+        "id": "hello",
+        "exp": 2162114783000,
+        "expDate": "2038-07-07T20:26:23.000+09:00"
+    },
+    "name": "hello"
+}

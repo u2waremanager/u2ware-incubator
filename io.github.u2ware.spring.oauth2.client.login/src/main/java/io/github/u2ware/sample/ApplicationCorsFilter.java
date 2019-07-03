@@ -1,4 +1,4 @@
-package io.github.u2ware;
+package io.github.u2ware.sample;
 
 import java.io.IOException;
 
