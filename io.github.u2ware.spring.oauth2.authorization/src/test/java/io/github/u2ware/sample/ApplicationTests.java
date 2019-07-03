@@ -1,4 +1,4 @@
-package io.github.u2ware;
+package io.github.u2ware.sample;
 
 //import static org.springframework.security.test.
 
