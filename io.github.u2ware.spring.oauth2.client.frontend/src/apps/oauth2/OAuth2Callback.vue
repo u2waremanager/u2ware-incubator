@@ -1,5 +1,5 @@
 <template>
-    <div></div>
+    <div>{{query}}</div>
 </template>
 
 <script>
@@ -8,7 +8,7 @@ import {Authentication} from './Authentication.js'
 export default {
     name : 'Oauth2Callback',
     data: () => ({
-
+        query : null
     }),
     methods : {
 
@@ -18,11 +18,13 @@ export default {
     },
     mounted: function() {
         this.$log.debug(this.$options.name, 'mounted', this.$route.query);
-        
+        this.query = this.$route.query;
+
         this.$authentication = Authentication;
         
         this.$authentication.save(this.$route.query);
-        this.$router.push('/');
+        
+        //this.$router.push('/');
     },
     updated: function() {
         this.$log.debug(this.$options.name, 'updated');

@@ -20,12 +20,16 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,14 +41,16 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import io.github.u2ware.sample.x.NimbusDecoder;
 import io.github.u2ware.sample.x.NimbusEncoder;
+import io.github.u2ware.sample.x.XPrinter;
 
 @Controller
-public class Oauth2LoginController implements InitializingBean{
+public class Oauth2AuthorizationController implements InitializingBean{
 
     protected Log logger = LogFactory.getLog(getClass());
 	
     private @Autowired ClientRegistrationRepository clientRegistrationRepository;
     private @Autowired OAuth2AuthorizedClientService clientService;
+    private @Autowired AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository;
     
     @RequestMapping("/login")
     public String login(Model model) {
@@ -65,17 +71,17 @@ public class Oauth2LoginController implements InitializingBean{
     public String login(
             HttpServletRequest request, 
             @PathVariable("clientRegistrationId") String clientRegistrationId,
-            @RequestParam(value = "callback", required = false) String callback) 
+            @RequestParam(value = "callback_uri", required = false) String callback) 
             throws Exception{
 
-        if(StringUtils.hasText(callback)){
-            request.getSession().setAttribute(getClass().getName(), callback);
-        }
+        XPrinter.print("login: ", request);
 
         UriComponents redirect = UriComponentsBuilder
             .fromPath(OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI)
-            .pathSegment(clientRegistrationId).build();
-        logger.info("/login/"+clientRegistrationId +" ["+callback+"]");
+            .pathSegment(clientRegistrationId)
+            .queryParam("callback_uri", callback)
+            .build();
+        logger.info(redirect);
         return "redirect:" + redirect;
     }
     
@@ -84,75 +90,49 @@ public class Oauth2LoginController implements InitializingBean{
             @AuthenticationPrincipal OAuth2User oauth2User,
             @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) throws Exception {
 
-        Object callback = request.getSession().getAttribute(getClass().getName());
-        if (StringUtils.isEmpty(callback)) {
+        XPrinter.print("logon: ", request);
+
+        OAuth2AuthorizationRequest authorizationRequest = authorizationRequestRepository.loadAuthorizationRequest(request);
+        if (StringUtils.isEmpty(authorizationRequest)) {
             return login(model);
         }
-        
-        logger.info("---------------------------");
-        logger.info("/logon");
-        logger.info("/logon: " + principal.hashCode() + " " + principal.getClass());
-        logger.info("/logon: " + oauth2User.hashCode() + " " + oauth2User.getClass());
-        logger.info("/logon: " + authorizedClient.hashCode() + " " + authorizedClient.getClass());
-        logger.info("---------------------------");
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        logger.info("---------------------------");
-        logger.info("/logon: " + authentication.hashCode() + " " + authentication.getClass());
-        logger.info("/logon: " + authentication.getPrincipal().hashCode() + " " + authentication.getPrincipal().getClass());
-        logger.info("/logon: " + authentication.getDetails().hashCode() + " " + authentication.getDetails().getClass());
-        logger.info("/logon: " + authentication.getAuthorities().hashCode() + " " + authentication.getAuthorities().getClass());
-        logger.info("---------------------------");
-        
-        logger.info("---------------------------");
-        logger.info("/logon: " + authorizedClient.getAccessToken().hashCode()+" "+authorizedClient.getAccessToken().getClass());
-        logger.info("---------------------------");
-        
-
-        
-        
-        // JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 
 
-        String token = "";
-        String jwtToken = "";
-        String principalName = "";
-        String clientRegistrationId = "";
-        token = authorizedClient.getAccessToken().getTokenValue();
-        principalName = authorizedClient.getPrincipalName();
-        clientRegistrationId = authorizedClient.getClientRegistration().getRegistrationId();
         
-        
-        OAuth2AuthorizedClient OAuth2AuthorizedClient = clientService.loadAuthorizedClient(clientRegistrationId, principalName);
+        String url = authorizationRequest.getRedirectUri();
+        MultiValueMap<String,String> params = new LinkedMultiValueMap<>();
+        params.add("clientRegistrationId", clientRegistrationId(oauth2User, authorizedClient));
+        params.add("principalName", principalName(oauth2User, authorizedClient));
+        params.add("accessToken", accessToken(oauth2User, authorizedClient));
+        params.add("idToken", idToken(oauth2User, authorizedClient));
+        params.add("customToken", customToken(oauth2User, authorizedClient));
 
-        
-        //clientService.saveAuthorizedClient(OAuth2AuthorizedClient, principal);
-        
-        
-        
-        
-        
-        if (ClassUtils.isAssignableValue(DefaultOidcUser.class, oauth2User)) {
-            DefaultOidcUser oidcUser = (DefaultOidcUser) oauth2User;
-            jwtToken = oidcUser.getIdToken().getTokenValue();
-        }
-
-        // JwtDecoder d = JwtDecoders.fromOidcIssuerLocation("/aaaaaaaaa/");
-        // Jwt xToken = d.decode(token);
-
-        UriComponents redirect = UriComponentsBuilder
-            .fromUriString(callback.toString())
-            .queryParam("principalName", URLEncoder.encode(principalName,"UTF-8"))
-            .queryParam("clientRegistrationId", clientRegistrationId)
-            .queryParam("token", token)
-            .queryParam("jwtToken", jwtToken)
-            .build();
-
+        UriComponents redirect = UriComponentsBuilder.fromUriString(url).queryParams(params).build();
         logger.info(redirect);
         return "redirect:" + redirect;
     }
 
-    
+    private String clientRegistrationId(OAuth2User oauth2User, OAuth2AuthorizedClient authorizedClient)throws Exception{
+        return authorizedClient.getClientRegistration().getRegistrationId();
+    }
+    private String principalName(OAuth2User oauth2User, OAuth2AuthorizedClient authorizedClient) throws Exception{
+        return URLEncoder.encode(authorizedClient.getPrincipalName(), "UTF-8");
+    }
+    private String accessToken(OAuth2User oauth2User, OAuth2AuthorizedClient authorizedClient)throws Exception{
+        return authorizedClient.getAccessToken().getTokenValue();
+    }
+    private String idToken(OAuth2User oauth2User, OAuth2AuthorizedClient authorizedClient)throws Exception{
+        if (ClassUtils.isAssignableValue(DefaultOidcUser.class, oauth2User)) {
+            DefaultOidcUser oidcUser = (DefaultOidcUser) oauth2User;
+            return oidcUser.getIdToken().getTokenValue();
+        }
+        return null;
+    }
+    private String customToken(OAuth2User oauth2User, OAuth2AuthorizedClient authorizedClient){
+        return null;
+    }
+
+
     ////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////

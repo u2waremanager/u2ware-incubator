@@ -5,7 +5,9 @@ import java.security.Principal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Controller;
@@ -20,9 +22,13 @@ public class UserInfoController {
 
 
 	@GetMapping("/user/info")
-	public @ResponseBody Principal user(Principal user) {
-		return user;
-	}	
+	public @ResponseBody Object userInfo( Principal principal) {
+
+        logger.info("-----------------------------------");
+        logger.info("principal: "+principal);
+        logger.info("-----------------------------------");
+		return principal;
+	}
 
     @GetMapping("/")
     public @ResponseBody Object index() {

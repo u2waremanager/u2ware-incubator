@@ -6,19 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.DefaultClientCredentialsTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.NimbusAuthorizationCodeTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import io.github.u2ware.sample.x.InMemoryAuthorizationRequestRepository;
-import io.github.u2ware.sample.x.XOAuth2AuthorizedClientService;
 
 @Configuration
 @EnableWebSecurity
@@ -79,8 +69,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 //        return new XOAuth2AuthorizedClientRepository(authorizedClientService); //AuthenticatedPrincipalOAuth2AuthorizedClientRepository
 //    }
 //    
-    public AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
-        return new InMemoryAuthorizationRequestRepository(); //HttpSessionOAuth2AuthorizationRequestRepository
+    @Bean
+    public  AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
+        return new OAuth2AuthorizationRequestRepository(); 
+        //AuthorizationRequestRepository<OAuth2AuthorizationRequest>
+        //HttpSessionOAuth2AuthorizationRequestRepository
     }
     
    

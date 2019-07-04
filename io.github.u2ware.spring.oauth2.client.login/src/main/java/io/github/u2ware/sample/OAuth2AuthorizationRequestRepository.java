@@ -1,4 +1,4 @@
-package io.github.u2ware.sample.x;
+package io.github.u2ware.sample;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,30 +12,25 @@ import org.springframework.security.oauth2.client.web.AuthorizationRequestReposi
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import io.github.u2ware.sample.x.XPrinter;
+
 //HttpSessionOAuth2AuthorizationRequestRepository
-public class InMemoryAuthorizationRequestRepository implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
+public class OAuth2AuthorizationRequestRepository implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 
     protected Log logger = LogFactory.getLog(getClass());
 
+    private static final String CALLBACK_URI = "callback_uri";
     private Map<String, OAuth2AuthorizationRequest> authorizationRequests = new ConcurrentHashMap<>();
+    private Map<String, String> callbackRequests = new ConcurrentHashMap<>();
 
-    @Override
-    public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
-        Assert.notNull(request, "request cannot be null");
-
-        String state = request.getParameter(OAuth2ParameterNames.STATE);
-        if (state == null) {
-            return null;
-        }
-
-        String key = resolveOAuth2AuthorizationRequestKey(request, state);
-        logger.info("load: "+key);
-        return authorizationRequests.get(key);
-    }
-
+    
+    //////////////////////////////////////////////////////////////////////////
+    //
+    //////////////////////////////////////////////////////////////////////////    
     @Override
     public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request, HttpServletResponse response) {
         
@@ -46,29 +41,71 @@ public class InMemoryAuthorizationRequestRepository implements AuthorizationRequ
             this.removeAuthorizationRequest(request, response);
             return;
         }
+        
         String state = authorizationRequest.getState();
         Assert.hasText(state, "authorizationRequest.state cannot be empty");
 
         String key = resolveOAuth2AuthorizationRequestKey(request, state);
-
         authorizationRequests.put(key, authorizationRequest);
 
+        String callback = request.getParameter(CALLBACK_URI);
+        if(StringUtils.hasText(callback)){
+            callbackRequests.put(key, request.getParameter(CALLBACK_URI));        
+        }
         logger.info("save: "+key);
+        XPrinter.print("save: ", request);
     }
 
     @Override
     public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request) {
 
         Assert.notNull(request, "request cannot be null");
-
+        
         String state = request.getParameter(OAuth2ParameterNames.STATE);
         if (state == null) {
             return null;
         }
-        String key = resolveOAuth2AuthorizationRequestKey(request, state);
-        logger.info("remove: "+key);
 
-        return authorizationRequests.remove(key);
+        String key = resolveOAuth2AuthorizationRequestKey(request, state);
+        OAuth2AuthorizationRequest authorizationRequest =  authorizationRequests.remove(key);
+
+
+        String callback = callbackRequests.remove(key);
+        if(StringUtils.hasText(callback)){
+            request.getSession().setAttribute(CALLBACK_URI, callback);
+        }
+
+        logger.info("remove: "+key);
+        XPrinter.print("remove: ", request);
+        return authorizationRequest;
+    }
+
+
+
+
+    @Override
+    public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
+        Assert.notNull(request, "request cannot be null");
+
+        String state = request.getParameter(OAuth2ParameterNames.STATE);
+        if (state == null) {
+            String callback = (String)request.getSession().getAttribute(CALLBACK_URI);
+            if(StringUtils.hasText(callback)){
+                return OAuth2AuthorizationRequest.authorizationCode()
+                        .authorizationRequestUri(callback)
+                        .authorizationUri(callback)
+                        .clientId(callback)
+                        .redirectUri(callback).build();
+            }else{
+                return null;
+            }
+        }
+
+        String key = resolveOAuth2AuthorizationRequestKey(request, state);
+        OAuth2AuthorizationRequest authorizationRequest =  authorizationRequests.get(key);
+        logger.info("load: "+key);
+        XPrinter.print("load: ", request);
+        return authorizationRequest;
     }
 
 
@@ -77,8 +114,4 @@ public class InMemoryAuthorizationRequestRepository implements AuthorizationRequ
         String lastSegment = c.getPathSegments().stream().reduce((first, second) -> second).orElse(null);
         return lastSegment+"/"+state;
     }
-
-
-
-
 }

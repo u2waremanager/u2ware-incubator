@@ -23,6 +23,8 @@ public class XAuthorizationRequestRepository implements AuthorizationRequestRepo
 
     private final String sessionAttributeName = DEFAULT_AUTHORIZATION_REQUEST_ATTR_NAME;
 
+    //private final String CALLBACK_PARAMETER_NAME = "callback";
+
     @Override
     public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
         Assert.notNull(request, "request cannot be null");

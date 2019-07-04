@@ -26,6 +26,11 @@
                 <span class="fa fa-naver"></span>naver
             </a>
         </p>
+        <p>
+            <a class="btn btn-block btn-social btn-hello" @click="login('hello')">
+                <span class="fa fa-hello"></span>hello
+            </a>
+        </p>
     </div>
 
     <div v-if="isAuthenticated">
@@ -90,7 +95,11 @@ export default {
         },
 
         login(id){
-            var url = this.auth2Server+'/login/'+id+'?callback='+this.callback;
+
+
+
+
+            var url = this.auth2Server+'/login/'+id+'?callback_uri='+this.callback;
             window.location.href = url;
         },
 
@@ -127,7 +136,7 @@ export default {
         
         this.$authentication = Authentication;
 
-        this.info();
+        //this.info();
     }
 }
 </script>

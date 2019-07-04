@@ -52,8 +52,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security
         	.allowFormAuthenticationForClients() // BASIC vs FORM
-        	.tokenKeyAccess("permitAll()")
-        	.checkTokenAccess("isAuthenticated()");
+    		.tokenKeyAccess("permitAll()")
+    		.checkTokenAccess("isAuthenticated()");
     }
 	
 
