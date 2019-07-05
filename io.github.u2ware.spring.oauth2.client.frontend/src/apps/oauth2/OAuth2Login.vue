@@ -31,6 +31,13 @@
                 <span class="fa fa-hello"></span>hello
             </a>
         </p>
+
+        <p>
+            <a class="btn btn-block btn-social btn-hello" @click="nimbus">
+                <span class="fa fa-nimbus"></span>nimbus
+            </a>
+        </p>
+
     </div>
 
     <div v-if="isAuthenticated">
@@ -68,7 +75,41 @@ export default {
     }),
 
     methods : {
+        nimbus(){
 
+
+            this.$axios({
+                method : 'post',
+                url : 'http://localhost:9091/nimbus/jwks.json',
+                data : {
+                    hello : 'world'
+                }
+            }).then((result1) => {
+                this.$log.debug(this.$options.name, 'result1', result1);
+
+
+                this.$axios({
+                    method : 'get',
+                    url : 'http://localhost:9092/user/nfo',
+                    headers : {
+                        'Authorization': 'Bearar '+result1.data
+                    }
+                }).then((result2) => {
+                    this.$log.debug(this.$options.name, 'result2', result2);
+
+
+                }).catch((error2) => {
+                    this.$log.debug(this.$options.name, 'error2', error2);
+
+                });
+
+
+            }).catch((error1) => {
+                this.$log.debug(this.$options.name, 'error1', error1);
+
+            });
+
+        },
         info(){
 
             const auth = this.$authentication.load();
@@ -95,10 +136,6 @@ export default {
         },
 
         login(id){
-
-
-
-
             var url = this.auth2Server+'/login/'+id+'?callback_uri='+this.callback;
             window.location.href = url;
         },

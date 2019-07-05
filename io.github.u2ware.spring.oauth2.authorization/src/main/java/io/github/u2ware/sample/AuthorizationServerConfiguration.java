@@ -110,14 +110,21 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	}
 	
 	private static class SubjectAttributeUserTokenConverter extends DefaultUserAuthenticationConverter {
+        protected Log logger = LogFactory.getLog(getClass());
+
 		@Override
 		public Map<String, ?> convertUserAuthentication(Authentication authentication) {
+
 			Map<String, Object> response = new LinkedHashMap<String, Object>();
 			response.put("sub", authentication.getName());
+			response.put("name", authentication.getName());
+			response.put("id", authentication.getName());
 			response.put("aaa", "gggg");
 			if (authentication.getAuthorities() != null && !authentication.getAuthorities().isEmpty()) {
 				response.put(AUTHORITIES, AuthorityUtils.authorityListToSet(authentication.getAuthorities()));
-			}
+            }
+
+            logger.info("convertUserAuthentication: "+response);
 			return response;
 		}
 	}

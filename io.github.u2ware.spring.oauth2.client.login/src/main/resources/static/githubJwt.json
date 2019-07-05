@@ -1,0 +1,66 @@
+{
+    "tokenValue": "8924bb3a7c46a9f59c30e8d45cbbb9e15f066723",
+    "issuedAt": {
+        "epochSecond": 1562291905,
+        "nano": 850000000
+    },
+    "expiresAt": {
+        "epochSecond": 1562291906,
+        "nano": 850000000
+    },
+    "headers": {
+        "typ": "JWT",
+        "alg": "RS256"
+    },
+    "claims": {
+        "gists_url": "https://api.github.com/users/u2waremanager/gists{/gist_id}",
+        "repos_url": "https://api.github.com/users/u2waremanager/repos",
+        "two_factor_authentication": false,
+        "following_url": "https://api.github.com/users/u2waremanager/following{/other_user}",
+        "bio": null,
+        "created_at": "2011-09-27T07:46:31Z",
+        "login": "u2waremanager",
+        "type": "User",
+        "blog": "http://u2ware.com",
+        "private_gists": 0,
+        "total_private_repos": 1,
+        "subscriptions_url": "https://api.github.com/users/u2waremanager/subscriptions",
+        "updated_at": "2019-05-07T01:31:10Z",
+        "site_admin": false,
+        "disk_usage": 137379,
+        "collaborators": 0,
+        "company": "u2ware",
+        "owned_private_repos": 1,
+        "id": 1083091,
+        "public_repos": 4,
+        "gravatar_id": "",
+        "plan": {
+            "name": "free",
+            "space": 976562499,
+            "collaborators": 0,
+            "private_repos": 10000
+        },
+        "email": "u2waremanager@gmail.com",
+        "jti": "b0f180d6-dacd-409d-808d-4a925eba2654",
+        "organizations_url": "https://api.github.com/users/u2waremanager/orgs",
+        "hireable": null,
+        "starred_url": "https://api.github.com/users/u2waremanager/starred{/owner}{/repo}",
+        "followers_url": "https://api.github.com/users/u2waremanager/followers",
+        "public_gists": 0,
+        "url": "https://api.github.com/users/u2waremanager",
+        "received_events_url": "https://api.github.com/users/u2waremanager/received_events",
+        "followers": 1,
+        "avatar_url": "https://avatars0.githubusercontent.com/u/1083091?v=4",
+        "events_url": "https://api.github.com/users/u2waremanager/events{/privacy}",
+        "html_url": "https://github.com/u2waremanager",
+        "following": 0,
+        "name": "u2waremanager@gmail.com",
+        "location": "Seoul, Korea",
+        "node_id": "MDQ6VXNlcjEwODMwOTE="
+    },
+    "id": "b0f180d6-dacd-409d-808d-4a925eba2654",
+    "subject": null,
+    "notBefore": null,
+    "issuer": null,
+    "audience": null
+}

@@ -2,16 +2,19 @@ package io.github.u2ware.sample;
 
 import java.net.URLEncoder;
 import java.security.Principal;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,13 +28,14 @@ import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequest
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtClaimNames;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,12 +43,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import io.github.u2ware.sample.x.NimbusDecoder;
-import io.github.u2ware.sample.x.NimbusEncoder;
 import io.github.u2ware.sample.x.XPrinter;
 
 @Controller
-public class Oauth2AuthorizationController implements InitializingBean{
+public class Oauth2AuthorizationController {
 
     protected Log logger = LogFactory.getLog(getClass());
 	
@@ -92,14 +94,6 @@ public class Oauth2AuthorizationController implements InitializingBean{
 
         XPrinter.print("logon: ", request);
 
-        OAuth2AuthorizationRequest authorizationRequest = authorizationRequestRepository.loadAuthorizationRequest(request);
-        if (StringUtils.isEmpty(authorizationRequest)) {
-            return login(model);
-        }
-
-
-        
-        String url = authorizationRequest.getRedirectUri();
         MultiValueMap<String,String> params = new LinkedMultiValueMap<>();
         params.add("clientRegistrationId", clientRegistrationId(oauth2User, authorizedClient));
         params.add("principalName", principalName(oauth2User, authorizedClient));
@@ -107,6 +101,12 @@ public class Oauth2AuthorizationController implements InitializingBean{
         params.add("idToken", idToken(oauth2User, authorizedClient));
         params.add("customToken", customToken(oauth2User, authorizedClient));
 
+        OAuth2AuthorizationRequest authorizationRequest = authorizationRequestRepository.loadAuthorizationRequest(request);
+        if (StringUtils.isEmpty(authorizationRequest)) {
+            return login(model);
+        }
+
+        String url = authorizationRequest.getRedirectUri();
         UriComponents redirect = UriComponentsBuilder.fromUriString(url).queryParams(params).build();
         logger.info(redirect);
         return "redirect:" + redirect;
@@ -128,7 +128,28 @@ public class Oauth2AuthorizationController implements InitializingBean{
         }
         return null;
     }
-    private String customToken(OAuth2User oauth2User, OAuth2AuthorizedClient authorizedClient){
+    private String customToken(OAuth2User oauth2User, OAuth2AuthorizedClient authorizedClient) throws Exception{
+
+        String tokenValue = authorizedClient.getAccessToken().getTokenValue();
+        Instant issuedAt = authorizedClient.getAccessToken().getIssuedAt();
+        Instant expiresAt = authorizedClient.getAccessToken().getExpiresAt();
+        
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("typ", "JWT");
+        headers.put("alg", "RS256");
+        Map<String, Object> claims = new HashMap<>(oauth2User.getAttributes());
+
+        if(! claims.containsKey(JwtClaimNames.JTI)){
+            claims.put(JwtClaimNames.JTI, UUID.randomUUID());
+        }
+
+        Jwt jwt = new Jwt(tokenValue, issuedAt, expiresAt, headers, claims);
+
+
+        logger.info("####################################################");
+        logger.info(new ObjectMapper().writeValueAsString(jwt));
+        logger.info("####################################################");
+
         return null;
     }
 
@@ -204,21 +225,4 @@ public class Oauth2AuthorizationController implements InitializingBean{
 
         return contents;
     }
-    
-    ////////////////////////////////////////////////////////////////////
-    //
-    ////////////////////////////////////////////////////////////////////
-	private NimbusEncoder encoder;// = new NimbusJwtEncoder(JWKKeypairSet.getFile());
-	private NimbusDecoder decoder;// = new NimbusJwtDecoder(JWKKeypairSet.getFile());
-	
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		encoder = new NimbusEncoder(new ClassPathResource("JWKKeypairSet.json").getFile());
-	}
-
-	
-	@GetMapping("/.well-known/jwks.json")
-	public @ResponseBody Map<String, Object> getKey() {
-		return encoder.getJWKSet().toJSONObject(true);
-	}
 }

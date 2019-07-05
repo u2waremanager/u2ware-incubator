@@ -37,27 +37,26 @@ public class UserInfoEndpoint extends BearerTokenExtractor{
     public @ResponseBody ResponseEntity<Object> info(HttpServletRequest request) {
     	
     	try {
+            logger.info("info: "+tokenStore.getClass());
+            
         	String token = super.extractHeaderToken(request);
-        	
-        	logger.info("info: "+tokenStore); //JwtTokenStore
-        	logger.info("info: "+tokenStore.getClass());
-        	
-    		OAuth2AccessToken accessToken = this.tokenStore.readAccessToken(token);
+            OAuth2AccessToken accessToken = this.tokenStore.readAccessToken(token);
+            //OAuth2Authentication authentication = this.tokenStore.readAuthentication(accessToken);
+            
     		Map<String, Object> attributes = new HashMap<>();
     		if (accessToken == null || accessToken.isExpired()) {
     			attributes.put("active", false);
     			return ResponseEntity.ok(attributes);
-    		}
+            }
 
-    		OAuth2Authentication authentication = this.tokenStore.readAuthentication(token);
 
     		attributes.put("active", true);
     		attributes.put("exp", accessToken.getExpiration().getTime());
-    		attributes.put("scope", accessToken.getScope().stream().collect(Collectors.joining(" ")));
-    		attributes.put("sub", authentication.getName());
-    		
-    		attributes.put("id", authentication.getName());
     		attributes.put("expDate", new DateTime(accessToken.getExpiration().getTime()).toString());
+            attributes.put("scope", accessToken.getScope().stream().collect(Collectors.joining(" ")));
+    		attributes.putAll(accessToken.getAdditionalInformation());
+            
+            logger.info("info: "+attributes);
 
 			return ResponseEntity.ok(attributes);
     	}catch(Exception e) {

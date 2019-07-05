@@ -1,0 +1,34 @@
+{
+    "tokenValue": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhYWEiOiJnZ2dnIiwic3ViIjoidXNlciIsInNjb3BlIjpbIm1lc3NhZ2U6cmVhZCJdLCJuYW1lIjoidXNlciIsImlkIjoidXNlciIsImV4cCI6MjE2MjI5MzczNiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9VU0VSIl0sImp0aSI6IjI4NjllN2NlLTY0YzEtNDA5ZS04MDYzLTJiYmNmMDMyMjdmOCIsImNsaWVudF9pZCI6ImhlbGxvIn0.aqsSeJwLehLsmu8asyS-X7bV1fMd7bno19lCEjtqq-bjIh3F8UkoY3fk9Rbr54akP6k3pgU7PwCl7YFYHkZtkC9mSFxtAReF4lzYE4KIaUxnyqtb_dni7vhGczbV7BysjQsdWePWdMx4lFJqLHt-2T7guOBIJ6JZ_dbmb2wTFKNFw5kuEwATksjIYmQu9oXWfygVymgosScPbu21847_R9pIVoLKzWbsv2WMoI_UlRhU7QRpBK8_K1s62k9y0lp2peFwtGP-RxKqtPt9-fzEUdVX_X1kOXwfeziBO-HxzhGt0EChsfER_JeJr8GxQ3BeUv--x3DJVeC1ntdMAXqqwA",
+    "issuedAt": {
+        "epochSecond": 1562293736,
+        "nano": 150000000
+    },
+    "expiresAt": {
+        "epochSecond": 2162293735,
+        "nano": 150000000
+    },
+    "headers": {
+        "typ": "JWT",
+        "alg": "RS256"
+    },
+    "claims": {
+        "aaa": "gggg",
+        "sub": "user",
+        "scope": "message:read",
+        "name": "user",
+        "active": true,
+        "id": "user",
+        "exp": 2162293736000,
+        "expDate": "2038-07-09T22:08:56.000+09:00",
+        "authorities": [
+            "ROLE_USER"
+        ],
+        "jti": "2869e7ce-64c1-409e-8063-2bbcf03227f8"
+    },
+    "id": "2869e7ce-64c1-409e-8063-2bbcf03227f8",
+    "subject": "user",
+    "notBefore": null,
+    "issuer": null,
+    "audience": null
+}

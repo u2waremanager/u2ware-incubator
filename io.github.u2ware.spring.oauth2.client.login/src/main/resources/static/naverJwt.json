@@ -1,0 +1,28 @@
+{
+    "tokenValue": "AAAAOkym6kBzJe6LEzfDyXAURKEQb3RRJYV25-ylfp3uJYwLNQmc3zddon7vVCK6pT5BiESScpkT53jxt7iOvYa61lY",
+    "issuedAt": {
+        "epochSecond": 1562291564,
+        "nano": 367000000
+    },
+    "expiresAt": {
+        "epochSecond": 1562295164,
+        "nano": 367000000
+    },
+    "headers": {
+        "typ": "JWT",
+        "alg": "RS256"
+    },
+    "claims": {
+        "resultcode": "00",
+        "message": "success",
+        "response": {
+            "id": "39157432"
+        },
+        "jti": "9f830b7c-cd7e-4686-9660-f9856f62b910"
+    },
+    "id": "9f830b7c-cd7e-4686-9660-f9856f62b910",
+    "subject": null,
+    "notBefore": null,
+    "issuer": null,
+    "audience": null
+}

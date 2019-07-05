@@ -1,0 +1,47 @@
+{
+    "tokenValue": "ya29.Gls8B-p-O0C7KipgnkMNpASZDIPKZpwwZl7mVFugZMAibpBrrnqiEaK6g8TbhQndZGu4vmOxdWVgXgzoYOfU6cSBiGSCU7hAdDOhc5uN9mkCBYoPq2QmX0V_4VrZ",
+    "issuedAt": {
+        "epochSecond": 1562291338,
+        "nano": 710000000
+    },
+    "expiresAt": {
+        "epochSecond": 1562294938,
+        "nano": 710000000
+    },
+    "headers": {
+        "typ": "JWT",
+        "alg": "RS256"
+    },
+    "claims": {
+        "at_hash": "GAQyyzaYVxaDe43OiSfFOw",
+        "sub": "103357393997003400360",
+        "email_verified": true,
+        "iss": "https://accounts.google.com",
+        "given_name": "Lee",
+        "locale": "ko",
+        "picture": "https://lh3.googleusercontent.com/-Nbt6Hg8XIxM/AAAAAAAAAAI/AAAAAAAAAN8/G4nL9d6UOBw/s96-c/photo.jpg",
+        "aud": [
+            "959686615396-k5ac9n5gfu1upq93fh2nnsnni7mgcenn.apps.googleusercontent.com"
+        ],
+        "azp": "959686615396-k5ac9n5gfu1upq93fh2nnsnni7mgcenn.apps.googleusercontent.com",
+        "name": "Lee KwangSik",
+        "exp": {
+            "epochSecond": 1562294944,
+            "nano": 0
+        },
+        "family_name": "KwangSik",
+        "iat": {
+            "epochSecond": 1562291344,
+            "nano": 0
+        },
+        "email": "u2waremanager@gmail.com",
+        "jti": "a239e441-a17e-4ad3-9b82-617a5d7256fa"
+    },
+    "id": "a239e441-a17e-4ad3-9b82-617a5d7256fa",
+    "subject": "103357393997003400360",
+    "notBefore": null,
+    "issuer": "https://accounts.google.com",
+    "audience": [
+        "959686615396-k5ac9n5gfu1upq93fh2nnsnni7mgcenn.apps.googleusercontent.com"
+    ]
+}

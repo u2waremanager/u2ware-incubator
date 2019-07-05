@@ -11,7 +11,23 @@ export default {
         query : null
     }),
     methods : {
+        nimbus(){
 
+            this.$axios({
+                method : 'get',
+                url : 'http://localhost:9092/user/nfo',
+                headers : {
+                    'Authorization': 'Bearar '+result1.data
+                }
+            }).then((result2) => {
+                this.$log.debug(this.$options.name, 'result2', result2);
+
+
+            }).catch((error2) => {
+                this.$log.debug(this.$options.name, 'error2', error2);
+
+            });
+        }
     },
     created: function() {
         this.$log.debug(this.$options.name, 'created');

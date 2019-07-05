@@ -9,6 +9,27 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.RemoteKeySourceException;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import com.nimbusds.jose.jwk.source.ImmutableSecret;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.jwk.source.RemoteJWKSet;
+import com.nimbusds.jose.proc.BadJOSEException;
+import com.nimbusds.jose.proc.JWSKeySelector;
+import com.nimbusds.jose.proc.JWSVerificationKeySelector;
+import com.nimbusds.jose.proc.SecurityContext;
+import com.nimbusds.jose.util.Resource;
+import com.nimbusds.jose.util.ResourceRetriever;
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.JWTParser;
+import com.nimbusds.jwt.SignedJWT;
+import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
+import com.nimbusds.jwt.proc.DefaultJWTProcessor;
+
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -27,62 +48,43 @@ import org.springframework.util.Assert;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.RemoteKeySourceException;
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.BadJOSEException;
-import com.nimbusds.jose.proc.JWSKeySelector;
-import com.nimbusds.jose.proc.JWSVerificationKeySelector;
-import com.nimbusds.jose.proc.SecurityContext;
-import com.nimbusds.jose.util.Resource;
-import com.nimbusds.jose.util.ResourceRetriever;
-import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.JWTParser;
-import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
-import com.nimbusds.jwt.proc.DefaultJWTProcessor;
-
-public class NimbusDecoder  {
+public class NimbusJwtDecoder  {
+    //NimbusJwtDecoderJwkSupport d;
+    
 	private static final String DECODING_ERROR_MESSAGE_TEMPLATE =
 			"An error occurred while attempting to decode the Jwt: %s";
 
-	private final JWKSet jwkSet;
-	private final JWSAlgorithm jwsAlgorithm;
-	private final ConfigurableJWTProcessor<SecurityContext> jwtProcessor;
-	private final RestOperationsResourceRetriever jwkSetRetriever = new RestOperationsResourceRetriever();
+	private JWSAlgorithm jwsAlgorithm;
+	private ConfigurableJWTProcessor<SecurityContext> jwtProcessor;
+	private RestOperationsResourceRetriever jwkSetRetriever = new RestOperationsResourceRetriever();
 
 	private Converter<Map<String, Object>, Map<String, Object>> claimSetConverter =
 			MappedJwtClaimSetConverter.withDefaults(Collections.emptyMap());
 	private OAuth2TokenValidator<Jwt> jwtValidator = JwtValidators.createDefault();
 
-	//NimbusJwtDecoderJwkSupport d;
-	public NimbusDecoder(File jwkSetFile) throws IOException, ParseException, JOSEException{
-		this(JWKSet.load(jwkSetFile));
-	}
+    
+	public NimbusJwtDecoder(File jwkSetFile, String jwsAlgorithm) throws IOException, ParseException {
+        init(new ImmutableJWKSet(JWKSet.load(jwkSetFile)), jwsAlgorithm);
+    }
+	public NimbusJwtDecoder(String jwkSetUrl, String jwsAlgorithm) throws IOException, ParseException {
+        init(new RemoteJWKSet(new URL(jwkSetUrl), this.jwkSetRetriever), jwsAlgorithm);
+    }
+	public NimbusJwtDecoder(byte[] secret, String jwsAlgorithm) throws IOException, ParseException {
+        init(new ImmutableSecret<>(secret), jwsAlgorithm);
+    }
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public NimbusDecoder(JWKSet jwkSet) throws IOException, ParseException{
+	private void init(JWKSource jwkSource, String jwsAlgorithm) throws IOException, ParseException {
+		Assert.notNull(jwkSource, "jwkSource cannot be empty");
+		Assert.hasText(jwsAlgorithm, "jwsAlgorithm cannot be empty");
 
-		Assert.notNull(jwkSet, "jwkSet cannot be empty");
-
-		this.jwkSet = jwkSet;
-		this.jwsAlgorithm = JWSAlgorithm.parse(jwkSet.getKeys().get(0).getAlgorithm().getName());
-		
-		JWKSource jwkSource = new ImmutableJWKSet(jwkSet);
+		this.jwsAlgorithm = JWSAlgorithm.parse(jwsAlgorithm);
 		JWSKeySelector<SecurityContext> jwsKeySelector = new JWSVerificationKeySelector<>(this.jwsAlgorithm, jwkSource);
 		this.jwtProcessor = new DefaultJWTProcessor<>();
 		this.jwtProcessor.setJWSKeySelector(jwsKeySelector);
 
 		// Spring Security validates the claim set independent from Nimbus
 		this.jwtProcessor.setJWTClaimsSetVerifier((claims, context) -> {});
-	}
-
-	public JWKSet getJWKSet(){
-		return jwkSet;
 	}
 
 	public Map<String, Object> claims(String token) throws JwtException {

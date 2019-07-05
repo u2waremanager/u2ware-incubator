@@ -29,10 +29,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
-import io.github.u2ware.sample.AuthorizationServerConfiguration;
-import io.github.u2ware.sample.UserDetailsServices;
-import io.github.u2ware.sample.UserInfoEndpoint;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc

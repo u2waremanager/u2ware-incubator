@@ -28,6 +28,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .antMatchers("/login/*").permitAll()
                 .antMatchers("/logout/*").permitAll()
+                .antMatchers("/.well-known/jwks.json").permitAll()
+                .antMatchers("/nimbus/jwks.json").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .oauth2Login()

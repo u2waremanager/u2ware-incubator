@@ -44,6 +44,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 			.authorizeRequests()
 				.mvcMatchers(JwkSetEndpoint.PATH).permitAll()
 				.mvcMatchers(UserInfoEndpoint.PATH).permitAll()
+				.mvcMatchers("/oauth/token").permitAll()
 				.anyRequest().authenticated()
 				.and()
 				;
