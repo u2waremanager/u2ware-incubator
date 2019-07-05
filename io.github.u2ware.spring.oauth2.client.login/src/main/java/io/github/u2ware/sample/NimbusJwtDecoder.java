@@ -1,4 +1,4 @@
-package io.github.u2ware.sample.x;
+package io.github.u2ware.sample;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +8,25 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
+import org.springframework.security.oauth2.jose.jws.JwsAlgorithms;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtClaimNames;
+import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.security.oauth2.jwt.JwtValidationException;
+import org.springframework.security.oauth2.jwt.JwtValidators;
+import org.springframework.security.oauth2.jwt.MappedJwtClaimSetConverter;
+import org.springframework.util.Assert;
+import org.springframework.web.client.RestOperations;
+import org.springframework.web.client.RestTemplate;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -30,99 +49,74 @@ import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
 
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.core.OAuth2TokenValidator;
-import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtClaimNames;
-import org.springframework.security.oauth2.jwt.JwtException;
-import org.springframework.security.oauth2.jwt.JwtValidationException;
-import org.springframework.security.oauth2.jwt.JwtValidators;
-import org.springframework.security.oauth2.jwt.MappedJwtClaimSetConverter;
-import org.springframework.util.Assert;
-import org.springframework.web.client.RestOperations;
-import org.springframework.web.client.RestTemplate;
-
-public class NimbusJwtDecoder  {
+public class NimbusJwtDecoder {
+    
     //NimbusJwtDecoderJwkSupport d;
     
-	private static final String DECODING_ERROR_MESSAGE_TEMPLATE =
-			"An error occurred while attempting to decode the Jwt: %s";
+	private static final String DECODING_ERROR_MESSAGE_TEMPLATE = "An error occurred while attempting to decode the Jwt: %s";
 
-	private JWSAlgorithm jwsAlgorithm;
 	private ConfigurableJWTProcessor<SecurityContext> jwtProcessor;
-	private RestOperationsResourceRetriever jwkSetRetriever = new RestOperationsResourceRetriever();
+    private Converter<Map<String, Object>, Map<String, Object>> claimSetConverter;
+    private OAuth2TokenValidator<Jwt> jwtValidator;
 
-	private Converter<Map<String, Object>, Map<String, Object>> claimSetConverter =
-			MappedJwtClaimSetConverter.withDefaults(Collections.emptyMap());
-	private OAuth2TokenValidator<Jwt> jwtValidator = JwtValidators.createDefault();
-
-    
-	public NimbusJwtDecoder(File jwkSetFile, String jwsAlgorithm) throws IOException, ParseException {
-        init(new ImmutableJWKSet(JWKSet.load(jwkSetFile)), jwsAlgorithm);
+	public NimbusJwtDecoder(File jwkSetFile) throws IOException, ParseException {
+        this(jwkSetFile, JwsAlgorithms.RS256);
     }
-	public NimbusJwtDecoder(String jwkSetUrl, String jwsAlgorithm) throws IOException, ParseException {
-        init(new RemoteJWKSet(new URL(jwkSetUrl), this.jwkSetRetriever), jwsAlgorithm);
+	public NimbusJwtDecoder(URL jwkSetUrl) throws IOException, ParseException {
+        this(jwkSetUrl, JwsAlgorithms.RS256);
+    }
+	public NimbusJwtDecoder(byte[] secret) throws IOException, ParseException {
+        this(secret, JwsAlgorithms.RS256);
+    }
+	public NimbusJwtDecoder(JWKSet jwkSet) throws IOException, ParseException {
+        this(jwkSet, JwsAlgorithms.RS256);
+    }
+	public NimbusJwtDecoder(File jwkSetFile, String jwsAlgorithm) throws IOException, ParseException {
+        this(JWKSet.load(jwkSetFile), jwsAlgorithm);
     }
 	public NimbusJwtDecoder(byte[] secret, String jwsAlgorithm) throws IOException, ParseException {
-        init(new ImmutableSecret<>(secret), jwsAlgorithm);
+        this(new ImmutableSecret<>(secret), jwsAlgorithm);
+    }
+	@SuppressWarnings("rawtypes")
+	public NimbusJwtDecoder(URL jwkSetUrl, String jwsAlgorithm) throws IOException, ParseException {
+        this(new RemoteJWKSet(jwkSetUrl, new RestOperationsResourceRetriever()), jwsAlgorithm);
+    }
+	@SuppressWarnings("rawtypes")
+	public NimbusJwtDecoder(JWKSet jwkSet, String jwsAlgorithm) throws IOException, ParseException {
+        this(new ImmutableJWKSet(jwkSet), jwsAlgorithm);
     }
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void init(JWKSource jwkSource, String jwsAlgorithm) throws IOException, ParseException {
+	public NimbusJwtDecoder(JWKSource jwkSource, String jwsAlgorithm) throws IOException, ParseException {
 		Assert.notNull(jwkSource, "jwkSource cannot be empty");
 		Assert.hasText(jwsAlgorithm, "jwsAlgorithm cannot be empty");
 
-		this.jwsAlgorithm = JWSAlgorithm.parse(jwsAlgorithm);
-		JWSKeySelector<SecurityContext> jwsKeySelector = new JWSVerificationKeySelector<>(this.jwsAlgorithm, jwkSource);
+		JWSAlgorithm jwsAlg = JWSAlgorithm.parse(jwsAlgorithm);
+		JWSKeySelector<SecurityContext> jwsKeySelector = new JWSVerificationKeySelector<>(jwsAlg, jwkSource);
 		this.jwtProcessor = new DefaultJWTProcessor<>();
 		this.jwtProcessor.setJWSKeySelector(jwsKeySelector);
-
-		// Spring Security validates the claim set independent from Nimbus
-		this.jwtProcessor.setJWTClaimsSetVerifier((claims, context) -> {});
+        this.jwtProcessor.setJWTClaimsSetVerifier((claims, context) -> {});
+        
+        this.jwtValidator = JwtValidators.createDefault();
+        this.claimSetConverter = MappedJwtClaimSetConverter.withDefaults(Collections.emptyMap());
 	}
 
-	public Map<String, Object> claims(String token) throws JwtException {
-		JWT jwt = this.parse(token);
-		try {
-			return createJwtClaims(jwt);
-		}catch(Exception ex) {
-			throw new JwtException(String.format(DECODING_ERROR_MESSAGE_TEMPLATE, ex.getMessage()), ex);
-		}
-	}
+	// public Map<String, Object> decodeCaims(String token) throws JwtException {
+	// 	JWT jwt = this.parse(token);
+	// 	try {
+	// 		return createJwtClaims(jwt);
+	// 	}catch(Exception ex) {
+	// 		throw new JwtException(String.format(DECODING_ERROR_MESSAGE_TEMPLATE, ex.getMessage()), ex);
+	// 	}
+	// }
 	
-	public Jwt jwt(String token) throws JwtException {
+	public Jwt decode(String token) throws JwtException {
 		JWT jwt = this.parse(token);
 		if (jwt instanceof SignedJWT) {
 			Jwt createdJwt = this.createJwt(token, jwt);
 			return this.validateJwt(createdJwt);
 		}
 		throw new JwtException("Unsupported algorithm of " + jwt.getHeader().getAlgorithm());
-	}
-
-	/**
-	 * Use this {@link Jwt} Validator
-	 *
-	 * @param jwtValidator - the Jwt Validator to use
-	 */
-	public void setJwtValidator(OAuth2TokenValidator<Jwt> jwtValidator) {
-		Assert.notNull(jwtValidator, "jwtValidator cannot be null");
-		this.jwtValidator = jwtValidator;
-	}
-
-	/**
-	 * Use the following {@link Converter} for manipulating the JWT's claim set
-	 *
-	 * @param claimSetConverter the {@link Converter} to use
-	 */
-	public final void setClaimSetConverter(Converter<Map<String, Object>, Map<String, Object>> claimSetConverter) {
-		Assert.notNull(claimSetConverter, "claimSetConverter cannot be null");
-		this.claimSetConverter = claimSetConverter;
 	}
 
 	private JWT parse(String token) {
@@ -178,17 +172,6 @@ public class NimbusJwtDecoder  {
 		}
 
 		return jwt;
-	}
-
-	/**
-	 * Sets the {@link RestOperations} used when requesting the JSON Web Key (JWK) Set.
-	 *
-	 * @since 5.1
-	 * @param restOperations the {@link RestOperations} used when requesting the JSON Web Key (JWK) Set
-	 */
-	public final void setRestOperations(RestOperations restOperations) {
-		Assert.notNull(restOperations, "restOperations cannot be null");
-		this.jwkSetRetriever.restOperations = restOperations;
 	}
 
 	private static class RestOperationsResourceRetriever implements ResourceRetriever {

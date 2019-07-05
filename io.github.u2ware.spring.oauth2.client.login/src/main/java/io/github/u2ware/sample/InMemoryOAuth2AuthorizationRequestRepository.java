@@ -19,7 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import io.github.u2ware.sample.x.XPrinter;
 
 //HttpSessionOAuth2AuthorizationRequestRepository
-public class OAuth2AuthorizationRequestRepository implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
+public class InMemoryOAuth2AuthorizationRequestRepository implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 
     protected Log logger = LogFactory.getLog(getClass());
 

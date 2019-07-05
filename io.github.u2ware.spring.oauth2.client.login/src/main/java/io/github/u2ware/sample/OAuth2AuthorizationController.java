@@ -9,12 +9,11 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,27 +35,62 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jose.jwk.JWKSet;
+
 import io.github.u2ware.sample.x.XPrinter;
 
 @Controller
-public class Oauth2AuthorizationController {
+public class OAuth2AuthorizationController implements InitializingBean {
 
     protected Log logger = LogFactory.getLog(getClass());
 	
+	private JWKSet jwkSet;
+	private NimbusJwtEncoder encoder;
+	private NimbusJwtDecoder decoder;
+
     private @Autowired ClientRegistrationRepository clientRegistrationRepository;
     private @Autowired OAuth2AuthorizedClientService clientService;
     private @Autowired AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository;
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+        this.jwkSet = JWKSet.load( new ClassPathResource("JWKKeypairSet.json").getFile());
+		this.encoder = new NimbusJwtEncoder(jwkSet);
+		this.decoder = new NimbusJwtDecoder(jwkSet);
+	}
+    
+	
+	@PostMapping("/token/encode")
+	public @ResponseBody Object encode(@RequestBody Jwt jwt) throws Exception{
+        return encoder.encode(jwt);
+    }
+
+	@PostMapping("/token/decode")
+	public @ResponseBody Object decode(@RequestBody String token) throws Exception{
+        return decoder.decode(token);
+    }
+
+	@GetMapping("/token/jwks.json")
+	public @ResponseBody Map<String, Object> getKey() {
+		return jwkSet.toJSONObject(true);
+	}
+	
     
     @RequestMapping("/login")
     public String login(Model model) {
-
+    	
+    	
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getClass().isAssignableFrom(OAuth2AuthenticationToken.class)) {
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
@@ -145,6 +179,7 @@ public class Oauth2AuthorizationController {
 
         Jwt jwt = new Jwt(tokenValue, issuedAt, expiresAt, headers, claims);
 
+        
 
         logger.info("####################################################");
         logger.info(new ObjectMapper().writeValueAsString(jwt));

@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @FrameworkEndpoint
-public class JwkSetEndpoint {
+public class KeyPairEndpoint {
 	
 	public static final String PATH = "/.well-known/jwks.json";
 
 	KeyPair keyPair;
 
-	public JwkSetEndpoint(KeyPair keyPair) {
+	public KeyPairEndpoint(KeyPair keyPair) {
 		this.keyPair = keyPair;
 	}
 

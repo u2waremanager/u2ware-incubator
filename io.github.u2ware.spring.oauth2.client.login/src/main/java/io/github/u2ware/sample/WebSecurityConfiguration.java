@@ -29,7 +29,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login/*").permitAll()
                 .antMatchers("/logout/*").permitAll()
                 .antMatchers("/.well-known/jwks.json").permitAll()
-                .antMatchers("/nimbus/jwks.json").permitAll()
+                .antMatchers("/token/jwks.json").permitAll()
+                .antMatchers("/token/decode").permitAll()
+                .antMatchers("/token/encode").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .oauth2Login()
@@ -73,7 +75,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 //    
     @Bean
     public  AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
-        return new OAuth2AuthorizationRequestRepository(); 
+        return new InMemoryOAuth2AuthorizationRequestRepository(); 
         //AuthorizationRequestRepository<OAuth2AuthorizationRequest>
         //HttpSessionOAuth2AuthorizationRequestRepository
     }

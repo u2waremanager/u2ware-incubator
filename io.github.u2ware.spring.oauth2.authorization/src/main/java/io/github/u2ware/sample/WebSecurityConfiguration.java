@@ -42,7 +42,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 			.formLogin()
 				.and()
 			.authorizeRequests()
-				.mvcMatchers(JwkSetEndpoint.PATH).permitAll()
+				.mvcMatchers(KeyPairEndpoint.PATH).permitAll()
 				.mvcMatchers(UserInfoEndpoint.PATH).permitAll()
 				.mvcMatchers("/oauth/token").permitAll()
 				.anyRequest().authenticated()
