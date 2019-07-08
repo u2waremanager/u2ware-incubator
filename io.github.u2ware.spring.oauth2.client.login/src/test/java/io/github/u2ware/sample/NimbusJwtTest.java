@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jwt.proc.DefaultJWTProcessor;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
@@ -29,8 +32,6 @@ import org.springframework.security.oauth2.jwt.JwtClaimNames;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -135,7 +136,7 @@ public class NimbusJwtTest {
         logger.info(objectMapper.writeValueAsString(jwt1));
 
 
-        Jwt jwt2 = new NimbusJwtDecoder(new URL("http://localhost:9091/nimbus/jwks.json")).decode(jwtToken);
+        Jwt jwt2 = new NimbusJwtDecoder(new URL("http://localhost:9091/token/jwks.json")).decode(jwtToken);
         logger.info(jwt2);
         logger.info(objectMapper.writeValueAsString(jwt2));
      
@@ -143,6 +144,18 @@ public class NimbusJwtTest {
         ///////////////////////////////////////////
         //  Encode JWT2
         ///////////////////////////////////////////
-        
+        logger.info("---------------------------------------------");
+        logger.info("---------------------------------------------");
+        logger.info("---------------------------------------------");
+        logger.info("---------------------------------------------");
+        String token3 = 
+"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdF9oYXNoIjoiN2hHcXdpYVBrcF9CdUNZNEJ5UDlnZyIsInN1YiI6IjEwMzM1NzM5Mzk5NzAwMzQwMDM2MCIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczpcL1wvYWNjb3VudHMuZ29vZ2xlLmNvbSIsImdpdmVuX25hbWUiOiJMZWUiLCJsb2NhbGUiOiJrbyIsInBpY3R1cmUiOiJodHRwczpcL1wvbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbVwvLU5idDZIZzhYSXhNXC9BQUFBQUFBQUFBSVwvQUFBQUFBQUFBTjhcL0c0bkw5ZDZVT0J3XC9zOTYtY1wvcGhvdG8uanBnIiwiYXVkIjoiOTU5Njg2NjE1Mzk2LWs1YWM5bjVnZnUxdXBxOTNmaDJubnNubmk3bWdjZW5uLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXpwIjoiOTU5Njg2NjE1Mzk2LWs1YWM5bjVnZnUxdXBxOTNmaDJubnNubmk3bWdjZW5uLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwibmFtZSI6IkxlZSBLd2FuZ1NpayIsImV4cCI6e30sImZhbWlseV9uYW1lIjoiS3dhbmdTaWsiLCJpYXQiOnt9LCJlbWFpbCI6InUyd2FyZW1hbmFnZXJAZ21haWwuY29tIn0.AVjZYPD8InYdNaWLykvwsMb-ZHTED060uByDpp8XtvPibAR0jGij50UM3rKz-ssZaZOEXsToHfSLkbr6uTOqqcqOkXOfBRF6Fqm0uPmPmrq1J8xkdsEHqAH9GldjhoKl2YM-H9I01T5Bj-Avp7nAvjnZTYsdSRU47YoKDrv9bNLQ00sefRI1iDkfWJ2ACZZgF-EZRMhAtj3mIr1p00_dJkPxQmBC2SqMNoBEQxh1l_LNHd3EN4I2ZaTCrVO6aeFzrdkQpOO7bTzpG1vjjlqnzX4cC_uIgU-cTCzvmmN0EtfsLEJrfWjysD4DD1DeXzbrbX6evREHZKXZy9obFnNjHA"
+        ;
+        Jwt jwt3 = new NimbusJwtDecoder(new URL("http://localhost:9091/token/jwks.json")).decode(token3);
+        logger.info(jwt3);
+        logger.info(objectMapper.writeValueAsString(jwt2));
+
+
+        //DefaultJWTProcessor f;
     }
 }

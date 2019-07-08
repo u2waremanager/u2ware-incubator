@@ -132,8 +132,8 @@ public class OAuth2AuthorizationController implements InitializingBean {
         params.add("clientRegistrationId", clientRegistrationId(oauth2User, authorizedClient));
         params.add("principalName", principalName(oauth2User, authorizedClient));
         params.add("accessToken", accessToken(oauth2User, authorizedClient));
-        params.add("idToken", idToken(oauth2User, authorizedClient));
-        params.add("customToken", customToken(oauth2User, authorizedClient));
+        //params.add("idToken", idToken(oauth2User, authorizedClient));
+        params.add("idToken", customToken(oauth2User, authorizedClient));
 
         OAuth2AuthorizationRequest authorizationRequest = authorizationRequestRepository.loadAuthorizationRequest(request);
         if (StringUtils.isEmpty(authorizationRequest)) {
@@ -143,6 +143,7 @@ public class OAuth2AuthorizationController implements InitializingBean {
         String url = authorizationRequest.getRedirectUri();
         UriComponents redirect = UriComponentsBuilder.fromUriString(url).queryParams(params).build();
         logger.info(redirect);
+        logger.info(redirect.toString().length());
         return "redirect:" + redirect;
     }
 
@@ -172,20 +173,30 @@ public class OAuth2AuthorizationController implements InitializingBean {
         headers.put("typ", "JWT");
         headers.put("alg", "RS256");
         Map<String, Object> claims = new HashMap<>(oauth2User.getAttributes());
-
-        if(! claims.containsKey(JwtClaimNames.JTI)){
-            claims.put(JwtClaimNames.JTI, UUID.randomUUID());
-        }
-
-        Jwt jwt = new Jwt(tokenValue, issuedAt, expiresAt, headers, claims);
-
+        claims.put("name", oauth2User.getName());
         
 
-        logger.info("####################################################");
-        logger.info(new ObjectMapper().writeValueAsString(jwt));
-        logger.info("####################################################");
+//		if(! claims.containsKey(JwtClaimNames.JTI)){
+//			claims.put(JwtClaimNames.JTI, UUID.randomUUID());
+//		}
+        logger.info("authorizedClient------------------------------------------------------");
+        logger.info(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(authorizedClient));
+        logger.info("oauth2User ------------------------------------------------------");
+        logger.info(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(oauth2User));
+        logger.info("---------------------------------------------------------------");
 
-        return null;
+        Jwt jwt = new Jwt(tokenValue, issuedAt, expiresAt, headers, claims);
+        String token = encoder.encode(jwt);
+
+        logger.info("JWT Encode Token------------------------------------------------------");
+        logger.info(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(jwt));
+        
+        logger.info("JWT Decode Token------------------------------------------------------");
+        logger.info(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(decoder.decode(token)));
+        logger.info("---------------------------------------------------------------");
+        
+        
+        return token;
     }
 
 
@@ -209,13 +220,13 @@ public class OAuth2AuthorizationController implements InitializingBean {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         
         
-        logger.info("---------------------------");
-        logger.info("/oauth2: "+authentication.hashCode()+" "+authentication.getClass());
+        // logger.info("---------------------------");
+        // logger.info("/oauth2: "+authentication.hashCode()+" "+authentication.getClass());
         // logger.info(clientService.getClass()); //InMemoryOAuth2AuthorizedClientService
         // logger.info(clientService);
         // logger.info(clientRepository.getClass()); //AuthenticatedPrincipalOAuth2AuthorizedClientRepository
         // logger.info(clientRepository);
-        logger.info("---------------------------");
+        // logger.info("---------------------------");
 
         Map<String,Object> contents = new HashMap<>();
         contents.put(Authentication.class.getName(), authentication);

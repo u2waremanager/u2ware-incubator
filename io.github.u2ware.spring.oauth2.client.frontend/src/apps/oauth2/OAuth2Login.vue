@@ -31,13 +31,6 @@
                 <span class="fa fa-hello"></span>hello
             </a>
         </p>
-
-        <p>
-            <a class="btn btn-block btn-social btn-hello" @click="nimbus">
-                <span class="fa fa-nimbus"></span>nimbus
-            </a>
-        </p>
-
     </div>
 
     <div v-if="isAuthenticated">
@@ -69,54 +62,19 @@ export default {
     data: () => ({
         isAuthenticated : false,
         message : null,
-        auth2Server  : 'http://localhost:9091',
+        authServer  : 'http://localhost:9091',
+        resourceServer  : 'http://localhost:9092',
         // auth2Server  : 'http://devapi.hi-class.io:19081',
-        callback : 'http://localhost:8080/callback',
+        authCallback : 'http://localhost:8080/callback',
     }),
 
     methods : {
-        nimbus(){
-
-
-            this.$axios({
-                method : 'post',
-                url : 'http://localhost:9091/nimbus/jwks.json',
-                data : {
-                    hello : 'world'
-                }
-            }).then((result1) => {
-                this.$log.debug(this.$options.name, 'result1', result1);
-
-
-                this.$axios({
-                    method : 'get',
-                    url : 'http://localhost:9092/user/nfo',
-                    headers : {
-                        'Authorization': 'Bearar '+result1.data
-                    }
-                }).then((result2) => {
-                    this.$log.debug(this.$options.name, 'result2', result2);
-
-
-                }).catch((error2) => {
-                    this.$log.debug(this.$options.name, 'error2', error2);
-
-                });
-
-
-            }).catch((error1) => {
-                this.$log.debug(this.$options.name, 'error1', error1);
-
-            });
-
-        },
         info(){
-
             const auth = this.$authentication.load();
 
             this.$axios({
                 method : 'get',
-                url : this.auth2Server + '/info/'+auth.clientRegistrationId,
+                url : this.resourceServer + '/user/info',
                 headers : {
                     'Authorization': auth.principalName
                 }
@@ -129,42 +87,47 @@ export default {
             }).catch((error) => {
                 this.$log.debug(this.$options.name, 'info', error);
                 this.isAuthenticated = false;
-                this.message = error;
+                this.message = auth;
+                this.message.error = error;
 
                 this.$authentication.clear();
             })
         },
 
         login(id){
-            var url = this.auth2Server+'/login/'+id+'?callback_uri='+this.callback;
+            var url = this.authServer+'/login/'+id+'?callback_uri='+this.authCallback;
+
+            alert(url);
+
             window.location.href = url;
         },
 
         logout(){
 
-            const auth = this.$authentication.load();
+            // const auth = this.$authentication.load();
+            // this.$log.debug(this.$options.name, 'auth', auth);
             
-            this.$axios({
-                method : 'get',
-                url : this.auth2Server + '/info/'+auth.clientRegistrationId,
-                headers : {
-                    'Authorization': auth.principalName
-                }
+            // this.$axios({
+            //     method : 'get',
+            //     url : this.auth2Server + '/info/'+auth.clientRegistrationId,
+            //     headers : {
+            //         'Authorization': auth.principalName
+            //     }
 
-            }).then((result) => {
-                this.$log.debug(this.$options.name, 'logout', result);
-                this.isAuthenticated = false;
-                this.message = result.data;
+            // }).then((result) => {
+            //     this.$log.debug(this.$options.name, 'logout', result);
+            //     this.isAuthenticated = false;
+            //     this.message = result.data;
 
-                this.$authentication.clear();
+            //     this.$authentication.clear();
 
-            }).catch((error) => {
-                this.$log.debug(this.$options.name, 'logout', error);
-                this.isAuthenticated = false;
-                this.message = error;
+            // }).catch((error) => {
+            //     this.$log.debug(this.$options.name, 'logout', error);
+            //     this.isAuthenticated = false;
+            //     this.message = error;
 
-                this.$authentication.clear();
-            })
+            //     this.$authentication.clear();
+            // })
         },
     },
 
@@ -173,7 +136,7 @@ export default {
         
         this.$authentication = Authentication;
 
-        //this.info();
+        this.info();
     }
 }
 </script>

@@ -8,26 +8,52 @@ import {Authentication} from './Authentication.js'
 export default {
     name : 'Oauth2Callback',
     data: () => ({
-        query : null
+        query : null,
+        authServer  : 'http://localhost:9091',
+        resourceServer  : 'http://localhost:9092',
     }),
     methods : {
+        
         nimbus(){
+            const auth = this.$authentication.load();
+            this.$log.debug(this.$options.name, 'nimbus', auth);
 
             this.$axios({
                 method : 'get',
-                url : 'http://localhost:9092/user/nfo',
+                url : this.resourceServer+'/user/info',
                 headers : {
-                    'Authorization': 'Bearar '+result1.data
+                    'Authorization': 'Bearar '+auth.idToken
                 }
-            }).then((result2) => {
-                this.$log.debug(this.$options.name, 'result2', result2);
+            }).then((result1) => {
+                this.$log.debug(this.$options.name, 'nimbus', result1);
 
-
-            }).catch((error2) => {
-                this.$log.debug(this.$options.name, 'error2', error2);
-
+            }).catch((error1) => {
+                this.$log.debug(this.$options.name, 'nimbus', error1);
             });
-        }
+
+
+
+
+
+
+            // this.$axios({
+            //     method : 'post',
+            //     url : 'http://localhost:9091/nimbus/jwks.json',
+            //     data : {
+            //         hello : 'world'
+            //     }
+            // }).then((result1) => {
+            //     this.$log.debug(this.$options.name, 'result1', result1);
+
+                
+
+
+            // }).catch((error1) => {
+            //     this.$log.debug(this.$options.name, 'error1', error1);
+
+            // });
+
+        },
     },
     created: function() {
         this.$log.debug(this.$options.name, 'created');
@@ -41,6 +67,7 @@ export default {
         this.$authentication.save(this.$route.query);
         
         //this.$router.push('/');
+        this.nimbus();
     },
     updated: function() {
         this.$log.debug(this.$options.name, 'updated');
