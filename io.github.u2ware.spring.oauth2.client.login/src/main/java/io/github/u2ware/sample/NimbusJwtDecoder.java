@@ -9,8 +9,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -54,7 +52,7 @@ import com.nimbusds.jwt.proc.DefaultJWTProcessor;
 public class NimbusJwtDecoder {
     
     //NimbusJwtDecoderJwkSupport d;
-    private Log logger = LogFactory.getLog(getClass());
+    //private Log logger = LogFactory.getLog(getClass());
     
 	private static final String DECODING_ERROR_MESSAGE_TEMPLATE = "An error occurred while attempting to decode the Jwt: %s";
 
@@ -104,15 +102,6 @@ public class NimbusJwtDecoder {
         this.claimSetConverter = MappedJwtClaimSetConverter.withDefaults(Collections.emptyMap());
 	}
 
-	// public Map<String, Object> decodeCaims(String token) throws JwtException {
-	// 	JWT jwt = this.parse(token);
-	// 	try {
-	// 		return createJwtClaims(jwt);
-	// 	}catch(Exception ex) {
-	// 		throw new JwtException(String.format(DECODING_ERROR_MESSAGE_TEMPLATE, ex.getMessage()), ex);
-	// 	}
-	// }
-	
 	public Jwt decode(String token) throws JwtException {
 		JWT jwt = this.parse(token);
 		if (jwt instanceof SignedJWT) {

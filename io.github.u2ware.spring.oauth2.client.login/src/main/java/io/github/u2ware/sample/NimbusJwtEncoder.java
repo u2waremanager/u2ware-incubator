@@ -3,6 +3,10 @@ package io.github.u2ware.sample;
 import java.io.File;
 import java.util.Date;
 
+import org.springframework.security.oauth2.jose.jws.JwsAlgorithms;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtException;
+
 import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -15,15 +19,9 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.JWTClaimsSet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.security.oauth2.jose.jws.JwsAlgorithms;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtException;
-
 public class NimbusJwtEncoder {
 
-    private Log logger = LogFactory.getLog(getClass());
+    //private Log logger = LogFactory.getLog(getClass());
 
     private static final String ENCODING_ERROR_MESSAGE_TEMPLATE = "An error occurred while attempting to encode the Jwt: %s";
 
@@ -74,18 +72,10 @@ public class NimbusJwtEncoder {
     
 	public String encode(Jwt jwt) throws JwtException {
 		try {
-			//objectMapper
-            logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            logger.info(jwt.getIssuedAt());
-            logger.info(jwt.getExpiresAt());
-            
             JWSHeader header = new JWSHeader(jwsAlgorithm, JOSEObjectType.JWT, null, null,null,null,null,null,null,null,null,null,null);
 
             JWTClaimsSet.Builder claimsBuilder = new JWTClaimsSet.Builder();
 			jwt.getClaims().forEach((k,v)->{claimsBuilder.claim(k, v);});
-            
             claimsBuilder.expirationTime(Date.from(jwt.getExpiresAt()));
             claimsBuilder.issueTime(Date.from(jwt.getIssuedAt()));
             claimsBuilder.jwtID(jwt.getId());

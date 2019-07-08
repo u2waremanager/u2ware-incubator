@@ -76,20 +76,21 @@ export default {
                 method : 'get',
                 url : this.resourceServer + '/user/info',
                 headers : {
-                    'Authorization': auth.principalName
+                    'Authorization': "Bearer "+auth.idToken
                 }
 
             }).then((result) => {
                 this.$log.debug(this.$options.name, 'info', result);
-                this.isAuthenticated = true;
                 this.message = result.data;
+
+                this.isAuthenticated = true;
 
             }).catch((error) => {
                 this.$log.debug(this.$options.name, 'info', error);
-                this.isAuthenticated = false;
-                this.message = auth;
-                this.message.error = error;
 
+                this.message = {};
+
+                this.isAuthenticated = false;
                 this.$authentication.clear();
             })
         },
@@ -103,31 +104,9 @@ export default {
         },
 
         logout(){
-
-            // const auth = this.$authentication.load();
-            // this.$log.debug(this.$options.name, 'auth', auth);
-            
-            // this.$axios({
-            //     method : 'get',
-            //     url : this.auth2Server + '/info/'+auth.clientRegistrationId,
-            //     headers : {
-            //         'Authorization': auth.principalName
-            //     }
-
-            // }).then((result) => {
-            //     this.$log.debug(this.$options.name, 'logout', result);
-            //     this.isAuthenticated = false;
-            //     this.message = result.data;
-
-            //     this.$authentication.clear();
-
-            // }).catch((error) => {
-            //     this.$log.debug(this.$options.name, 'logout', error);
-            //     this.isAuthenticated = false;
-            //     this.message = error;
-
-            //     this.$authentication.clear();
-            // })
+            this.message = {};
+            this.isAuthenticated = false;
+            this.$authentication.clear();
         },
     },
 

@@ -5,7 +5,6 @@ import java.security.Principal;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,7 +27,6 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequ
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtClaimNames;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ClassUtils;
@@ -37,15 +35,12 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWKSet;
 
 import io.github.u2ware.sample.x.XPrinter;
@@ -71,15 +66,15 @@ public class OAuth2AuthorizationController implements InitializingBean {
 	}
     
 	
-	@PostMapping("/token/encode")
-	public @ResponseBody Object encode(@RequestBody Jwt jwt) throws Exception{
-        return encoder.encode(jwt);
-    }
-
-	@PostMapping("/token/decode")
-	public @ResponseBody Object decode(@RequestBody String token) throws Exception{
-        return decoder.decode(token);
-    }
+//	@PostMapping("/token/encode")
+//	public @ResponseBody Object encode(@RequestBody Jwt jwt) throws Exception{
+//        return encoder.encode(jwt);
+//    }
+//
+//	@PostMapping("/token/decode")
+//	public @ResponseBody Object decode(@RequestBody String token) throws Exception{
+//        return decoder.decode(token);
+//    }
 
 	@GetMapping("/token/jwks.json")
 	public @ResponseBody Map<String, Object> getKey() {
@@ -132,8 +127,7 @@ public class OAuth2AuthorizationController implements InitializingBean {
         params.add("clientRegistrationId", clientRegistrationId(oauth2User, authorizedClient));
         params.add("principalName", principalName(oauth2User, authorizedClient));
         params.add("accessToken", accessToken(oauth2User, authorizedClient));
-        //params.add("idToken", idToken(oauth2User, authorizedClient));
-        params.add("idToken", customToken(oauth2User, authorizedClient));
+        params.add("idToken", idToken(oauth2User, authorizedClient));
 
         OAuth2AuthorizationRequest authorizationRequest = authorizationRequestRepository.loadAuthorizationRequest(request);
         if (StringUtils.isEmpty(authorizationRequest)) {
@@ -156,14 +150,14 @@ public class OAuth2AuthorizationController implements InitializingBean {
     private String accessToken(OAuth2User oauth2User, OAuth2AuthorizedClient authorizedClient)throws Exception{
         return authorizedClient.getAccessToken().getTokenValue();
     }
-    private String idToken(OAuth2User oauth2User, OAuth2AuthorizedClient authorizedClient)throws Exception{
-        if (ClassUtils.isAssignableValue(DefaultOidcUser.class, oauth2User)) {
-            DefaultOidcUser oidcUser = (DefaultOidcUser) oauth2User;
-            return oidcUser.getIdToken().getTokenValue();
-        }
-        return null;
-    }
-    private String customToken(OAuth2User oauth2User, OAuth2AuthorizedClient authorizedClient) throws Exception{
+//    private String idToken(OAuth2User oauth2User, OAuth2AuthorizedClient authorizedClient)throws Exception{
+//        if (ClassUtils.isAssignableValue(DefaultOidcUser.class, oauth2User)) {
+//            DefaultOidcUser oidcUser = (DefaultOidcUser) oauth2User;
+//            return oidcUser.getIdToken().getTokenValue();
+//        }
+//        return null;
+//    }
+    private String idToken(OAuth2User oauth2User, OAuth2AuthorizedClient authorizedClient) throws Exception{
 
         String tokenValue = authorizedClient.getAccessToken().getTokenValue();
         Instant issuedAt = authorizedClient.getAccessToken().getIssuedAt();
@@ -173,28 +167,23 @@ public class OAuth2AuthorizationController implements InitializingBean {
         headers.put("typ", "JWT");
         headers.put("alg", "RS256");
         Map<String, Object> claims = new HashMap<>(oauth2User.getAttributes());
-        claims.put("name", oauth2User.getName());
+        claims.put("principalName", authorizedClient.getPrincipalName());
+        claims.put("clientRegistrationId", authorizedClient.getClientRegistration().getRegistrationId());
         
-
-//		if(! claims.containsKey(JwtClaimNames.JTI)){
-//			claims.put(JwtClaimNames.JTI, UUID.randomUUID());
-//		}
-        logger.info("authorizedClient------------------------------------------------------");
-        logger.info(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(authorizedClient));
-        logger.info("oauth2User ------------------------------------------------------");
-        logger.info(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(oauth2User));
-        logger.info("---------------------------------------------------------------");
+//        logger.info("authorizedClient------------------------------------------------------");
+//        logger.info(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(authorizedClient));
+//        logger.info("oauth2User ------------------------------------------------------");
+//        logger.info(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(oauth2User));
+//        logger.info("---------------------------------------------------------------");
 
         Jwt jwt = new Jwt(tokenValue, issuedAt, expiresAt, headers, claims);
         String token = encoder.encode(jwt);
 
-        logger.info("JWT Encode Token------------------------------------------------------");
-        logger.info(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(jwt));
-        
-        logger.info("JWT Decode Token------------------------------------------------------");
-        logger.info(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(decoder.decode(token)));
-        logger.info("---------------------------------------------------------------");
-        
+//        logger.info("JWT Encode Token------------------------------------------------------");
+//        logger.info(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(jwt));
+//        logger.info("JWT Decode Token------------------------------------------------------");
+//        logger.info(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(decoder.decode(token)));
+//        logger.info("---------------------------------------------------------------");
         
         return token;
     }

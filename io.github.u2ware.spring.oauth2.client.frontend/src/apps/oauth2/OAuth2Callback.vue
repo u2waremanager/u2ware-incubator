@@ -14,45 +14,22 @@ export default {
     }),
     methods : {
         
-        nimbus(){
+        info(){
             const auth = this.$authentication.load();
-            this.$log.debug(this.$options.name, 'nimbus', auth);
+            this.$log.debug(this.$options.name, 'info', auth);
 
             this.$axios({
                 method : 'get',
                 url : this.resourceServer+'/user/info',
                 headers : {
-                    'Authorization': 'Bearar '+auth.idToken
+                    'Authorization': 'Bearer '+auth.idToken
                 }
             }).then((result1) => {
-                this.$log.debug(this.$options.name, 'nimbus', result1);
+                this.$log.debug(this.$options.name, 'info', result1);
 
             }).catch((error1) => {
-                this.$log.debug(this.$options.name, 'nimbus', error1);
+                this.$log.debug(this.$options.name, 'info', error1);
             });
-
-
-
-
-
-
-            // this.$axios({
-            //     method : 'post',
-            //     url : 'http://localhost:9091/nimbus/jwks.json',
-            //     data : {
-            //         hello : 'world'
-            //     }
-            // }).then((result1) => {
-            //     this.$log.debug(this.$options.name, 'result1', result1);
-
-                
-
-
-            // }).catch((error1) => {
-            //     this.$log.debug(this.$options.name, 'error1', error1);
-
-            // });
-
         },
     },
     created: function() {
@@ -63,11 +40,11 @@ export default {
         this.query = this.$route.query;
 
         this.$authentication = Authentication;
-        
         this.$authentication.save(this.$route.query);
         
-        //this.$router.push('/');
-        this.nimbus();
+        this.$router.push('/');
+        // or
+        // this.info();
     },
     updated: function() {
         this.$log.debug(this.$options.name, 'updated');
