@@ -91,7 +91,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	public JwtAccessTokenConverter accessTokenConverter() {
 
 		DefaultAccessTokenConverter accessTokenConverter = new DefaultAccessTokenConverter();
-		accessTokenConverter.setUserTokenConverter(new UserInfoConverter());
+		accessTokenConverter.setUserTokenConverter(new UserDetailsConverters());
 		
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 		converter.setKeyPair(this.keyPair);
