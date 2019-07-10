@@ -21,8 +21,6 @@ public class UserDetailsServices implements UserDetailsService, InitializingBean
 	public final static String PASSWORD = "password";
 	public final static String[] ROLES = new String[] {"USER"};
 
-	private InMemoryUserDetailsManager inMemoryUserDetailsManager;
-    
     @Autowired
     private PasswordEncoder encoder;
 	
@@ -32,6 +30,8 @@ public class UserDetailsServices implements UserDetailsService, InitializingBean
 		return inMemoryUserDetailsManager.loadUserByUsername(username);
 	}
 
+	private InMemoryUserDetailsManager inMemoryUserDetailsManager;
+	
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		inMemoryUserDetailsManager = new InMemoryUserDetailsManager(
