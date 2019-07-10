@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -166,19 +167,18 @@ public class OAuth2AuthorizationController implements InitializingBean {
         Map<String, Object> headers = new HashMap<>();
         headers.put("typ", "JWT");
         headers.put("alg", "RS256");
+
         Map<String, Object> claims = new HashMap<>(oauth2User.getAttributes());
-        claims.put("principalName", authorizedClient.getPrincipalName());
         claims.put("clientRegistrationId", authorizedClient.getClientRegistration().getRegistrationId());
-        
+        //CommonOAuth2Provider d;
+//      claims.put("principalName", authorizedClient.getPrincipalName());
 //        logger.info("authorizedClient------------------------------------------------------");
 //        logger.info(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(authorizedClient));
 //        logger.info("oauth2User ------------------------------------------------------");
 //        logger.info(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(oauth2User));
 //        logger.info("---------------------------------------------------------------");
-
         Jwt jwt = new Jwt(tokenValue, issuedAt, expiresAt, headers, claims);
         String token = encoder.encode(jwt);
-
 //        logger.info("JWT Encode Token------------------------------------------------------");
 //        logger.info(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(jwt));
 //        logger.info("JWT Decode Token------------------------------------------------------");
