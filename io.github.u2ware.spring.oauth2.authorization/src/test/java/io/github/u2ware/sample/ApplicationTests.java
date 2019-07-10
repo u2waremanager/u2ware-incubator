@@ -47,16 +47,13 @@ public class ApplicationTests {
 
         
         Arrays.stream(applicationContext.getBeanDefinitionNames()).sorted().forEach(n-> {
-        	
         	//String type = 
         	String type = applicationContext.getType(n).getName();
         	if(type.startsWith("org.springframework.security")|| type.startsWith("io.github.u2ware")) {
             	logger.info(n+"="+type);
         	}
         });
-		
         logger.info(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("password"));
-        
         logger.info(new BCryptPasswordEncoder().encode("password"));
         
         

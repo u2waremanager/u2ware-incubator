@@ -57,10 +57,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 		clients.inMemory()
 			.withClient(CLIENT_ID)
 				.authorizedGrantTypes(GRANT_TYPES)
-				.secret("{noop}secret")
+				.secret("{noop}"+CLIENT_SECRET)
 				.scopes("message:read")
                 .accessTokenValiditySeconds(600_000_000)
                 .redirectUris(REDIRECT_URIS)
+                .autoApprove(true)
 				.and()
 		;
 		// @formatter:on

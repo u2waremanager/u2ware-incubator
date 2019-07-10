@@ -1,5 +1,6 @@
 package io.github.u2ware.sample;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,7 +32,15 @@ public class UserInfoEndpoint extends BearerTokenExtractor{
 		this.tokenStore = tokenStore;
 	}
 
-	
+	@GetMapping("/")
+	public @ResponseBody Object userInfo( Principal principal) {
+        logger.info("-----------------------------------");
+        logger.info("principal: "+principal);
+        logger.info("-----------------------------------");
+		return principal;
+	}
+    
+    
     @GetMapping(value=PATH)
     public @ResponseBody ResponseEntity<Object> info(HttpServletRequest request) {
     	
