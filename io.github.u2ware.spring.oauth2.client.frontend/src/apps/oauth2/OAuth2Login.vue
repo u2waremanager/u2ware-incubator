@@ -31,6 +31,11 @@
                 <span class="fa fa-hello"></span>hello
             </a>
         </p>
+        <p>
+            <a class="btn btn-block btn-social btn-iScreamMedia" @click="login('iScreamMedia')">
+                <span class="fa fa-iScreamMedia"></span>iScreamMedia
+            </a>
+        </p>
     </div>
 
     <div v-if="isAuthenticated">
