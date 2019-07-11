@@ -9,16 +9,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
 
-public class UserDetailsConverters extends DefaultUserAuthenticationConverter {
+public class UserTokenConverters extends DefaultUserAuthenticationConverter {
 	
     protected Log logger = LogFactory.getLog(getClass());
 
 	@Override
 	public Map<String, ?> convertUserAuthentication(Authentication authentication) {
 
-        logger.info("convertUserAuthentication1: "+authentication);
-        logger.info("convertUserAuthentication2: "+authentication.getClass());
-        logger.info("convertUserAuthentication3: "+authentication.getPrincipal()); //->UserDetailsService
+        logger.info("convertUserAuthentication1: ");
+        logger.info("convertUserAuthentication1: "+authentication.getPrincipal());
+        
+        UserToken token = (UserToken)authentication.getPrincipal();
 
 		Map<String, Object> response = new LinkedHashMap<String, Object>();
 		response.put("id", authentication.getName());
@@ -26,7 +27,8 @@ public class UserDetailsConverters extends DefaultUserAuthenticationConverter {
         if (authentication.getAuthorities() != null && !authentication.getAuthorities().isEmpty()) {
 			response.put(AUTHORITIES, AuthorityUtils.authorityListToSet(authentication.getAuthorities()));
         }
-
+        response.putAll(token.getInfo());
+        
 		return response;
 	}
 

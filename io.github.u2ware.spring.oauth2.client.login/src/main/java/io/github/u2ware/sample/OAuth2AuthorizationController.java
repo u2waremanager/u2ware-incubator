@@ -3,7 +3,9 @@ package io.github.u2ware.sample;
 import java.net.URLEncoder;
 import java.security.Principal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +15,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +23,7 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
@@ -66,6 +68,21 @@ public class OAuth2AuthorizationController implements InitializingBean {
 		this.decoder = new NimbusJwtDecoder(jwkSet);
 	}
     
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@GetMapping("/token/clientRegistrations")
+	public @ResponseBody Object clientRegistrations() throws Exception{
+
+        InMemoryClientRegistrationRepository rr = (InMemoryClientRegistrationRepository)clientRegistrationRepository;
+
+        List clients = new ArrayList();
+        rr.forEach((r)->{
+            Map client = new HashMap();
+            client.put("name", r.getClientName());
+            client.put("uri", "/login/"+r.getRegistrationId());
+            clients.add(client);
+        });
+        return clients;
+    }
 	
 //	@PostMapping("/token/encode")
 //	public @ResponseBody Object encode(@RequestBody Jwt jwt) throws Exception{

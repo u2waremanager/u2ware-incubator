@@ -1,8 +1,8 @@
 package io.github.u2ware.sample;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,36 +15,39 @@ import org.springframework.security.web.authentication.rememberme.TokenBasedReme
 @Configuration
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 
-
     @Bean
-    public PasswordEncoder passwordEncoder() { 
+    public PasswordEncoder userTokenPasswordEncoder() { 
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    };
+    }
 
     @Bean
-    public RememberMeServices rememberMeServices() { 
-        TokenBasedRememberMeServices rememberMeServices = new TokenBasedRememberMeServices(rememberMeServicesKey(), userDetailsService);
+    public UserDetailsService userTokenDetailsService() { 
+        return new UserTokenManager(userTokenPasswordEncoder());
+    }
+
+    public AuthenticationProvider userTokenAuthenticationProvider() { 
+        return new UserTokenAuthenticationProvider(userTokenPasswordEncoder());
+    }
+
+    public RememberMeServices userTokenRememberMeServices() { 
+        // TokenBasedRememberMeServices rememberMeServices = new TokenBasedRememberMeServices(rememberMeServicesKey(), userDetailsService);
+        XTokenBasedRememberMeServices rememberMeServices = new XTokenBasedRememberMeServices(userTokenRememberMeServicesKey(), userTokenDetailsService());
         rememberMeServices.setAlwaysRemember(true);
         return rememberMeServices;
     };
 
-    public String rememberMeServicesKey() { 
+    public String userTokenRememberMeServicesKey() { 
         return getClass().getName();
     }
-    
-    
-    @Autowired
-    private UserDetailsService userDetailsService;
-    
-    
-    
+   
 	/////////////////////////////////////////////////////////////
 	//
 	/////////////////////////////////////////////////////////////
 	@Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-        	.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        	.authenticationProvider(userTokenAuthenticationProvider())
+        	.userDetailsService(userTokenDetailsService()).passwordEncoder(userTokenPasswordEncoder());
     }
 	
 	@Override
@@ -54,13 +57,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 			.formLogin()
 				.and()
 			.authorizeRequests()
-				.mvcMatchers(KeyPairEndpoint.PATH).permitAll()
-				.mvcMatchers(UserInfoEndpoint.PATH).permitAll()
+				.mvcMatchers(ResourceServerEndpoint.JWK_SET_URI).permitAll()
+				.mvcMatchers(ResourceServerEndpoint.USER_INFO).permitAll()
 				.anyRequest().authenticated()
                 .and()
-            .rememberMe()
-                .rememberMeServices(rememberMeServices())
-                .key(rememberMeServicesKey())
+           .rememberMe()
+               .rememberMeServices(userTokenRememberMeServices())
+               .key(userTokenRememberMeServicesKey())
 				;
     }
 }

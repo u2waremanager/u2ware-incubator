@@ -30,8 +30,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/logout/*").permitAll()
                 .antMatchers("/.well-known/jwks.json").permitAll()
                 .antMatchers("/token/jwks.json").permitAll()
-                .antMatchers("/token/decode").permitAll()
-                .antMatchers("/token/encode").permitAll()
+                .antMatchers("/token/clientRegistrations").permitAll()
+
+                // .antMatchers("/token/decode").permitAll()
+                // .antMatchers("/token/encode").permitAll()
+
+
+
                 .anyRequest().authenticated()
                 .and()
             .oauth2Login()

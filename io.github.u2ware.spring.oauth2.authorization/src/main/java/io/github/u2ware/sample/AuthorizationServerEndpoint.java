@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @FrameworkEndpoint
-public class UserLogonEndpoint {
+public class AuthorizationServerEndpoint {
 
 	protected Log logger = LogFactory.getLog(getClass());
 	
