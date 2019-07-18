@@ -1,6 +1,5 @@
 package io.github.u2ware.sample;
 
-import java.net.URLEncoder;
 import java.security.Principal;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -69,7 +68,7 @@ public class OAuth2AuthorizationController implements InitializingBean {
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-        this.jwkSet = JWKSet.load( new ClassPathResource("JWKKeypairSet.json").getFile());
+        this.jwkSet = JWKSet.load( new ClassPathResource("JWKKeypairSet.json", this.getClass().getClassLoader()).getInputStream());
 		this.encoder = new NimbusJwtEncoder(jwkSet);
 		this.decoder = new NimbusJwtDecoder(jwkSet);
 	}
@@ -180,17 +179,15 @@ public class OAuth2AuthorizationController implements InitializingBean {
         XPrinter.print("logon: ", request);
 
         String clientRegistrationId = clientRegistrationId(oauth2User, authorizedClient);
-        String principalName = principalName(oauth2User, authorizedClient);
+//        String principalName = principalName(oauth2User, authorizedClient);
         String accessToken = accessToken(oauth2User, authorizedClient);
         String idToken = idToken(oauth2User, authorizedClient);
 
         MultiValueMap<String,String> params = new LinkedMultiValueMap<>();
         params.add("clientRegistrationId", clientRegistrationId);
-        params.add("principalName", principalName);
+//        params.add("principalName", principalName);
         params.add("accessToken", accessToken);
         params.add("idToken", idToken);
-        // params.add("userInfoUri" , authorizedClient.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUri());
-        // params.add("userJwtUri"  , ServletUriComponentsBuilder.fromContextPath(request).build()+"/user/info");
 
         OAuth2AuthorizationRequest authorizationRequest = authorizationRequestRepository.loadAuthorizationRequest(request);
         if (StringUtils.isEmpty(authorizationRequest)) {
@@ -209,9 +206,9 @@ public class OAuth2AuthorizationController implements InitializingBean {
     private String clientRegistrationId(OAuth2User oauth2User, OAuth2AuthorizedClient authorizedClient)throws Exception{
         return authorizedClient.getClientRegistration().getRegistrationId();
     }
-    private String principalName(OAuth2User oauth2User, OAuth2AuthorizedClient authorizedClient) throws Exception{
-        return URLEncoder.encode(authorizedClient.getPrincipalName(), "UTF-8");
-    }
+//    private String principalName(OAuth2User oauth2User, OAuth2AuthorizedClient authorizedClient) throws Exception{
+//        return URLEncoder.encode(authorizedClient.getPrincipalName(), "UTF-8");
+//    }
     private String accessToken(OAuth2User oauth2User, OAuth2AuthorizedClient authorizedClient)throws Exception{
         return authorizedClient.getAccessToken().getTokenValue();
     }
