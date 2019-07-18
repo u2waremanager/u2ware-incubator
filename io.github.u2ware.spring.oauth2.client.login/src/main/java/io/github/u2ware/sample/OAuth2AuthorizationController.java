@@ -4,6 +4,7 @@ import java.net.URLEncoder;
 import java.security.Principal;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,9 +44,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWKSet;
 
 import io.github.u2ware.sample.x.XPrinter;
@@ -57,6 +62,7 @@ public class OAuth2AuthorizationController implements InitializingBean {
 	private NimbusJwtEncoder encoder;
 	private NimbusJwtDecoder decoder;
 
+    private @Autowired ObjectMapper objectMapper;
     private @Autowired ClientRegistrationRepository clientRegistrationRepository;
     private @Autowired OAuth2AuthorizedClientService clientService;
     private @Autowired AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository;
@@ -70,20 +76,55 @@ public class OAuth2AuthorizationController implements InitializingBean {
     
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@GetMapping("/token/clientRegistrations")
-	public @ResponseBody Object clientRegistrations() throws Exception{
+	public @ResponseBody Object clientRegistrations(HttpServletRequest request) throws Exception{
 
         InMemoryClientRegistrationRepository rr = (InMemoryClientRegistrationRepository)clientRegistrationRepository;
 
+        UriComponents base = ServletUriComponentsBuilder.fromContextPath(request).build();
         List clients = new ArrayList();
         rr.forEach((r)->{
             Map client = new HashMap();
-            client.put("name", r.getClientName());
-            client.put("uri", "/login/"+r.getRegistrationId());
+            client.put("clientRegistrationId", r.getRegistrationId());
+            client.put("clientName", r.getClientName());
+            client.put("authorizationUri", base+"/login/"+r.getRegistrationId());
+            client.put("userJwtUri"     , base+"/user/info");
+            client.put("userInfoUri"    , r.getProviderDetails().getUserInfoEndpoint().getUri());
+
             clients.add(client);
         });
         return clients;
     }
-	
+
+	@GetMapping("/token/jwks.json")
+	public @ResponseBody Map<String, Object> jwks() {
+		return jwkSet.toJSONObject(true);
+	}
+
+	@GetMapping("/user/info")
+	public @ResponseBody ResponseEntity<?> info(HttpServletRequest request) throws Exception{
+
+        String bearerTokenValue = extractHeaderToken(request);
+        try{
+            Jwt jwt = decoder.decode(bearerTokenValue);
+            return ResponseEntity.ok(jwt);
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+	}
+    
+	protected String extractHeaderToken(HttpServletRequest request) {
+		Enumeration<String> headers = request.getHeaders("Authorization");
+		while (headers.hasMoreElements()) { // typically there is only one (most servers enforce that)
+			String value = headers.nextElement();
+			if ((value.toLowerCase().startsWith("Bearer".toLowerCase()))) {
+				String authHeaderValue = value.substring("Bearer".length()).trim();
+                return authHeaderValue;
+			}
+		}
+		return null;
+	}
+
+
 //	@PostMapping("/token/encode")
 //	public @ResponseBody Object encode(@RequestBody Jwt jwt) throws Exception{
 //        return encoder.encode(jwt);
@@ -94,20 +135,17 @@ public class OAuth2AuthorizationController implements InitializingBean {
 //        return decoder.decode(token);
 //    }
 
-	@GetMapping("/token/jwks.json")
-	public @ResponseBody Map<String, Object> getKey() {
-		return jwkSet.toJSONObject(true);
-	}
-	
-    
     @RequestMapping("/login")
     public String login(Model model) {
     	
     	
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getClass().isAssignableFrom(OAuth2AuthenticationToken.class)) {
-            OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
-            model.addAttribute("oauthToken", oauthToken);
+
+            // OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+            // OAuth2User oauthUser = oauthToken.getPrincipal();
+            // model.addAttribute("oauthToken", oauthToken);
+
             return "logonPage";
 
         } else {
@@ -141,21 +179,30 @@ public class OAuth2AuthorizationController implements InitializingBean {
 
         XPrinter.print("logon: ", request);
 
+        String clientRegistrationId = clientRegistrationId(oauth2User, authorizedClient);
+        String principalName = principalName(oauth2User, authorizedClient);
+        String accessToken = accessToken(oauth2User, authorizedClient);
+        String idToken = idToken(oauth2User, authorizedClient);
+
         MultiValueMap<String,String> params = new LinkedMultiValueMap<>();
-        params.add("clientRegistrationId", clientRegistrationId(oauth2User, authorizedClient));
-        params.add("principalName", principalName(oauth2User, authorizedClient));
-        params.add("accessToken", accessToken(oauth2User, authorizedClient));
-        params.add("idToken", idToken(oauth2User, authorizedClient));
+        params.add("clientRegistrationId", clientRegistrationId);
+        params.add("principalName", principalName);
+        params.add("accessToken", accessToken);
+        params.add("idToken", idToken);
+        // params.add("userInfoUri" , authorizedClient.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUri());
+        // params.add("userJwtUri"  , ServletUriComponentsBuilder.fromContextPath(request).build()+"/user/info");
 
         OAuth2AuthorizationRequest authorizationRequest = authorizationRequestRepository.loadAuthorizationRequest(request);
         if (StringUtils.isEmpty(authorizationRequest)) {
+            model.addAttribute("oauth2User", objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(oauth2User));
+            model.addAttribute("authorizedClient", objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(authorizedClient));
+            model.addAttribute("paremeters", objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(params.toSingleValueMap()));
             return login(model);
         }
 
         String url = authorizationRequest.getRedirectUri();
         UriComponents redirect = UriComponentsBuilder.fromUriString(url).queryParams(params).build();
-        logger.info(redirect);
-        logger.info(redirect.toString().length());
+        logger.info("redirect: "+redirect.toString().length());
         return "redirect:" + redirect;
     }
 
@@ -209,22 +256,21 @@ public class OAuth2AuthorizationController implements InitializingBean {
     ////////////////////////////////////////////////////////////////////
     //
     ////////////////////////////////////////////////////////////////////
-    @RequestMapping(value="/oauth2/user")
+    @RequestMapping(value="/user/oauth2user")
     public @ResponseBody OAuth2User oauth2User(@AuthenticationPrincipal OAuth2User oauth2User) {
         return oauth2User;
     }
 
-    @RequestMapping(value="/oauth2/authorizedClient")
+    @RequestMapping(value="/user/oauth2authorizedClient")
     public @ResponseBody OAuth2AuthorizedClient oauth2User(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient){
         return authorizedClient;
     }
     
-    @RequestMapping(value="/oauth2")
+    @RequestMapping(value="/user")
     public @ResponseBody Map<String,Object> oauth2User() {
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
         
         // logger.info("---------------------------");
         // logger.info("/oauth2: "+authentication.hashCode()+" "+authentication.getClass());

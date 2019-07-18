@@ -1,48 +1,61 @@
 <template>
-<div>
-    <div v-if="! isAuthenticated">
-        <p v-for="client in clients">
-            <a @click="login(client.uri)">
-                {{client.name}}
-            </a>
-        </p>
-    </div>
-
-    <div v-if="isAuthenticated">
-        <p>
-            <button @click="logout">logout</button>
-        </p>
-        <p>
-            <button @click="info">info</button>
-        </p>
-    </div>
-    <p>
-        <pre>{{message}}</pre>
-    </p>
-
-</div>
+  <v-app id="inspire">
+    <v-content>
+      <v-container fluid fill-height>
+        <v-layout align-center justify-center>
 
 
+          <v-flex xs12>
+            <v-card class="elevation-12">
+              <v-toolbar dark color="primary">
+                <v-toolbar-title>OAuth2 Login Server</v-toolbar-title>
+                <v-spacer></v-spacer>
+              </v-toolbar>
+              
+              <v-card-text v-if="! isAuthenticated()">
+                <v-btn v-for="client in clients" :key="client.name" :small="true" color="info" @click="login(client)">
+                    {{client.clientName}}
+                </v-btn>
+              </v-card-text>
+              
+              <v-card-text v-if="isAuthenticated()">
+                <v-btn :small="true" color="primary" @click="idTokenInfo">id Token User Info</v-btn>
+                <v-btn :small="true" color="primary" @click="accessTokenInfo">Access Token User Info</v-btn>
+                <v-btn :small="true" color="primary" @click="logout">logout</v-btn>
+              </v-card-text>
+
+              <v-card-actions>
+                <pre>{{userInfo}}</pre>
+              </v-card-actions>
+
+            </v-card>
+
+          </v-flex>
+
+
+
+        </v-layout>
+      </v-container>
+    </v-content>
+  </v-app>
 </template>
 
 
 
-
 <script>
-import {Authentication} from './Authentication.js'
 
 export default {
     name : 'OAuth2Login',
 
     data: () => ({
-        isAuthenticated : false,
-        message : null,
+        userInfo : null,
 
         clients : [],
 
-        authServer  : 'http://localhost:9091',
-        authCallback : 'http://localhost:8080/callback',
-        resourceServer  : 'http://localhost:9092',
+        oauth2AuthorizationServer : 'http://localhost:9093',
+        // oauth2ResourceServer      : 'http://localhost:9092',
+        oauth2ResourceServer      : 'http://localhost:9091',
+        oauth2LoginServer      : 'http://localhost:9091',
     }),
 
     methods : {
@@ -50,7 +63,7 @@ export default {
         clientRegistrations(){
             this.$axios({
                 method : 'get',
-                url : this.authServer + '/token/clientRegistrations',
+                url : this.oauth2LoginServer+'/token/clientRegistrations',
 
             }).then((result) => {
                 this.$log.debug(this.$options.name, 'clientRegistrations', result);
@@ -61,55 +74,87 @@ export default {
             })
         },
 
+        isAuthenticated(){
+            return this.$authentication.isAuthenticated();
+        },
 
-        info(){
+
+        accessTokenInfo(){
+
             const auth = this.$authentication.load();
+
+            this.clients.forEach(client => {
+                if(client.clientRegistrationId == auth.clientRegistrationId){
+
+
+                    this.$log.debug(this.$options.name, 'accessTokenInfo', client, auth);
+                    this.$log.debug(this.$options.name, 'accessTokenInfo', client, auth.accessToken);
+
+                    this.$axios({
+                        method : 'get',
+                        url : client.userInfoUri,
+                        headers : {
+                            'Authorization': "Bearer "+auth.accessToken,
+                            // 'Access-Control-Allow-Origin' : 'GET'
+                        }
+
+                    }).then((result) => {
+                        this.$log.debug(this.$options.name, 'accessTokenInfo', result);
+                        this.userInfo = result.data;
+
+                    }).catch((error) => {
+                        this.$log.debug(this.$options.name, 'accessTokenInfo', error);
+                        this.userInfo = {};
+                    })
+                }
+            });
+
+
+        },
+
+
+        idTokenInfo(){
+            const auth = this.$authentication.load();
+            this.userInfo = {};
 
             this.$axios({
                 method : 'get',
-                url : this.resourceServer + '/user/info',
+                url : this.oauth2ResourceServer+"/user/info",
                 headers : {
                     'Authorization': "Bearer "+auth.idToken
                 }
 
             }).then((result) => {
-                this.$log.debug(this.$options.name, 'info', result);
-                this.message = result.data;
-
-                this.isAuthenticated = true;
+                this.$log.debug(this.$options.name, 'idTokenInfo', result);
+                this.userInfo = result.data;
 
             }).catch((error) => {
-                this.$log.debug(this.$options.name, 'info', error);
+                this.$log.debug(this.$options.name, 'idTokenInfo', error);
 
-                this.message = {};
-
-                this.isAuthenticated = false;
-                this.$authentication.clear();
+                this.userInfo = {};
             })
         },
 
-        login(uri){
-            var url = this.authServer+uri+'?callback_uri='+this.authCallback;
-
+        login(client){
+            var url = client.authorizationUri+'?callback_uri=http://localhost:8080/callback';
             alert(url);
-
             window.location.href = url;
         },
 
         logout(){
             this.message = {};
-            this.isAuthenticated = false;
+            this.userInfo = {};
             this.$authentication.clear();
         },
     },
 
     created(){
-        this.$authentication = Authentication;
-        this.clientRegistrations();
-    },
-    mounted(){
         this.$log.debug(this.$options.name, 'created');
-        this.info();
+    },
+    
+    mounted(){
+        this.$log.debug(this.$options.name, 'mounted');
+        this.clientRegistrations();
     }
 }
 </script>

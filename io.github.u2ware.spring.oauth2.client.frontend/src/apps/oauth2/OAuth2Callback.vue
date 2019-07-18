@@ -1,50 +1,43 @@
 <template>
-    <div>{{query}}</div>
+    <div>{{message}}</div>
 </template>
 
 <script>
-import {Authentication} from './Authentication.js'
-
 export default {
     name : 'Oauth2Callback',
     data: () => ({
-        query : null,
-        authServer  : 'http://localhost:9091',
-        resourceServer  : 'http://localhost:9092',
+        message : "....",
+        oauth2AuthorizationServer : 'http://localhost:9093',
+        // oauth2ResourceServer      : 'http://localhost:9092',
+        oauth2ResourceServer      : 'http://localhost:9091',
+        oauth2LoginServer      : 'http://localhost:9091',
     }),
     methods : {
-        
-        info(){
-            const auth = this.$authentication.load();
-            this.$log.debug(this.$options.name, 'info', auth);
 
-            this.$axios({
-                method : 'get',
-                url : this.resourceServer+'/user/info',
-                headers : {
-                    'Authorization': 'Bearer '+auth.idToken
-                }
-            }).then((result1) => {
-                this.$log.debug(this.$options.name, 'info', result1);
-
-            }).catch((error1) => {
-                this.$log.debug(this.$options.name, 'info', error1);
-            });
-        },
     },
     created: function() {
         this.$log.debug(this.$options.name, 'created');
     },
     mounted: function() {
         this.$log.debug(this.$options.name, 'mounted', this.$route.query);
-        this.query = this.$route.query;
 
-        this.$authentication = Authentication;
-        this.$authentication.save(this.$route.query);
-        
-        this.$router.push('/');
-        // or
-        // this.info();
+        this.$axios({
+            method : 'get',
+            url : this.oauth2LoginServer+"/user/info",
+            headers : {
+                'Authorization': "Bearer "+this.$route.query.idToken
+            }
+
+        }).then((result) => {
+            this.$log.debug(this.$options.name, 'info', result);
+            this.$authentication.save(this.$route.query);
+            this.$router.push('/');
+
+        }).catch((error) => {
+            this.$log.debug(this.$options.name, 'info', error);
+            this.message = 'error';
+        })
+
     },
     updated: function() {
         this.$log.debug(this.$options.name, 'updated');

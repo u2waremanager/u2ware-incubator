@@ -1,6 +1,7 @@
+"use strict";
 import Vue from 'vue'
 
-export const Authentication = {
+const Authentication = {
 
     clear() {
         Vue.$log.debug('Authentication', 'clear');
@@ -19,14 +20,24 @@ export const Authentication = {
             'principalName' : localStorage.principalName
         };
     },
+
     save(auth) {
         Vue.$log.debug('Authentication', 'save', auth);
         localStorage.setItem('accessToken', auth.accessToken);
         localStorage.setItem('idToken', auth.idToken);
         localStorage.setItem('clientRegistrationId', auth.clientRegistrationId);
         localStorage.setItem('principalName', auth.principalName);
+    },
+
+    isAuthenticated(){
+        Vue.$log.debug('Authentication', 'isAuthenticated', "");
+        return localStorage.accessToken != null;
     }
 };
+
+export default Authentication;
+
+
 
 
 

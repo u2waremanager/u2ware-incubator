@@ -12,11 +12,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.provider.endpoint.RedirectResolver;
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -62,7 +65,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 				.secret("{noop}"+CLIENT_SECRET)
 				.scopes("message:read")
                 .accessTokenValiditySeconds(600_000_000)
-                .redirectUris(REDIRECT_URIS)
+                //.redirectUris(REDIRECT_URIS) //->redirectResolver
                 .autoApprove(true)
 				.and()
 		;
@@ -76,6 +79,14 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
             .authenticationManager(this.authenticationManager)
 			.accessTokenConverter(accessTokenConverter())
             .tokenStore(tokenStore())
+            
+            .redirectResolver(new RedirectResolver() {
+				@Override
+				public String resolveRedirect(String requestedRedirect, ClientDetails client) throws OAuth2Exception {
+					logger.info("aaaaaaaaaaaaaa");
+					return requestedRedirect;
+				}
+			})
         ;
 		// @formatter:on
     }
