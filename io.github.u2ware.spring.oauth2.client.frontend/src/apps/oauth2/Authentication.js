@@ -5,28 +5,28 @@ const Authentication = {
 
     clear() {
         Vue.$log.debug('Authentication', 'clear');
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('idToken');
         localStorage.removeItem('clientRegistrationId');
         localStorage.removeItem('principalName');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('idToken');
     },
 
     load() {
         Vue.$log.debug('Authentication', 'load');
         return {
+            'clientRegistrationId' : localStorage.clientRegistrationId,
+            'principalName' : localStorage.principalName,
             'accessToken' : localStorage.accessToken,
             'idToken' : localStorage.idToken,
-            'clientRegistrationId' : localStorage.clientRegistrationId,
-            'principalName' : localStorage.principalName
         };
     },
 
     save(auth) {
         Vue.$log.debug('Authentication', 'save', auth);
-        localStorage.setItem('accessToken', auth.accessToken);
-        localStorage.setItem('idToken', auth.idToken);
         localStorage.setItem('clientRegistrationId', auth.clientRegistrationId);
         localStorage.setItem('principalName', auth.principalName);
+        localStorage.setItem('accessToken', auth.accessToken);
+        localStorage.setItem('idToken', auth.idToken);
     },
 
     isAuthenticated(){

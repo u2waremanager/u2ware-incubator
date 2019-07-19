@@ -16,7 +16,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.authentication.BearerTokenExtractor;
 import org.springframework.security.oauth2.provider.endpoint.FrameworkEndpoint;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,7 +37,7 @@ public class ResourceServerEndpoint extends BearerTokenExtractor {
 
 	
     @SuppressWarnings("unchecked")
-	@GetMapping(value=USER_INFO)
+    @RequestMapping(value=USER_INFO)
     public @ResponseBody ResponseEntity<Object> info(HttpServletRequest request) {
     	
     	try {
@@ -66,9 +66,8 @@ public class ResourceServerEndpoint extends BearerTokenExtractor {
     	}
 	}
     
-	@GetMapping(JWK_SET_URI)
-	@ResponseBody
-	public Map<String, Object> getKey(Principal principal) {
+	@RequestMapping(JWK_SET_URI)
+	public @ResponseBody Map<String, Object> getKey(Principal principal) {
 		RSAPublicKey publicKey = (RSAPublicKey) this.keyPair.getPublic();
 		RSAKey key = new RSAKey.Builder(publicKey).build();
 		return new JWKSet(key).toJSONObject();
