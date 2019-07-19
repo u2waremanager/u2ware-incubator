@@ -8,8 +8,7 @@ export default {
     data: () => ({
         message : "....",
         oauth2AuthorizationServer : 'http://localhost:9093',
-        // oauth2ResourceServer      : 'http://localhost:9092',
-        oauth2ResourceServer      : 'http://localhost:9091',
+        oauth2ResourceServer      : 'http://localhost:9092',
         oauth2LoginServer      : 'http://localhost:9091',
     }),
     methods : {
@@ -23,7 +22,7 @@ export default {
 
         this.$axios({
             method : 'get',
-            url : this.oauth2LoginServer+"/user/info",
+            url : this.oauth2ResourceServer+"/user/info",
             headers : {
                 'Authorization': "Bearer "+this.$route.query.idToken
             }

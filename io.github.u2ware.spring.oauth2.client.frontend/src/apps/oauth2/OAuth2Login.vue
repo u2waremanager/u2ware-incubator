@@ -53,8 +53,7 @@ export default {
         clients : [],
 
         oauth2AuthorizationServer : 'http://localhost:9093',
-        // oauth2ResourceServer      : 'http://localhost:9092',
-        oauth2ResourceServer      : 'http://localhost:9091',
+        oauth2ResourceServer      : 'http://localhost:9092',
         oauth2LoginServer      : 'http://localhost:9091',
     }),
 
@@ -90,6 +89,8 @@ export default {
                     this.$log.debug(this.$options.name, 'accessTokenInfo', client, auth);
                     this.$log.debug(this.$options.name, 'accessTokenInfo', client, auth.accessToken);
 
+                    alert(client.userInfoUri);
+
                     this.$axios({
                         method : 'get',
                         url : client.userInfoUri,
@@ -117,9 +118,12 @@ export default {
             const auth = this.$authentication.load();
             this.userInfo = {};
 
+
+            alert(this.oauth2LoginServer+"/user/info");
+
             this.$axios({
                 method : 'get',
-                url : this.oauth2ResourceServer+"/user/info",
+                url : this.oauth2LoginServer+"/user/info",
                 headers : {
                     'Authorization': "Bearer "+auth.idToken
                 }
