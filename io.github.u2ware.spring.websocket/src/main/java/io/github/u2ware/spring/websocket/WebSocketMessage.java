@@ -10,7 +10,7 @@ public class WebSocketMessage {
 	private String sender;
 	private String type;
 	private String content;
-	private boolean connected = true;
+	private Object escape;
 
 	public String getRoom() {
 		return room;
@@ -36,15 +36,14 @@ public class WebSocketMessage {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public boolean isConnected() {
-		return connected;
+	public Object getEscape() {
+		return escape;
 	}
-	public void setConnected(boolean connected) {
-		this.connected = connected;
+	public void setEscape(Object escape) {
+		this.escape = escape;
 	}
-	
 	@Override
 	public String toString() {
-		return "WebSocketMessage [room=" + room + ", sender=" + sender + ", type=" + type + ", connected=" + connected + "]";
+		return "WebSocketMessage [room=" + room + ", sender=" + sender + ", type=" + type + ", escape=" + escape + "]";
 	}
 }

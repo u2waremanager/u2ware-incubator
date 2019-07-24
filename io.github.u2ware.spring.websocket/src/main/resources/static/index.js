@@ -84,7 +84,7 @@ function disconnect(event) {
     var subscribeId = room+"/"+username;
     stompClient.unsubscribe(subscribeId, {});
 
-    stompClient.send(CHAT_PUBLISH_URL + room, {}, JSON.stringify({sender: username, type: 'LEAVE', connected : false}) )
+    stompClient.send(CHAT_PUBLISH_URL + room, {}, JSON.stringify({sender: username, type: 'LEAVE', escape : true}) )
     
     onDisconnected();
 
@@ -144,7 +144,7 @@ function onMessageReceived(payload) {
 
     var messageElement = document.createElement('li');
 
-    if(message.connected === false) {
+    if(message.escape === true) {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' left!';
     

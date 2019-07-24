@@ -41,29 +41,29 @@ public class WebSocketMessageEndpoint {
     
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
-        //this.print("SessionDisconnectEvent", event);
+        this.print("SessionDisconnectEvent", event);
     	
         WebSocketMessage payload = this.messageLoad(StompHeaderAccessor.wrap(event.getMessage()));
-        if(payload != null && payload.isConnected()) {
-        	payload.setConnected(false);
+        if(payload != null && payload.getEscape() == null) {
+        	payload.setEscape(true);
             this.messageSend(payload);
         }
     }
     @EventListener
     public void handleWebSocketUnsubscribeListener(SessionUnsubscribeEvent event) {
-//        this.print("SessionUnsubscribeEvent", event);
+        this.print("SessionUnsubscribeEvent", event);
     }
     @EventListener
     public void handleWebSocketSubscribeListener(SessionSubscribeEvent event) {
-//        this.print("SessionSubscribeEvent", event);
+        this.print("SessionSubscribeEvent", event);
     }
     @EventListener
     public void handleWebSocketConnectedListener(SessionConnectedEvent event) {
-//        this.print("SessionConnectedEvent", event);
+        this.print("SessionConnectedEvent", event);
     }
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectEvent event) {
-//        this.print("SessionConnectEvent", event);
+        this.print("SessionConnectEvent", event);
     }
     
     ///////////////////////////////////////////////////////////////////////////////////
@@ -87,7 +87,7 @@ public class WebSocketMessageEndpoint {
     protected void messageStore(SimpMessageHeaderAccessor header, WebSocketMessage payload) {
     	String key = WebSocketMessage.class.getName();
         header.getSessionAttributes().put(key, payload);
-        logger.info("message store: "+payload);
+        //logger.info("message store: "+payload);
     }
     
     protected WebSocketMessage messageLoad(SimpMessageHeaderAccessor header) {
@@ -96,14 +96,14 @@ public class WebSocketMessageEndpoint {
         Map<String, Object> attrs = header.getSessionAttributes();
         if(attrs != null && attrs.containsKey(key)) {
         	payload = (WebSocketMessage) attrs.get(key);
-            logger.info("message load: "+payload);
+            //logger.info("message load: "+payload);
         }
         return payload;
     }
     
     protected void messageSend(WebSocketMessage payload) {
     	String destination = WebSocketMessage.WS_SUBSCRIBE_URL + payload.getRoom();
-        logger.info("message send: "+payload);
+        logger.info(destination+ " "+payload);
         simpMessageSendingOperations.convertAndSend(destination, payload);
     }
 }
