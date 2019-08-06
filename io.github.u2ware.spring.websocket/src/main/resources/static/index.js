@@ -152,6 +152,10 @@ function onMessageReceived(payload) {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' left!';
     
+    } else if (message.contentType === 'DISCONNECT') {
+        messageElement.classList.add('event-message');
+        message.content = message.sender + ' disconnected!';
+        
     } else if (message.contentType === 'CHAT') {
 
     	if(message.sender != username) {

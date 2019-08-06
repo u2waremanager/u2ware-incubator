@@ -110,6 +110,7 @@ public class WebSocketMessageEndpoint {
 
     	WebSocketMessage payload = this.messageLoad(header);
         if(payload != null) {
+        	payload.setId(UUID.randomUUID());
         	payload.setContentType(header.getMessageType().toString());
             this.messageSend(payload);
         }
