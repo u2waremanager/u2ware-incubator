@@ -45,7 +45,7 @@ function connect(event) {
             onConnected();
 
         }else{
-            console.log('STOMP: Attempting connection');
+            console.log('STOMP: Attempting connection', CHAT_URL);
 
             // recreate the stompClient to use a new WebSocket
             var socket = new SockJS(CHAT_URL);
@@ -62,7 +62,7 @@ function onConnected() {
     console.log('STOMP: onConnected');
 
     // Tell your username to the server
-    stompClient.send(CHAT_PUBLISH_URL + room, {}, JSON.stringify({sender: username, type: 'JOIN'}) )
+    stompClient.send(CHAT_PUBLISH_URL + room, {}, JSON.stringify({sender: username, contentType: 'JOIN'}) )
     
     // Subscribe to the Public Topic
     var subscribeId = room+"/"+username;
@@ -84,7 +84,7 @@ function disconnect(event) {
     var subscribeId = room+"/"+username;
     stompClient.unsubscribe(subscribeId, {});
 
-    stompClient.send(CHAT_PUBLISH_URL + room, {}, JSON.stringify({sender: username, type: 'LEAVE', escape : true}) )
+    stompClient.send(CHAT_PUBLISH_URL + room, {}, JSON.stringify({sender: username, contentType: 'LEAVE'}) )
     
     onDisconnected();
 
@@ -125,8 +125,8 @@ function sendMessage(event) {
     if(messageContent && stompClient) {
         var chatMessage = {
             sender: username,
-            content: messageInput.value,
-            type: 'CHAT'
+            contentType: 'CHAT',
+            content: messageInput.value
         };
 
         stompClient.send(CHAT_PUBLISH_URL + room, {}, JSON.stringify(chatMessage));
@@ -144,17 +144,27 @@ function onMessageReceived(payload) {
 
     var messageElement = document.createElement('li');
 
-    if(message.escape === true) {
+    if(message.contentType === 'JOIN') {
+        messageElement.classList.add('event-message');
+        message.content = message.sender + ' joined!';
+        
+    } else if (message.contentType === 'LEAVE') {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' left!';
     
-    } else if(message.type === 'JOIN') {
-        messageElement.classList.add('event-message');
-        message.content = message.sender + ' joined!';
-    } else if (message.type === 'LEAVE') {
-        messageElement.classList.add('event-message');
-        message.content = message.sender + ' left!';
-    } else {
+    } else if (message.contentType === 'CHAT') {
+
+    	if(message.sender != username) {
+        	var chatMessage = {
+                sender: username,
+                contentType: 'READ',
+                content: message.id,
+        	};
+        	stompClient.send(CHAT_PUBLISH_URL + room, {}, JSON.stringify(chatMessage));
+    	}
+    	
+    	
+    	
         messageElement.classList.add('chat-message');
 
         var avatarElement = document.createElement('i');
@@ -168,6 +178,8 @@ function onMessageReceived(payload) {
         var usernameText = document.createTextNode(message.sender);
         usernameElement.appendChild(usernameText);
         messageElement.appendChild(usernameElement);
+    } else {
+    	return;
     }
 
     var textElement = document.createElement('p');

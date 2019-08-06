@@ -1,17 +1,29 @@
 package io.github.u2ware.spring.websocket;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 public class WebSocketMessage {
 
     public static final String WS_URL = "/ws";
     public static final String WS_PUBLISH_URL = "/queue/";
     public static final String WS_SUBSCRIBE_URL = "/topic/";
+    public static final String CLOSED_TYPE = "LEAVE";
 	
+	private UUID id;
 	private String room;
 	private String sender;
-	private String type;
+	private String contentType;
 	private String content;
-	private Object escape;
-
+	private Map<String,Object> api = new HashMap<>();
+	
+	public UUID getId() {
+		return id;
+	}
+	public void setId(UUID id) {
+		this.id = id;
+	}
 	public String getRoom() {
 		return room;
 	}
@@ -24,11 +36,11 @@ public class WebSocketMessage {
 	public void setSender(String sender) {
 		this.sender = sender;
 	}
-	public String getType() {
-		return type;
+	public String getContentType() {
+		return contentType;
 	}
-	public void setType(String type) {
-		this.type = type;
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
 	}
 	public String getContent() {
 		return content;
@@ -36,14 +48,15 @@ public class WebSocketMessage {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public Object getEscape() {
-		return escape;
+	public Map<String, Object> getApi() {
+		return api;
 	}
-	public void setEscape(Object escape) {
-		this.escape = escape;
+	public void setApi(Map<String, Object> api) {
+		this.api = api;
 	}
 	@Override
 	public String toString() {
-		return "WebSocketMessage [room=" + room + ", sender=" + sender + ", type=" + type + ", escape=" + escape + "]";
+		return "[id=" + id + ", room=" + room + ", sender=" + sender + ", contentType=" + contentType
+				+ ", content=" + content + ", api=" + api + "]";
 	}
 }
