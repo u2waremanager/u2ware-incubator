@@ -100,6 +100,11 @@ public class OAuth2AuthorizationController implements InitializingBean {
 		return jwkSet.toJSONObject(true);
 	}
 
+    @RequestMapping(value = "/token/callback")
+    public @ResponseBody Object callback(HttpServletRequest request) {
+    	return ServletUriComponentsBuilder.fromRequest(request).build().getQueryParams().toSingleValueMap();
+    }
+	
 	@GetMapping("/user/info")
 	public @ResponseBody ResponseEntity<?> info(HttpServletRequest request) throws Exception{
 
@@ -232,6 +237,7 @@ public class OAuth2AuthorizationController implements InitializingBean {
 
         Map<String, Object> claims = new HashMap<>(oauth2User.getAttributes());
         claims.put("clientRegistrationId", authorizedClient.getClientRegistration().getRegistrationId());
+        claims.put("principalName", URLEncoder.encode(authorizedClient.getPrincipalName(), "UTF-8"));
         //CommonOAuth2Provider d;
 //      claims.put("principalName", authorizedClient.getPrincipalName());
 //        logger.info("authorizedClient------------------------------------------------------");

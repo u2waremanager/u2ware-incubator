@@ -81,7 +81,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 //    
     @Bean
     public  AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
-        return new InMemoryOAuth2AuthorizationRequestRepository(); 
+        return new OAuth2AuthorizationRequestRepository(); 
         //AuthorizationRequestRepository<OAuth2AuthorizationRequest>
         //HttpSessionOAuth2AuthorizationRequestRepository
     }

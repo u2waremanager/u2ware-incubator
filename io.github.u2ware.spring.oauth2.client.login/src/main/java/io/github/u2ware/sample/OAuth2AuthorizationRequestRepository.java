@@ -15,11 +15,10 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import io.github.u2ware.sample.x.XPrinter;
+import org.springframework.web.util.WebUtils;
 
 //HttpSessionOAuth2AuthorizationRequestRepository
-public class InMemoryOAuth2AuthorizationRequestRepository implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
+public class OAuth2AuthorizationRequestRepository implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 
     protected Log logger = LogFactory.getLog(getClass());
 
@@ -53,7 +52,6 @@ public class InMemoryOAuth2AuthorizationRequestRepository implements Authorizati
             callbackRequests.put(key, request.getParameter(CALLBACK_URI));        
         }
         logger.info("save: "+key);
-        XPrinter.print("save: ", request);
     }
 
     @Override
@@ -72,11 +70,10 @@ public class InMemoryOAuth2AuthorizationRequestRepository implements Authorizati
 
         String callback = callbackRequests.remove(key);
         if(StringUtils.hasText(callback)){
-            request.getSession().setAttribute(CALLBACK_URI, callback);
+            WebUtils.setSessionAttribute(request, CALLBACK_URI, callback);
+            logger.info("add callback: "+callback);
         }
-
         logger.info("remove: "+key);
-        XPrinter.print("remove: ", request);
         return authorizationRequest;
     }
 
@@ -89,7 +86,8 @@ public class InMemoryOAuth2AuthorizationRequestRepository implements Authorizati
 
         String state = request.getParameter(OAuth2ParameterNames.STATE);
         if (state == null) {
-            String callback = (String)request.getSession().getAttribute(CALLBACK_URI);
+            String callback = (String)WebUtils.getSessionAttribute(request, CALLBACK_URI);
+            logger.info("get callback: "+callback);
             if(StringUtils.hasText(callback)){
                 return OAuth2AuthorizationRequest.authorizationCode()
                         .authorizationRequestUri(callback)
@@ -104,7 +102,6 @@ public class InMemoryOAuth2AuthorizationRequestRepository implements Authorizati
         String key = resolveOAuth2AuthorizationRequestKey(request, state);
         OAuth2AuthorizationRequest authorizationRequest =  authorizationRequests.get(key);
         logger.info("load: "+key);
-        XPrinter.print("load: ", request);
         return authorizationRequest;
     }
 
