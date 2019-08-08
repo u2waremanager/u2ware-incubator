@@ -25,6 +25,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 import org.springframework.web.socket.messaging.StompSubProtocolHandler;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.jayway.jsonpath.JsonPath;
 
@@ -142,14 +143,14 @@ public class WebSocketMessageEndpoint {
 
         try {
         	HttpMethod method = HttpMethod.resolve(apiMethod);
-        	URI uri = new URI(apiUri + payload.getRoom());
+        	URI uri = UriComponentsBuilder.fromUriString(apiUri).pathSegment(payload.getRoom()).build().toUri();
         			
         	RequestEntity<?> request = RequestEntity.method(method, uri).body(payload);
         	String response = restTemplate.exchange(request, String.class).getBody();
             Map<String,Object> api = JsonPath.parse(response).read("$");
             payload.setApi(api);
         }catch(Exception e) {
-        	//e.printStackTrace();
+            logger.info(apiUri + "is not found.");
         }
         
         simpMessageSendingOperations.convertAndSend(destination, payload);
