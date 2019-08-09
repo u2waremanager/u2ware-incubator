@@ -5,11 +5,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class WebSocketMessage {
-
-    public static final String WS_URL = "/ws";
-    public static final String WS_PUBLISH_URL = "/queue/";
-    public static final String WS_SUBSCRIBE_URL = "/topic/";
-    public static final String CLOSED_TYPE = "LEAVE";
 	
 	private UUID id;
 	private String room;

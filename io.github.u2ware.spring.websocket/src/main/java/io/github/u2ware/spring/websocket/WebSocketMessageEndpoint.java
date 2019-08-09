@@ -138,7 +138,7 @@ public class WebSocketMessageEndpoint {
     }
     
     protected void messageSend(WebSocketMessage payload) {
-    	String destination = WebSocketMessage.WS_SUBSCRIBE_URL + payload.getRoom();
+    	String destination = WebSocketMessageBrokerConfiguration.WS_BROADCASTING + payload.getRoom();
         logger.info(destination+" "+payload);
 
         try {

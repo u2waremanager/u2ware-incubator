@@ -11,9 +11,14 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 @EnableWebSocketMessageBroker
 public class WebSocketMessageBrokerConfiguration implements WebSocketMessageBrokerConfigurer {
 	
+    public static final String WS_CONNECTION    = "/connect";
+    public static final String WS_BROADCASTING  = "/app/"; 
+    public static final String WS_SUBSCRIPTIONS = "/topic/";
+	
+	
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint(WebSocketMessage.WS_URL).setAllowedOrigins("*").withSockJS();
+        registry.addEndpoint(WS_CONNECTION).setAllowedOrigins("*").withSockJS();
     }
     
     @Override
@@ -23,10 +28,10 @@ public class WebSocketMessageBrokerConfiguration implements WebSocketMessageBrok
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes(WebSocketMessage.WS_PUBLISH_URL);
+        registry.setApplicationDestinationPrefixes(WS_BROADCASTING);
         
         // Enables a simple in-memory broker
-        registry.enableSimpleBroker(WebSocketMessage.WS_SUBSCRIBE_URL);
+        registry.enableSimpleBroker(WS_SUBSCRIPTIONS);
 
         // Enable STOMP MessageQueue broker
 //        registry.enableStompBrokerRelay(WebSocketMessage.WS_SUBSCRIBE_URL)
