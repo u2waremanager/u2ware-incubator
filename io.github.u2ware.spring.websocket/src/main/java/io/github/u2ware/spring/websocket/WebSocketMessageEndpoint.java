@@ -48,10 +48,10 @@ public class WebSocketMessageEndpoint {
     public void message(
     		@DestinationVariable String room, 
 //    		Message<WebSocketMessage> message,
-//    		StompHeaderAccessor stompHeaderAccessor,
+    		StompHeaderAccessor stompHeaderAccessor,
     		@Payload WebSocketMessage payload, 
     		SimpMessageHeaderAccessor header) {
-    	
+        logger.info(stompHeaderAccessor.getDestination()+"   "+payload);
     	payload.setId(UUID.randomUUID());
     	payload.setRoom(room);
     	
@@ -138,7 +138,8 @@ public class WebSocketMessageEndpoint {
     }
     
     protected void messageSend(WebSocketMessage payload) {
-    	String destination = WebSocketMessageBrokerConfiguration.WS_BROADCASTING + payload.getRoom();
+    	//!!! WS_SUBSCRIPTIONS
+    	String destination = WebSocketMessageBrokerConfiguration.WS_SUBSCRIPTIONS+ payload.getRoom();
         logger.info(destination+" "+payload);
 
         try {
@@ -150,7 +151,7 @@ public class WebSocketMessageEndpoint {
             Map<String,Object> api = JsonPath.parse(response).read("$");
             payload.setApi(api);
         }catch(Exception e) {
-            logger.info(apiUri + "is not found.");
+            logger.info("error: "+apiUri);
         }
         
         simpMessageSendingOperations.convertAndSend(destination, payload);

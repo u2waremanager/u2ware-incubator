@@ -10,8 +10,8 @@ var connectingElement = document.querySelector('.connecting');
 
 
 
-var CHAT_URL = "/ws";
-var CHAT_PUBLISH_URL = "/queue/";
+var CHAT_CONNECT_URL = "ws://"+window.location.hostname+":"+window.location.port+"/connect/websocket";
+var CHAT_PUBLISH_URL = "/app/";
 var CHAT_SUBSCRIBE_URL = "/topic/";
 
 
@@ -45,13 +45,17 @@ function connect(event) {
             onConnected();
 
         }else{
-            console.log('STOMP: Attempting connection', CHAT_URL);
-
+            console.log('STOMP: Attempting connection', CHAT_CONNECT_URL);
+	
             // recreate the stompClient to use a new WebSocket
-            var socket = new SockJS(CHAT_URL);
-            stompClient = Stomp.over(socket);
+            //stompClient = Stomp.over(new SockJS(CHAT_CONNECT_URL));
+            stompClient = Stomp.client(CHAT_CONNECT_URL);
+            
+            // Setting...
             // stompClient.heartbeat.outgoing = 0;
             // stompClient.heartbeat.incoming = 0;
+            
+            // Connect...
             stompClient.connect({}, onConnected, onError);
         }
     }

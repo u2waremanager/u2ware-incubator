@@ -15,7 +15,6 @@ public class WebSocketMessageBrokerConfiguration implements WebSocketMessageBrok
     public static final String WS_BROADCASTING  = "/app/"; 
     public static final String WS_SUBSCRIPTIONS = "/topic/";
 	
-	
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint(WS_CONNECTION).setAllowedOrigins("*").withSockJS();

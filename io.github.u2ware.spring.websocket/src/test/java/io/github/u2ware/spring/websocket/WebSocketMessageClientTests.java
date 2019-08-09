@@ -23,8 +23,8 @@ public class WebSocketMessageClientTests {
     public void contextLoads() throws Exception {
 
     	String CONNECTION_PATH = "ws://localhost:"+port+"/"+WebSocketMessageBrokerConfiguration.WS_CONNECTION;
-    	String SUBSCRIPTIONS_PATH = WebSocketMessageBrokerConfiguration.WS_SUBSCRIPTIONS+"/xxx";
-    	String BROADCASTING_PATH = WebSocketMessageBrokerConfiguration.WS_BROADCASTING+"/xxx";
+    	String SUBSCRIPTIONS_PATH = WebSocketMessageBrokerConfiguration.WS_SUBSCRIPTIONS+"xxx";
+    	String BROADCASTING_PATH = WebSocketMessageBrokerConfiguration.WS_BROADCASTING+"xxx";
     	
     	WebSocketMessageClient client = new WebSocketMessageClient();
     	client.connect(CONNECTION_PATH, (connection)->{
