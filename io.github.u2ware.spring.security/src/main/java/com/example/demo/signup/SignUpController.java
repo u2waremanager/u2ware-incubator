@@ -1,18 +1,11 @@
 package com.example.demo.signup;
 
-import java.util.UUID;
-
-import com.example.demo.signin.RememberMeService;
-import com.poscoict.rpa.controlroom.api.sendMails.ref.SendMailRef;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -43,7 +36,7 @@ public class SignUpController {
 	public @ResponseBody ResponseEntity<Object> exists(
 			@RequestParam(value = "username") String username) throws Exception {
 
-		signUpService.userExists(username);
+		//signUpService.userExists(username);
 		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 
@@ -93,56 +86,56 @@ public class SignUpController {
 
 	
 
-	////////////////////////////////////////////////////////
-	// verification
-	////////////////////////////////////////////////////////
-	@RequestMapping(value = "/join/verify/{token}", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<Object> verify(
-			@PathVariable("token") UUID token, 
-			SendMailRef sendmail) throws Exception {
-
-		UUID res = signUpService.verifyStarted(token, sendmail);
-
-		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-		headers.add(RememberMeService.TOKEN_HEADER_NAME, res.toString());
-		return new ResponseEntity<Object>(headers, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/join/verify/{token}", method = RequestMethod.PUT)
-	public @ResponseBody ResponseEntity<Object> verify(
-			@PathVariable("token") UUID token) throws Exception {
-
-		UUID res = signUpService.verifyFinished(token);
-
-		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-		headers.add(RememberMeService.TOKEN_HEADER_NAME, res.toString());
-		return new ResponseEntity<Object>(headers, HttpStatus.OK);
-	}
-
-
-	////////////////////////////////////////////////////////
-	// password reset
-	////////////////////////////////////////////////////////
-	@RequestMapping(value = "/join/reset/{token}", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<Object> reset(
-			@PathVariable("token") UUID token,
-			SendMailRef sendmail) throws Exception {
-
-		UUID res = signUpService.resetStarted(token, sendmail);
-
-		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-		headers.add(RememberMeService.TOKEN_HEADER_NAME, res.toString());
-		return new ResponseEntity<Object>(headers, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/join/reset/{token}", method = RequestMethod.PUT)
-	public @ResponseBody ResponseEntity<Object> reset(
-			@PathVariable("token") UUID token) throws Exception {
-
-		UUID res = signUpService.resetFinished(token);
-
-		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-		headers.add(RememberMeService.TOKEN_HEADER_NAME, res.toString());
-		return new ResponseEntity<Object>(headers, HttpStatus.OK);
-	}
+//	////////////////////////////////////////////////////////
+//	// verification
+//	////////////////////////////////////////////////////////
+//	@RequestMapping(value = "/join/verify/{token}", method = RequestMethod.POST)
+//	public @ResponseBody ResponseEntity<Object> verify(
+//			@PathVariable("token") UUID token, 
+//			SendMailRef sendmail) throws Exception {
+//
+//		UUID res = signUpService.verifyStarted(token, sendmail);
+//
+//		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+//		headers.add(RememberMeService.TOKEN_HEADER_NAME, res.toString());
+//		return new ResponseEntity<Object>(headers, HttpStatus.OK);
+//	}
+//
+//	@RequestMapping(value = "/join/verify/{token}", method = RequestMethod.PUT)
+//	public @ResponseBody ResponseEntity<Object> verify(
+//			@PathVariable("token") UUID token) throws Exception {
+//
+//		UUID res = signUpService.verifyFinished(token);
+//
+//		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+//		headers.add(RememberMeService.TOKEN_HEADER_NAME, res.toString());
+//		return new ResponseEntity<Object>(headers, HttpStatus.OK);
+//	}
+//
+//
+//	////////////////////////////////////////////////////////
+//	// password reset
+//	////////////////////////////////////////////////////////
+//	@RequestMapping(value = "/join/reset/{token}", method = RequestMethod.POST)
+//	public @ResponseBody ResponseEntity<Object> reset(
+//			@PathVariable("token") UUID token,
+//			SendMailRef sendmail) throws Exception {
+//
+//		UUID res = signUpService.resetStarted(token, sendmail);
+//
+//		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+//		headers.add(RememberMeService.TOKEN_HEADER_NAME, res.toString());
+//		return new ResponseEntity<Object>(headers, HttpStatus.OK);
+//	}
+//
+//	@RequestMapping(value = "/join/reset/{token}", method = RequestMethod.PUT)
+//	public @ResponseBody ResponseEntity<Object> reset(
+//			@PathVariable("token") UUID token) throws Exception {
+//
+//		UUID res = signUpService.resetFinished(token);
+//
+//		MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+//		headers.add(RememberMeService.TOKEN_HEADER_NAME, res.toString());
+//		return new ResponseEntity<Object>(headers, HttpStatus.OK);
+//	}
 }

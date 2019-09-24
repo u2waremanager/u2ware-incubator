@@ -1,4 +1,4 @@
-package com.example.demo.sign;
+package com.example.demo.core;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,13 +11,13 @@ import lombok.Data;
  *
  */
 @Entity
-public @Data class PersistentLogins {
+public @Data class SecurityPersistentLogins {
 
 	@Id
 	private String series;
 
 	private String username;
-	private String tokenValue;
-	private Long tokenDate;
+	private String token;
+	private Long lastUsed;
 
 }

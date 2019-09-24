@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class RememberMeService implements RememberMeServices, LogoutHandler{
 
     protected Log logger = LogFactory.getLog(getClass()); 

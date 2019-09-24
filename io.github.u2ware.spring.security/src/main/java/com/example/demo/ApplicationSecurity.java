@@ -13,8 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -23,7 +22,6 @@ import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -36,7 +34,7 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	private @Autowired PasswordEncoder passwordEncoder;
+//	private @Autowired PasswordEncoder passwordEncoder;
 	private @Autowired UserDetailsService userDetailsService;
 	private @Autowired(required = false) RememberMeServices rememberMeServices;
 	private @Autowired(required = false) PersistentTokenRepository rememberMeRepository;
@@ -50,7 +48,8 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+		logger.info("userDetailsService: "+userDetailsService.getClass());
+		auth.userDetailsService(userDetailsService).passwordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
     }
     
     protected RememberMeServices getRememberMeServices(){
@@ -63,7 +62,7 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                     userDetailsService, 
                     rememberMeRepository);
         }else{
-            throw new RuntimeException("rememberMe not found.");
+            return null;//throw new RuntimeException("rememberMe not found.");
         }
     }
 
@@ -99,14 +98,21 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 			//////////////////////////////////////////////////
 			.cors()
 				.and()
-			.rememberMe()
-				.rememberMeServices(getRememberMeServices())
-//				.key(rememberMeServices.getKey())
-				.and()
+//			.rememberMe()
+//				.rememberMeServices(getRememberMeServices())
+////				.key(rememberMeServices.getKey())
+//				.and()
 //			.sessionManagement()
 //				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 //				.and()
 			;
+		
+		RememberMeServices rememberMeServices = getRememberMeServices();
+		if(rememberMeServices!= null) {
+			http.rememberMe()
+				.rememberMeServices(rememberMeServices);
+//				.key(rememberMeServices)
+		}
 	}
 
 	@Bean
@@ -123,50 +129,4 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
-
-	@Component
-	public static class SecurityPasswordEncoder implements PasswordEncoder{
-
-		private BCryptPasswordEncoder e1 = new BCryptPasswordEncoder();
-		//private StandardPasswordEncoder e2 = new StandardPasswordEncoder();
-
-		@Override
-		public String encode(CharSequence rawPassword) {
-			return e1.encode(rawPassword);
-		}
-
-		@Override
-		public boolean matches(CharSequence rawPassword, String encodedPassword) {
-			return e1.matches(rawPassword, encodedPassword);
-		}
-
-	}	
-	
-
-	/////////////////////////////////////////////////////////////////
-	//
-	/////////////////////////////////////////////////////////////////
-//	public String[] getAllowedPaths() {
-//		return new String[] {
-//				"/join/**"
-//		};
-//	}
-//
-//	public String[] getAuthenticatedPaths() {
-//		return new String[] {
-//				springDataRestBasePath+"/profile/**",
-//				springDataRestBasePath+"/assets/**", 
-//				springDataRestBasePath+"/jobs/**",
-//				springDataRestBasePath+"/multipart/**",
-//				springDataRestBasePath+"/notify/**",
-//				springDataRestBasePath+"/organizations/**",
-//				springDataRestBasePath+"/robots/**",
-//				springDataRestBasePath+"/robotsLogs/**",
-//				springDataRestBasePath+"/schedules/**",
-//				springDataRestBasePath+"/account/**",
-//				springDataRestBasePath+"/users/**",
-//				springDataRestBasePath+"/usersLogs/**",
-//				"/logout"
-//		};
-//	}
 }

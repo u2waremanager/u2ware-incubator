@@ -8,7 +8,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentReme
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class RememberMeRepository implements PersistentTokenRepository {
 
 	protected Log logger = LogFactory.getLog(getClass());

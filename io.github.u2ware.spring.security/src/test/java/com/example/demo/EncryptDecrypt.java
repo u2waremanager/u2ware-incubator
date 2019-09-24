@@ -1,4 +1,4 @@
-package org.springframework.data.rest.webmvc.multipart;
+package com.example.demo;
 
 import java.security.spec.KeySpec;
 

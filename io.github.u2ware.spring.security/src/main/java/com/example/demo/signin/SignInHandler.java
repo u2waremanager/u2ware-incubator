@@ -54,5 +54,4 @@ public class SignInHandler implements AuthenticationSuccessHandler,
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         logger.info("onAuthenticationSuccess");
     }
-
 }
