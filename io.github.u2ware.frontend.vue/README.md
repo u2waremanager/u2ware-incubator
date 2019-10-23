@@ -31,6 +31,10 @@ npm install vue-router --save
 npm install vuetify --save 
 ```
 
+```
+npm install moment --save
+npm install vue-momentjs --save
+```
 
 ## Project setup
 ```
