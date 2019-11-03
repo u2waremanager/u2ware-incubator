@@ -11,6 +11,9 @@
     <h2><router-link to="/demo/test-i18n">test-i18n</router-link></h2>
     <h2><router-link to="/demo/test-axios">test-axios</router-link></h2>
     <h2><router-link to="/demo/test-moment">test-moment</router-link></h2>
+    <h2><router-link to="/demo/test-froala">test-froala</router-link></h2>
+    <h2><router-link to="/demo/test-tiptap">test-tiptap</router-link></h2>
+    <h2><router-link to="/demo/test-ckeditor">test-ckeditor</router-link></h2>
 </div>
 </template>
 

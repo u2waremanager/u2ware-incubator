@@ -132,6 +132,24 @@ export default [
         meta: {title: 'test-moment'},
         component: () => import(/* webpackChunkName: "test-moment" */ '../apps/demo/test-moment/App.vue'),
     },
+    {
+        path: '/demo/test-froala',
+        name: 'test-froala',
+        meta: {title: 'test-froala'},
+        component: () => import(/* webpackChunkName: "test-froala" */ '../apps/demo/test-froala/App.vue'),
+    },
+    {
+        path: '/demo/test-tiptap',
+        name: 'test-tiptap',
+        meta: {title: 'test-tiptap'},
+        component: () => import(/* webpackChunkName: "test-tiptap" */ '../apps/demo/test-tiptap/App.vue'),
+    },
+    {
+        path: '/demo/test-ckeditor',
+        name: 'test-ckeditor',
+        meta: {title: 'test-ckeditor'},
+        component: () => import(/* webpackChunkName: "test-ckeditor" */ '../apps/demo/test-ckeditor/App.vue'),
+    },
   
 /*
     {
