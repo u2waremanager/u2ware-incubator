@@ -55,25 +55,25 @@ export default {
                 //viewportTopOffset: window.getViewportTopOffsetConfig(),
 
                 image: {
-                    toolbar: [ 'imageTextAlternative', '|', 'imageStyle:full', 'imageStyle:side' ],
+                    // toolbar: [ 'imageTextAlternative', '|', 'imageStyle:full', 'imageStyle:side' ],
                          
                     //resizeUnit: 'px',
                     // You need to configure the image toolbar, too, so it uses the new style buttons.
-                    //toolbar: [ 'imageStyle:alignLeft', 'imageStyle:alignCenter', 'imageStyle:alignRight' ],
-                    // styles: [
-                    //     // This option is equal to a situation where no style is applied.
-                    //     'alignCenter',
+                    toolbar: [ 'imageStyle:alignLeft', 'imageStyle:alignCenter', 'imageStyle:alignRight' ],
+                    styles: [
+                        // This option is equal to a situation where no style is applied.
+                        'alignCenter',
 
-                    //     // This represents an image aligned to the left.
-                    //     'alignLeft',
+                        // This represents an image aligned to the left.
+                        'alignLeft',
 
-                    //     // This represents an image aligned to the right.
-                    //     'alignRight',
+                        // This represents an image aligned to the right.
+                        'alignRight',
 
-                    //                             'full',
-                    //                             'side'
+                        'full',
+                        'side'
 
-                    // ]
+                    ]
                 }
             },
         }
