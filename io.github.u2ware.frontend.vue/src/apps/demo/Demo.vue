@@ -14,6 +14,8 @@
     <h2><router-link to="/demo/test-froala">test-froala</router-link></h2>
     <h2><router-link to="/demo/test-tiptap">test-tiptap</router-link></h2>
     <h2><router-link to="/demo/test-ckeditor">test-ckeditor</router-link></h2>
+    <h2><router-link to="/demo/test-jquery">test-jquery</router-link></h2>
+    <h2><router-link to="/demo/test-summernote">test-summernote</router-link></h2>
 </div>
 </template>
 

@@ -1,15 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Routes from '../routes/routes.js'
 
 Vue.use(Router)
 
-const routes = Routes;
-
+// import ARoutes from '...'
 const router = new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+    mode: 'history',
+    base: process.env.BASE_URL,
+    //ARoutes
 });
 
 
@@ -50,5 +48,21 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
+
+
+// import BRoutes from '...'
+// router.addRoutes(BRoutes);
+
+//Auto....
+const routes = require.context('../routes', true, /[A-Za-z0-9-_,\s]+\.js$/i)
+routes.keys().forEach(key => {
+    const matched = key.match(/([A-Za-z0-9-_]+)\./i)
+    if (matched && matched.length > 1) {
+        const k = matched[1]
+        let v = routes(key)
+        console.log("routes : ../routes/"+k+".js");
+        router.addRoutes(v.default);
+    }
+})
 
 export default router;

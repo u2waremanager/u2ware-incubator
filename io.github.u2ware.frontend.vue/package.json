@@ -14,11 +14,16 @@
     "@ckeditor/ckeditor5-image": "^15.0.0",
     "@ckeditor/ckeditor5-upload": "^15.0.0",
     "@ckeditor/ckeditor5-vue": "^1.0.0",
+    "bootstrap": "^4.3.1",
+    "codemirror": "^5.49.2",
     "core-js": "^2.6.5",
+    "jquery": "^3.4.1",
     "material-design-icons-iconfont": "^3.0.3",
     "moment": "^2.24.0",
+    "popper.js": "^1.16.0",
     "qs": "^6.7.0",
     "roboto-fontface": "*",
+    "summernote": "^0.8.9",
     "tiptap": "^1.26.4",
     "tiptap-extensions": "^1.28.4",
     "vue": "^2.6.6",
@@ -51,7 +56,9 @@
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "rules": {},
+    "rules": {
+      "no-console": "off"
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }

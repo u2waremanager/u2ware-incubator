@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import VueFroala from 'vue-froala-wysiwyg';
+// import VueFroala from 'vue-froala-wysiwyg';
 
 export default {
 

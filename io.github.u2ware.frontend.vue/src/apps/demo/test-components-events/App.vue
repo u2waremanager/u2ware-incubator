@@ -4,7 +4,7 @@
 
 <script>
 import Parent from './components/Parent.vue';
-import Routes from '../../../routes/routes.js';
+// import Routes from '../DemoRoutes.js';
 
 export default {
 
@@ -14,7 +14,7 @@ export default {
 
     mounted: function (){
 
-        this.$log.debug(Routes);
+        this.$log.debug(this.$router);
     }
 }
 </script>
