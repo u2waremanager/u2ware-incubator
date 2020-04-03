@@ -127,6 +127,12 @@ export default [
         component: () => import(/* webpackChunkName: "test-components-events" */ '../apps/demo/test-components-events/App.vue'),
     },
     {
+        path: '/demo/test-components-values',
+        name: 'test-components-values',
+        meta: {title: 'test-components-values'},
+        component: () => import(/* webpackChunkName: "test-components-values" */ '../apps/demo/test-components-values/App.vue'),
+    },
+    {
         path: '/demo/test-moment',
         name: 'test-moment',
         meta: {title: 'test-moment'},
