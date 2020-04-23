@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import '../../plugins/moment'
 
 export default {
   name: 'demo-moment',

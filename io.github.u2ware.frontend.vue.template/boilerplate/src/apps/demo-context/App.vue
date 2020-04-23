@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import './context'
 
 export default {
   name: 'demo-context',

@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import '../../plugins/axios'
 
 export default {
   name: 'demo-axios',
