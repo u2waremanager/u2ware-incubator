@@ -30,10 +30,20 @@ export default [
                 component: () => import(/* webpackChunkName: "demo-openlayer-example04" */ '../apps/demo-openlayer/examples/example04.vue'),
             },        
             {
-                path: '/demo-openlayer/example05',
-                name: 'example05',
-                component: () => import(/* webpackChunkName: "demo-openlayer-example05" */ '../apps/demo-openlayer/examples/example05.vue'),
-            }
+                path: '/demo-openlayer/example10',
+                name: 'example10',
+                component: () => import(/* webpackChunkName: "demo-openlayer-example10" */ '../apps/demo-openlayer/examples/example10.vue'),
+            },        
+            {
+                path: '/demo-openlayer/example11',
+                name: 'example11',
+                component: () => import(/* webpackChunkName: "demo-openlayer-example11" */ '../apps/demo-openlayer/examples/example11.vue'),
+            },
+            {
+                path: '/demo-openlayer/example12',
+                name: 'example12',
+                component: () => import(/* webpackChunkName: "demo-openlayer-example12" */ '../apps/demo-openlayer/examples/example12.vue'),
+            },        
         ]
     },
 ]
