@@ -10,17 +10,16 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "cesium": "^1.68.0",
     "core-js": "^3.6.4",
-    "load-script-once": "^2.0.1",
     "ol": "^6.3.1",
+    "olcs": "^2.10.0",
     "proj4": "^2.6.1",
     "qs": "^6.9.3",
     "vue": "^2.6.11",
-    "vue-daum-map": "^1.0.15",
     "vue-i18n": "^8.0.0",
     "vue-moment": "^4.1.0",
     "vue-router": "^3.1.6",
-    "vuelayers": "^0.11.23",
     "vuetify": "^2.2.11"
   },
   "devDependencies": {
