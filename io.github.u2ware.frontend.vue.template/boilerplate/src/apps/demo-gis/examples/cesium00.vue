@@ -1,5 +1,13 @@
 <template>
+<div>
     <div id="cesiumContainer"></div>
+    <v-btn-toggle v-model="toggle_zoom" >
+        <v-btn x-small value="layer1"> layer1 </v-btn>
+        <v-btn x-small value="tileset1"> tileset1 </v-btn>
+        <v-btn x-small value="tileset2"> tileset2 </v-btn>
+      </v-btn-toggle> 
+
+</div>
 </template>
 
 <script>
@@ -10,32 +18,82 @@ Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOi
 
 export default {
   name: 'CesiumViewer00',
-  mounted: () => {
-      var viewer = new Cesium.Viewer('cesiumContainer'
-      , { terrainProvider: Cesium.createWorldTerrain()}
+  data : ()=>({
+
+    viewer : undefined,
+
+    layer1 : undefined,
+    tileset1 : undefined,
+    tileset2 : undefined,
+
+    toggle_zoom : undefined,
+
+  }),
+  mounted(){
+      this.viewer = new Cesium.Viewer('cesiumContainer', {
+        terrainProvider: Cesium.createWorldTerrain()}
       );
 
-      var imageryLayer = viewer.imageryLayers.addImageryProvider(
-        new Cesium.IonImageryProvider({ assetId: 4 })
-      );
+      ////////////////////////////////
+      this.layer1 = new Cesium.IonImageryProvider({ assetId: 4 });
+      this.viewer.imageryLayers.addImageryProvider(this.layer1);
 
-      viewer.zoomTo(imageryLayer).otherwise(function (error) {
-        console.log(error);
+      ////////////////////////////////
+      this.tileset1 = new Cesium.Cesium3DTileset({
+            url: Cesium.IonResource.fromAssetId(73494), //대전 대덕대교 
       });
+      this.viewer.scene.primitives.add(this.tileset1);
 
-      console.log(viewer);
-  }
+      ////////////////////////////////
+      this.tileset2 = new Cesium.Cesium3DTileset({
+            url: Cesium.IonResource.fromAssetId(19005), ////대구 운동장 
+      });
+      this.viewer.scene.primitives.add(this.tileset2);
+
+      //////////////////////////////
+      var czml = [
+        {
+          id: "document",
+          name: "CZML Point",
+          version: "1.0",
+        },
+        {
+          id: "point 1",
+          name: "point",
+          position: {
+            cartographicDegrees: [-111.0, 40.0, 0],
+          },
+          point: {
+            color: {
+              rgba: [255, 255, 255, 255],
+            },
+            outlineColor: {
+              rgba: [255, 0, 0, 255],
+            },
+            outlineWidth: 4,
+            pixelSize: 20,
+          },
+        },
+      ];
+      this.viewer.dataSources.add(Cesium.CzmlDataSource.load(czml));
+
+
+      console.log('viewer', this.viewer);
+      console.log('layer1', this.layer1);
+      console.log('tileset1', this.tileset1);
+      console.log('tileset2', this.tileset2);
+  },
+  watch : {
+      toggle_zoom(newVal) { 
+        console.log(newVal);
+        console.log(this[newVal]);
+        this.viewer.zoomTo(this[newVal]);
+      },
+    },	
+
+
+
 }
-// cesiumPath is path of Cesium.js', for example:
-  // local Cesium Build package:
-  // cesiumPath: /static/Cesium/Cesium.js
-  // Personal online Cesium Build package：
-  // cesiumPath: 'https://zouyaoji.top/vue-cesium/statics/Cesium/Cesium.js'
-  // Personal online SuperMap Cesium Build package：
-  // cesiumPath: 'https://zouyaoji.top/vue-cesium/statics/SuperMapCesium/Cesium.js'
-  // Official Online Cesium Build package：
-  // cesiumPath: 'https://unpkg.com/cesium/Build/Cesium/Cesium.js',
-  // accessToken : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhYmM5NDlmZC0xYWU5LTQ3YjQtYTg1NC1hZWFlMDhhNjIyMWQiLCJpZCI6NDY4Niwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTU0MTQxNTU5NH0.IYyAIxWJ2tqQKOR6OI2NlS8OT1MiXJ7LBgPFaJrlkmA'
 
 </script>
 
