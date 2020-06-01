@@ -127,6 +127,12 @@ export default [
         component: () => import(/* webpackChunkName: "test-components-events" */ '../apps/demo/test-components-events/App.vue'),
     },
     {
+        path: '/demo/test-components-values',
+        name: 'test-components-values',
+        meta: {title: 'test-components-values'},
+        component: () => import(/* webpackChunkName: "test-components-values" */ '../apps/demo/test-components-values/App.vue'),
+    },
+    {
         path: '/demo/test-moment',
         name: 'test-moment',
         meta: {title: 'test-moment'},
@@ -150,19 +156,16 @@ export default [
         meta: {title: 'test-ckeditor'},
         component: () => import(/* webpackChunkName: "test-ckeditor" */ '../apps/demo/test-ckeditor/App.vue'),
     },
-  
-/*
     {
-      path: '/:room/:username',
-      name: 'conference',
-      meta: {
-        title: 'Conference'
-      },
-      component: () => import(.....), 
-    }
-
-    // 
-    this.$route.params.room
-    this.$route.params.username
-*/    
+        path: '/demo/test-jquery',
+        name: 'test-jquery',
+        meta: {title: 'test-jquery'},
+        component: () => import(/* webpackChunkName: "test-jquery" */ '../apps/demo/test-jquery/App.vue'),
+    },
+    {
+        path: '/demo/test-summernote',
+        name: 'test-summernote',
+        meta: {title: 'test-summernote'},
+        component: () => import(/* webpackChunkName: "test-summernote" */ '../apps/demo/test-summernote/App.vue'),
+    },
 ]
