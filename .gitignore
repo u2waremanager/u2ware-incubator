@@ -54,6 +54,8 @@ node_modules/
 .springBeans
 .factorypath
 
+mvn/
+gradle/
 
 
 
