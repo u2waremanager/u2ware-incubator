@@ -62,9 +62,9 @@ public class ApplicationOauth2LoginConfig extends WebSecurityConfigurerAdapter {
 		)
         .oauth2Login(oauth2->oauth2
 			.authorizationEndpoint(authorization -> authorization
-				.baseUri("AUTHORIZATION_ENDPOINT_BASE_URI") // or authorizationRequestResolver 
+				.baseUri(AUTHORIZATION_ENDPOINT_BASE_URI) // or authorizationRequestResolver 
 //				.authorizationRequestResolver(this.authorizationRequestResolver(clientRegistrationRepository))
-				.authorizationRequestRepository(this.authorizationRequestRepository())
+//				.authorizationRequestRepository(this.authorizationRequestRepository())
 			)
 			.redirectionEndpoint(redirection -> redirection
 				.baseUri(REDIRECTION_ENDPOINT_BASE_URI) // Default... ;
