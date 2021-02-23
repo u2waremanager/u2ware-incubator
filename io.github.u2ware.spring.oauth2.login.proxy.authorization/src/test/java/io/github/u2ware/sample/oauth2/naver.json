@@ -1,0 +1,85 @@
+
+{
+  "oauth2AuthorizedClient": {
+    "clientRegistration": {
+      "registrationId": "naver",
+      "clientId": "oAAZUgI8RQCckk7KDaLC",
+      "clientSecret": "UkJyRionyy",
+      "clientAuthenticationMethod": {
+        "value": "POST"
+      },
+      "authorizationGrantType": {
+        "value": "authorization_code"
+      },
+      "redirectUriTemplate": "{baseUrl}/login/oauth2/code/{registrationId}",
+      "scopes": [
+        "profile"
+      ],
+      "providerDetails": {
+        "authorizationUri": "https://nid.naver.com/oauth2.0/authorize",
+        "tokenUri": "https://nid.naver.com/oauth2.0/token",
+        "userInfoEndpoint": {
+          "uri": "https://openapi.naver.com/v1/nid/me",
+          "authenticationMethod": {
+            "value": "header"
+          },
+          "userNameAttributeName": "response"
+        },
+        "jwkSetUri": null,
+        "configurationMetadata": {
+          
+        }
+      },
+      "clientName": "Naver"
+    },
+    "principalName": "{id=39157432}",
+    "accessToken": {
+      "tokenValue": "AAAAOuW_-EPWnDlxLIy7laxleoOPLs3lSv5wGjTO7rDtlNWb6sh4RxzZMokVc2DolDR0jMQfPMGx6SQ10pDR6fpsTU4",
+      "issuedAt": "2021-02-23T02:48:35.883Z",
+      "expiresAt": "2021-02-23T03:48:35.883Z",
+      "tokenType": {
+        "value": "Bearer"
+      },
+      "scopes": [
+        "profile"
+      ]
+    },
+    "refreshToken": {
+      "tokenValue": "CxmppDSOXCEis6DAUwiskVYljGvqnLsjipMipDO32X2SlDqis1TGLcJMhqWgZdKKbcvxafoXLfuistZBxJFH6C8Q3eZnW1ey7Ryl2q0CCpLmGeyu5zyrOasWrtPn0SsCjCtZdL",
+      "issuedAt": "2021-02-23T02:48:35.883Z",
+      "expiresAt": null
+    }
+  },
+  "userInfo": {
+    "resultcode": "00",
+    "message": "success",
+    "response": {
+      "id": "39157432"
+    }
+  },
+  "oauth2User": {
+    "authorities": [
+      {
+        "authority": "ROLE_USER",
+        "attributes": {
+          "resultcode": "00",
+          "message": "success",
+          "response": {
+            "id": "39157432"
+          }
+        }
+      },
+      {
+        "authority": "SCOPE_profile"
+      }
+    ],
+    "attributes": {
+      "resultcode": "00",
+      "message": "success",
+      "response": {
+        "id": "39157432"
+      }
+    },
+    "name": "{id=39157432}"
+  }
+}

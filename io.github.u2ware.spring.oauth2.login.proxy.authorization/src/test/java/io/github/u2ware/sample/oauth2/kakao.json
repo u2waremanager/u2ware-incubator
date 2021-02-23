@@ -1,0 +1,115 @@
+
+{
+  "oauth2AuthorizedClient": {
+    "clientRegistration": {
+      "registrationId": "kakao",
+      "clientId": "a7fbb91a35afeb826365068947c55c42",
+      "clientSecret": "L5TF5lTLhHRkjgf8BRrCZrukqL6WNItW",
+      "clientAuthenticationMethod": {
+        "value": "POST"
+      },
+      "authorizationGrantType": {
+        "value": "authorization_code"
+      },
+      "redirectUriTemplate": "{baseUrl}/login/oauth2/code/{registrationId}",
+      "scopes": [
+        "profile"
+      ],
+      "providerDetails": {
+        "authorizationUri": "https://kauth.kakao.com/oauth/authorize",
+        "tokenUri": "https://kauth.kakao.com/oauth/token",
+        "userInfoEndpoint": {
+          "uri": "https://kapi.kakao.com/v2/user/me",
+          "authenticationMethod": {
+            "value": "header"
+          },
+          "userNameAttributeName": "id"
+        },
+        "jwkSetUri": null,
+        "configurationMetadata": {
+          
+        }
+      },
+      "clientName": "Kakao"
+    },
+    "principalName": "1081613344",
+    "accessToken": {
+      "tokenValue": "u-rbHAJBFSrGAPkagtvmsRdb5LQ6XvM_5owJfQo9c04AAAF3zMkRPw",
+      "issuedAt": "2021-02-23T02:47:45.105Z",
+      "expiresAt": "2021-02-23T08:47:44.105Z",
+      "tokenType": {
+        "value": "Bearer"
+      },
+      "scopes": [
+        "profile"
+      ]
+    },
+    "refreshToken": {
+      "tokenValue": "guVoCZj-Ol4H4VCrBnn2wsaTth3j7NO5WjgM6wo9c04AAAF3zMkRPg",
+      "issuedAt": "2021-02-23T02:47:45.105Z",
+      "expiresAt": null
+    }
+  },
+  "userInfo": {
+    "id": 1081613344,
+    "connected_at": "2019-05-09T23:05:41Z",
+    "properties": {
+      "nickname": "이광식",
+      "profile_image": "http://k.kakaocdn.net/dn/LXd5f/btqu6NkCgf4/DjRWoMuTp9JUDSVkoFBS3K/profile_640x640s.jpg",
+      "thumbnail_image": "http://k.kakaocdn.net/dn/LXd5f/btqu6NkCgf4/DjRWoMuTp9JUDSVkoFBS3K/profile_110x110c.jpg"
+    },
+    "kakao_account": {
+      "profile_needs_agreement": false,
+      "profile": {
+        "nickname": "이광식",
+        "thumbnail_image_url": "http://k.kakaocdn.net/dn/psyqI/btqVHW9xBiY/BkbB7UUKonhq9CmyRmKm10/img_110x110.jpg",
+        "profile_image_url": "http://k.kakaocdn.net/dn/psyqI/btqVHW9xBiY/BkbB7UUKonhq9CmyRmKm10/img_640x640.jpg"
+      }
+    }
+  },
+  "oauth2User": {
+    "authorities": [
+      {
+        "authority": "ROLE_USER",
+        "attributes": {
+          "id": 1081613344,
+          "connected_at": "2019-05-09T23:05:41Z",
+          "properties": {
+            "nickname": "이광식",
+            "profile_image": "http://k.kakaocdn.net/dn/LXd5f/btqu6NkCgf4/DjRWoMuTp9JUDSVkoFBS3K/profile_640x640s.jpg",
+            "thumbnail_image": "http://k.kakaocdn.net/dn/LXd5f/btqu6NkCgf4/DjRWoMuTp9JUDSVkoFBS3K/profile_110x110c.jpg"
+          },
+          "kakao_account": {
+            "profile_needs_agreement": false,
+            "profile": {
+              "nickname": "이광식",
+              "thumbnail_image_url": "http://k.kakaocdn.net/dn/psyqI/btqVHW9xBiY/BkbB7UUKonhq9CmyRmKm10/img_110x110.jpg",
+              "profile_image_url": "http://k.kakaocdn.net/dn/psyqI/btqVHW9xBiY/BkbB7UUKonhq9CmyRmKm10/img_640x640.jpg"
+            }
+          }
+        }
+      },
+      {
+        "authority": "SCOPE_profile"
+      }
+    ],
+    "attributes": {
+      "id": 1081613344,
+      "connected_at": "2019-05-09T23:05:41Z",
+      "properties": {
+        "nickname": "이광식",
+        "profile_image": "http://k.kakaocdn.net/dn/LXd5f/btqu6NkCgf4/DjRWoMuTp9JUDSVkoFBS3K/profile_640x640s.jpg",
+        "thumbnail_image": "http://k.kakaocdn.net/dn/LXd5f/btqu6NkCgf4/DjRWoMuTp9JUDSVkoFBS3K/profile_110x110c.jpg"
+      },
+      "kakao_account": {
+        "profile_needs_agreement": false,
+        "profile": {
+          "nickname": "이광식",
+          "thumbnail_image_url": "http://k.kakaocdn.net/dn/psyqI/btqVHW9xBiY/BkbB7UUKonhq9CmyRmKm10/img_110x110.jpg",
+          "profile_image_url": "http://k.kakaocdn.net/dn/psyqI/btqVHW9xBiY/BkbB7UUKonhq9CmyRmKm10/img_640x640.jpg"
+        }
+      }
+    },
+    "name": "1081613344"
+  }
+}
