@@ -1,0 +1,13 @@
+{
+  "keys": [
+    {
+      "kty": "RSA",
+      "d": "YDs2VVHKzOqqrGuAPZYIekZUdboEfJsQ-iNsZHUCZmhKq13d-ULmtyJd9zXkJ0JWX7HvcrN-Eea-R97oGz21UC-9wHgIS9DT-CTvI0orsdqF6eC8FgD0a3A_ws0QymlmzhP5O7An7ku6E2sCBiBPNDTInb502tJWTnqb7vemfJvhxDLi4wEvn1QXFRGEztJ0A2N-JEYHRATXygSwLsf25slm1nb6V2cwgmfxZ0ITt3Xpl3aoKDSgTmtzznrNSGh3XS62-2HKBvgFTvCwGq9GTJvpcgFOKQLgDIgLc4QWNHqopDQRxVNt8LDXrSnv0AMLCk2CbL9xLU0DY_Ydg7cIAQ",
+      "e": "AQAB",
+      "use": "sig",
+      "kid": "iScreamMedia",
+      "alg": "RS256",
+      "n": "ts2e0-ymFhBhhof5azmn98yVNSXM8C03VamtIRraXCZ5irQ7495ml9taGBIDAZ8LNHLrSYrD4FYTo34ddatprdIY_jt8mbKH1ATr94VZk_KF5QobLbd6K6p7jjz944W4_7GyLGnPfU-yWQWXO-Jbv4_mfjKJX7c67FQD_S1dFQJCQJTP1mmwu9eAH5IzGTPhC71KbgLYG01oAt3JCm_uqusii03iWXQt7pbKB7lWsdUZkzPzB9Cby5xIt0U4YZiow3pm8pfFTe0Stb6yuvZZelS3HhvB_gTHaF2euxKRoJT6XURMazR6x3GpANU4IhbGICRECtJD7NBFk5O5hstXhQ"
+    }
+  ]
+}
