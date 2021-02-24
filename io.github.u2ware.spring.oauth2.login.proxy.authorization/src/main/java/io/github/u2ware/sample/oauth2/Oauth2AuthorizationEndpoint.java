@@ -16,7 +16,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,14 +32,12 @@ import org.springframework.web.client.RestTemplate;
 public class Oauth2AuthorizationEndpoint {
 
 	@Autowired
-    private JSONWebTokenCodec jsonWebTokenCodec;
+    private OAuth2AuthorizationService oauth2AuthorizationService;
 
-	@Autowired
-    private ClientRegistrationRepository clientRegistrationRepository;
 
 	@GetMapping(JWT_JWKS_JSON)
 	public @ResponseBody Map<String, Object> jwks() {
-		return jsonWebTokenCodec.toJSONObject();
+		return oauth2AuthorizationService.jwks();
 	}
 	
 	
@@ -49,14 +46,28 @@ public class Oauth2AuthorizationEndpoint {
 
         String bearerTokenValue = extractHeaderToken(request);
         try{
-            Jwt jwt = jsonWebTokenCodec.decode(bearerTokenValue);
-            return ResponseEntity.ok(jwt);
+            return ResponseEntity.ok(oauth2AuthorizationService.decode(bearerTokenValue));
         }catch(Exception e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 	}
 	
-
+	protected String extractHeaderToken(HttpServletRequest request) {
+		Enumeration<String> headers = request.getHeaders("Authorization");
+		while (headers.hasMoreElements()) { // typically there is only one (most servers enforce that)
+			String value = headers.nextElement();
+			if ((value.toLowerCase().startsWith("Bearer".toLowerCase()))) {
+				String authHeaderValue = value.substring("Bearer".length()).trim();
+                return authHeaderValue;
+			}
+		}
+		return null;
+	}
+	
+	@Autowired
+	private ClientRegistrationRepository clientRegistrationRepository;
+	
+	
 	@GetMapping(JWT_USER_INFO+"/{registrationId}")
 	public @ResponseBody ResponseEntity<?> info(HttpServletRequest request, @PathVariable String registrationId) throws Exception{
 
@@ -76,17 +87,5 @@ public class Oauth2AuthorizationEndpoint {
 		
         return ResponseEntity.ok(userInfo);
 	}
-	
-	
-	protected String extractHeaderToken(HttpServletRequest request) {
-		Enumeration<String> headers = request.getHeaders("Authorization");
-		while (headers.hasMoreElements()) { // typically there is only one (most servers enforce that)
-			String value = headers.nextElement();
-			if ((value.toLowerCase().startsWith("Bearer".toLowerCase()))) {
-				String authHeaderValue = value.substring("Bearer".length()).trim();
-                return authHeaderValue;
-			}
-		}
-		return null;
-	}
+
 }

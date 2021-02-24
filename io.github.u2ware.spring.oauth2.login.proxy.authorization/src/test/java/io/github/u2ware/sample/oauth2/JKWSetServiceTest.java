@@ -7,7 +7,6 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -22,7 +21,9 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
-public class JSONWebTokenCodecTest {
+import io.github.u2ware.sample.JKWSetService;
+
+public class JKWSetServiceTest {
 
 	private Log logger = LogFactory.getLog(getClass());
 	
@@ -116,7 +117,7 @@ public class JSONWebTokenCodecTest {
 	
 	
 	
-	private @Autowired JSONWebTokenCodec oauth2JwtService;
+//	private @Autowired  oauth2JwtService;
 	
 	@Test
 	public void contextLoads2() throws Exception{
@@ -148,8 +149,16 @@ public class JSONWebTokenCodecTest {
 		
         
         
-        JSONWebTokenCodec codec = JSONWebTokenCodec.withDefaultJWKSet();
-        
+        JKWSetService codec = new JKWSetService() {
+        	
+        	private JWKSet JWKSet;
+        	
+			@Override
+			public JWKSet jwkSet() {
+				if(JWKSet == null) JWKSet = build(true);
+				return JWKSet;
+			}
+        };
         
         String idToken = codec.encode(jwt);
         logger.info(idToken);
@@ -159,4 +168,5 @@ public class JSONWebTokenCodecTest {
         logger.info(jwt2.getHeaders());
         logger.info(jwt2.getClaims());
 	}
+
 }

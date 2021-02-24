@@ -31,7 +31,6 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -61,10 +60,10 @@ public class Oauth2AuthenticationEndpoint {
     private ClientRegistrationRepository clientRegistrationRepository;
 	
 	@Autowired
-    private AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository;
+    private Oauth2AuthenticationRepository oauth2AuthenticationRepository;
 
 	@Autowired
-    private JSONWebTokenCodec jsonWebTokenService;
+    private OAuth2AuthorizationService oauth2AuthorizationService;
 
     
 	@GetMapping(value=OAUTH2_LOGIN_URI)
@@ -135,7 +134,7 @@ public class Oauth2AuthenticationEndpoint {
 			@AuthenticationPrincipal OAuth2User oauth2User, 
 			@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) throws Exception{
 		
-        OAuth2AuthorizationRequest authorizationRequest = authorizationRequestRepository.loadAuthorizationRequest(request);
+        OAuth2AuthorizationRequest authorizationRequest = oauth2AuthenticationRepository.loadAuthorizationRequest(request);
         if(authorizationRequest == null) {
             UriComponents forward = ServletUriComponentsBuilder
             		.fromContextPath(request)
@@ -168,7 +167,7 @@ public class Oauth2AuthenticationEndpoint {
 		builder.queryParam("client_registration_id", authorizedClient.getClientRegistration().getRegistrationId());
 		builder.queryParam("client_registration_name", authorizedClient.getClientRegistration().getClientName());
 		builder.queryParam("access_token_user_info", authorizedClient.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUri());
-		builder.queryParam("id_token", jsonWebTokenService.encode(authorizedClient, oauth2User) );
+		builder.queryParam("id_token", oauth2AuthorizationService.encode(authorizedClient, oauth2User) );
 		builder.queryParam("id_token_user_info", ServletUriComponentsBuilder.fromContextPath(request).path("/user/info").build());
 		
 		

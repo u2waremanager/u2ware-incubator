@@ -30,7 +30,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 	public final static String LOGIN_PROVIDER_PARAM = "provider";
 	public final static String LOGIN_CALLBACK_PARAM = "callback";
 
-	
 	@Autowired
 	private AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository;
 	
