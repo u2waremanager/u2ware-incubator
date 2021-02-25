@@ -1,7 +1,7 @@
-package io.github.u2ware.sample.oauth2;
+package io.github.u2ware.sample.authorization;
 
-import static io.github.u2ware.sample.ApplicationSecurityConfig.JWT_JWKS_JSON;
-import static io.github.u2ware.sample.ApplicationSecurityConfig.JWT_USER_INFO;
+import static io.github.u2ware.sample.ApplicationOauth2AuthorizationServerConfig.JWT_JWKS_JSON;
+import static io.github.u2ware.sample.ApplicationOauth2AuthorizationServerConfig.JWT_USER_INFO;
 
 import java.util.Enumeration;
 
@@ -54,4 +54,7 @@ public class Oauth2AuthorizationEndpoint {
 		}
 		return null;
 	}
+	
+	
+	
 }

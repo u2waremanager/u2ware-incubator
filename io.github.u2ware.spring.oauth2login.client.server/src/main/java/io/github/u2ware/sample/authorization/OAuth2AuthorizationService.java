@@ -1,4 +1,4 @@
-package io.github.u2ware.sample.oauth2;
+package io.github.u2ware.sample.authorization;
 
 import java.sql.Date;
 import java.util.List;

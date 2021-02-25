@@ -1,7 +1,7 @@
-package io.github.u2ware.sample.oauth2;
+package io.github.u2ware.sample.authorization;
 
-import static io.github.u2ware.sample.ApplicationSecurityConfig.JWT_JWKS_JSON;
-import static io.github.u2ware.sample.ApplicationSecurityConfig.JWT_USER_INFO;
+import static io.github.u2ware.sample.ApplicationOAuth2LoginConfig.JWT_JWKS_JSON;
+import static io.github.u2ware.sample.ApplicationOAuth2LoginConfig.JWT_USER_INFO;
 
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -31,22 +31,19 @@ import org.springframework.web.client.RestTemplate;
 @Controller
 public class Oauth2AuthorizationEndpoint {
 
-	@Autowired
-    private OAuth2AuthorizationService oauth2AuthorizationService;
-
+    private @Autowired OAuth2AuthorizationService oauth2AuthorizationService;
 
 	@GetMapping(JWT_JWKS_JSON)
-	public @ResponseBody Map<String, Object> jwks() {
+	public @ResponseBody Object jwks() {
 		return oauth2AuthorizationService.jwks();
 	}
 	
 	
 	@GetMapping(JWT_USER_INFO)
 	public @ResponseBody ResponseEntity<?> info(HttpServletRequest request) throws Exception{
-
-        String bearerTokenValue = extractHeaderToken(request);
+        String idToken = extractHeaderToken(request);
         try{
-            return ResponseEntity.ok(oauth2AuthorizationService.decode(bearerTokenValue));
+            return ResponseEntity.ok(oauth2AuthorizationService.decode(idToken));
         }catch(Exception e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -87,5 +84,4 @@ public class Oauth2AuthorizationEndpoint {
 		
         return ResponseEntity.ok(userInfo);
 	}
-
 }

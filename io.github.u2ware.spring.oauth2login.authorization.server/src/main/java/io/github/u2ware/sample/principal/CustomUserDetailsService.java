@@ -1,4 +1,4 @@
-package io.github.u2ware.sample.secured;
+package io.github.u2ware.sample.principal;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,5 +1,7 @@
 package io.github.u2ware.sample;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,7 +12,10 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequ
 
 @Configuration
 @EnableWebSecurity
-public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
+public class ApplicationOAuth2LoginConfig extends WebSecurityConfigurerAdapter {
+	
+	private Log logger = LogFactory.getLog(getClass());
+
 	
 	public final static String AUTHORIZATION_ENDPOINT_BASE_URI = "/oauth2/authorization"; //OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI;
 	public final static String REDIRECTION_ENDPOINT_BASE_URI = "/login/oauth2/code/*"; //OAuth2LoginAuthenticationFilter.DEFAULT_FILTER_PROCESSES_URI
@@ -32,10 +37,10 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository;
-	
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
+    	
 		http
 		.authorizeRequests(authorize -> authorize
 			.antMatchers(JWT_JWKS_JSON).permitAll()
@@ -56,6 +61,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         .logout(logout-> logout
         	.logoutSuccessUrl(OAUTH2_LOGOFF_URI)
         );
+		
     }
 }
  

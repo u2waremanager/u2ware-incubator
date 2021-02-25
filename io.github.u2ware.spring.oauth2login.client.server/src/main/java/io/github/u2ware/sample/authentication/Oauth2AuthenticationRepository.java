@@ -1,6 +1,6 @@
-package io.github.u2ware.sample.oauth2;
+package io.github.u2ware.sample.authentication;
 
-import static io.github.u2ware.sample.ApplicationSecurityConfig.LOGIN_CALLBACK_PARAM;
+import static io.github.u2ware.sample.ApplicationOAuth2LoginConfig.LOGIN_CALLBACK_PARAM;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

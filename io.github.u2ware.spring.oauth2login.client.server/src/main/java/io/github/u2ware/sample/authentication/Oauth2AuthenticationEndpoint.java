@@ -1,12 +1,12 @@
-package io.github.u2ware.sample.oauth2;
+package io.github.u2ware.sample.authentication;
 
-import static io.github.u2ware.sample.ApplicationSecurityConfig.AUTHORIZATION_ENDPOINT_BASE_URI;
-import static io.github.u2ware.sample.ApplicationSecurityConfig.LOGIN_CALLBACK_PARAM;
-import static io.github.u2ware.sample.ApplicationSecurityConfig.LOGIN_PROVIDER_PARAM;
-import static io.github.u2ware.sample.ApplicationSecurityConfig.OAUTH2_LOGIN_URI;
-import static io.github.u2ware.sample.ApplicationSecurityConfig.OAUTH2_LOGOFF_URI;
-import static io.github.u2ware.sample.ApplicationSecurityConfig.OAUTH2_LOGON_URI;
-import static io.github.u2ware.sample.ApplicationSecurityConfig.OAUTH2_LOGOUT_URI;
+import static io.github.u2ware.sample.ApplicationOAuth2LoginConfig.AUTHORIZATION_ENDPOINT_BASE_URI;
+import static io.github.u2ware.sample.ApplicationOAuth2LoginConfig.LOGIN_CALLBACK_PARAM;
+import static io.github.u2ware.sample.ApplicationOAuth2LoginConfig.LOGIN_PROVIDER_PARAM;
+import static io.github.u2ware.sample.ApplicationOAuth2LoginConfig.OAUTH2_LOGIN_URI;
+import static io.github.u2ware.sample.ApplicationOAuth2LoginConfig.OAUTH2_LOGOFF_URI;
+import static io.github.u2ware.sample.ApplicationOAuth2LoginConfig.OAUTH2_LOGON_URI;
+import static io.github.u2ware.sample.ApplicationOAuth2LoginConfig.OAUTH2_LOGOUT_URI;
 
 import java.net.URLEncoder;
 import java.time.Instant;
@@ -46,6 +46,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import io.github.u2ware.sample.authorization.OAuth2AuthorizationService;
+
 /**
  * authentication 사용 or 입장 or 로그인 / 인증 /어쎈티케이션/
  * 
@@ -66,6 +68,8 @@ public class Oauth2AuthenticationEndpoint {
     private OAuth2AuthorizationService oauth2AuthorizationService;
 
     
+	
+	
 	@GetMapping(value=OAUTH2_LOGIN_URI)
 	public @ResponseBody List<Map<String,String>> oauth2(HttpServletRequest request) {
 		
