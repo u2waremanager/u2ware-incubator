@@ -24,7 +24,6 @@ public class UserAccountToken extends JwtAuthenticationToken{
 		this.userAccount = userAccount;
 	}
 	
-	
 	@Override
 	public Map<String, Object> getTokenAttributes() {
 		Map<String, Object> response = new HashMap<>();
