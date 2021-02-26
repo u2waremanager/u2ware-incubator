@@ -18,10 +18,35 @@
 		<java.version>1.8</java.version>
 	</properties>
 
+	<repositories>
+		<repository>
+		    <id>u2ware-mvm-repo</id>
+		    <url>https://raw.github.com/u2ware/u2ware.github.com/mvn-repo/</url>
+		</repository>
+		<repository> 
+			<id>oracle</id> 
+			<name>ORACLE JDBC Repository</name> 
+			<url>http://maven.jahia.org/maven2</url> 
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-jpa</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>io.github.u2ware</groupId>
+		    <artifactId>u2ware-data-rest</artifactId>
+		    <version>2.3.8.1.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

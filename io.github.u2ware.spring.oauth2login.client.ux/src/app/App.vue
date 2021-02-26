@@ -117,7 +117,13 @@ export default {
         },
         userInfo4Request(){
             axios({
-                url : 'http://localhost:9092/user',                    //Resource Server
+                url : 'http://localhost:9092/userAccounts',                    //Resource Server
+                // url : 'http://localhost:9092/userNotifies',                    //Resource Server
+                method : 'POST',
+                data : {
+                    username : 'aaa'
+                },
+                // url : 'http://localhost:9092/user',                    //Resource Server
                 headers : {
                     'Authorization' : 'Bearer '+this.oauth2Result.id_token  //JWT
                 }

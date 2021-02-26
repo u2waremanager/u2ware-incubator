@@ -2,6 +2,7 @@ package io.github.u2ware.sample.authorization;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -68,8 +69,7 @@ public class OAuth2AuthorizationService implements JKWSetService, InitializingBe
         }
         
 		if (client.getPrincipalName() != null) {
-			claimsSet.subject(client.getPrincipalName());
-			claimsSet.jwtID(client.getPrincipalName());
+			claimsSet.subject(client.getClientRegistration().getRegistrationId()+"_"+client.getPrincipalName());
 		}
 		if (client.getAccessToken().getExpiresAt() != null) {
 			claimsSet.expirationTime(new Date(client.getAccessToken().getExpiresAt().toEpochMilli()));
@@ -77,9 +77,11 @@ public class OAuth2AuthorizationService implements JKWSetService, InitializingBe
 		if (client.getAccessToken().getIssuedAt() != null) {
 			claimsSet.issueTime(new Date(client.getAccessToken().getIssuedAt().toEpochMilli()));
 		}
-		claimsSet.claim("client_registration_id", client.getClientRegistration().getRegistrationId());
-		claimsSet.claim("client_registration_name", client.getClientRegistration().getClientName());
+//		claimsSet.claim("client_registration_id", );
+//		claimsSet.claim("client_registration_name", client.getClientRegistration().getClientName());
 		claimsSet.claim("authorities", new String[] {client.getClientRegistration().getRegistrationId().toUpperCase(),"USER"});
+		
+		claimsSet.jwtID(UUID.randomUUID().toString());
 		
 		
 		return encode(new SignedJWT(header.build(), claimsSet.build()));

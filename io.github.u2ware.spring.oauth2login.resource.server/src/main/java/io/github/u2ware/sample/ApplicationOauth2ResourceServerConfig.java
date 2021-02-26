@@ -2,15 +2,22 @@ package io.github.u2ware.sample;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true) 
 public class ApplicationOauth2ResourceServerConfig extends WebSecurityConfigurerAdapter {
 	
+	
+    private @Autowired Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter;
+
 	
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -26,7 +33,6 @@ public class ApplicationOauth2ResourceServerConfig extends WebSecurityConfigurer
 		);
     }
 
-    @Autowired JwtAuthenticationConverter jwtAuthenticationConverter;
 
     
 //    JwtAuthenticationConverter jwtAuthenticationConverter1() {
@@ -57,9 +63,7 @@ public class ApplicationOauth2ResourceServerConfig extends WebSecurityConfigurer
 //        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
 //        return jwtAuthenticationConverter;
 //    }
-    
-    
-    
+//    
 //    JwtAuthenticationConverter jwtAuthenticationConverter4() {
 //    	JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
 //        grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
